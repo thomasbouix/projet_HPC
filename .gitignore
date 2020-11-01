@@ -52,4 +52,4 @@ Mkfile.old
 dkms.conf
 
 #directories
-output/fd/*
+output/fd/*.pgm
