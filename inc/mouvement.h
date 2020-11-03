@@ -20,5 +20,7 @@ void compute_fd(int num_image, int threshold);
 // Appel compute_fd() pour tout car3
 void compute_all_fd(void);
 
+// Calcule la moyene de deux images et renvoie le résultat sous forme de matrice
+uint8** routine_Mean(uint8** M_t_moins_1, uint8** I_t, int nrl, int nrh, int ncl, int nch);
 
 #endif
