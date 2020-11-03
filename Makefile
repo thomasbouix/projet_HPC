@@ -40,7 +40,7 @@ CFLAGS = $(C_CC_FLAGS) $(C_OPTIMISATION_FLAGS) $(C_ARCH_FLAGS) $(C_OS_FLAGS) $(C
 LDFLAGS = $(C_CC_FLAGS) $(C_OPTIMISATION_FLAGS) $(C_ARCH_FLAGS) $(C_OS_FLAGS) $(C_CONFIG_FLAGS) $(C_INC_FLAGS) $(LIB_LIB_PATH)
 
 # -- Final product ----------
-PRODUCT   = tp_SSE.exe
+PRODUCT   = main.exe
 
 # -- src and obj List ----------
 SRC = $(addprefix ${SRC_PATH}/, $(FILE))
@@ -61,6 +61,7 @@ depend:
 clean:
 	rm -f $(OBJ)
 	rm -f ${LIB_PATH}/${PRODUCT}
+	rm -rf output
 
 tar:
 	tar -cvf deriche_SSE.tar Makefile src include
