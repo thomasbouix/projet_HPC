@@ -113,7 +113,6 @@ void compute_all_sd_diff() {
 		sprintf(diff, "output/sd/diff/diff%.3d.pgm", i);
 		uint8** M_t = LoadPGM_ui8matrix(moyenne_i_, &nrl, &nrh, &ncl, &nch);
 		uint8** I_t = LoadPGM_ui8matrix(car_i_, &nrl, &nrh, &ncl, &nch);
-
 		uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
 
 		for(int i = nrl; i <= nrh; i++){
@@ -122,6 +121,67 @@ void compute_all_sd_diff() {
 			}
 		}
 		SavePGM_ui8matrix(O_t, nrl, nrh, ncl, nch, diff);
+		free_ui8matrix(M_t, nrl, nrh, ncl, nch);
+		free_ui8matrix(I_t, nrl, nrh, ncl, nch);
+		free_ui8matrix(O_t, nrl, nrh, ncl, nch);
+	}
+
+	return;
+}
+void compute_all_sd_up_cl() {
+
+	CHECK_ERROR(system("mkdir -p output/sd/up_cl"));
+
+	uint8 Vmin = 1;
+	uint8 Vmax = 254;
+	int N = 4;
+
+	int nrl = 0;
+	int nrh = 239;
+	int ncl = 0;
+	int nch = 3190;
+
+	char diff_path[30];					// output/sd/diff/diff001.pgm
+	char v_i_moins_1_path[60];			// output/sd/variance/v000.pgm
+	char v_path[60];					// output/sd/variance/v001.pgm
+
+	/* ------------ Initialisation ------------ */
+	uint8** v3000 = ui8matrix(nrl, nrh, ncl, nch);
+	for (int i=nrl; i<=nrh; i++) {
+		for (int j=ncl; j<=nch; j++) {
+			v3000[i][j] = Vmin;
+		}
+	}
+	SavePGM_ui8matrix(v3000, nrl, nrh, ncl, nch, "output/sd/up_cl/v000.pgm");
+	free_ui8matrix(v3000, nrl, nrh, ncl, nch);
+
+	/* ---------------------------------------- */
+	for (int i=1; i<=199; i++) {
+
+		sprintf(diff_path, "output/sd/diff/diff%.3d.pgm", i);
+		sprintf(v_i_moins_1_path, "output/sd/up_cl/v%.3d.pgm", i-1);
+		sprintf(v_path, "output/sd/up_cl/v%.3d.pgm", i);
+		uint8** V_t_moins_1 = LoadPGM_ui8matrix(v_i_moins_1_path, &nrl, &nrh, &ncl, &nch);
+		uint8** O_t = LoadPGM_ui8matrix(diff_path, &nrl, &nrh, &ncl, &nch);
+
+		uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
+
+		for(int i = nrl; i <= nrh; i++){
+			for(int j = ncl; j <= nch; j++){
+				if (V_t_moins_1[i][j] < N * O_t[i][j]) {
+					V_t[i][j] = V_t_moins_1[i][j] + 1;
+				} else if (V_t_moins_1[i][j] > N * O_t[i][j]) {
+					V_t[i][j] = V_t_moins_1[i][j] - 1;
+				} else {
+					V_t[i][j] = V_t_moins_1[i][j];
+				}
+				V_t[i][j] = MAX(MIN(V_t[i][j], Vmax), Vmin);
+			}
+		}
+		SavePGM_ui8matrix(V_t, nrl, nrh, ncl, nch, v_path);
+		free_ui8matrix(V_t_moins_1, nrl, nrh, ncl, nch);
+		free_ui8matrix(O_t, nrl, nrh, ncl, nch);
+		free_ui8matrix(V_t, nrl, nrh, ncl, nch);
 	}
 
 	return;
