@@ -7,9 +7,11 @@
 
 int main(void){
 
-  system("mkdir -p output/fd");
+  printf("COMPUTE ALL FD STEPS\n\n");
+  compute_fd_all_steps(50);
 
-  for(int i = 1; i < 200; i++)
-    compute_fd(i, 50);
+  printf("COMPUTE ALL SD STEPS\n\n");
+  //compute_sd_all_steps();
 
+  return 0;
 }
