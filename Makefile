@@ -48,10 +48,12 @@ OBJ = $(addprefix ${OBJ_PATH}/, $(addsuffix .o, $(basename $(FILE))))
 
 # -- Base rules ----------
 $(OBJ_PATH)/%.o : $(SRC_PATH)/%.c
+	mkdir -p obj
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #-----Main rule ----------
 $(EXE_PATH)/$(PRODUCT): $(OBJ)
+	mkdir -p exe
 	$(CC) -o $@ $^ $(LDFLAGS) $(OPTFLAGS) $(CFG) $(INC) $(LIB) -lm
 
 # -- Other stuff ----------
@@ -59,10 +61,6 @@ depend:
 	makedepend $(CFLAGS) -Y $(SRC)
 
 clean:
-	rm -f $(OBJ)
-	rm -f ${LIB_PATH}/${PRODUCT}
+	rm -rf $(OBJ_PATH)
+	rm -rf ${EXE_PATH}
 	rm -rf output
-
-tar:
-	tar -cvf deriche_SSE.tar Makefile src include
-	gzip -9 deriche_SSE.tar

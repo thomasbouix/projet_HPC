@@ -3,7 +3,7 @@
 #include "nrutil.h"
 #include "nrdef.h"
 #include "mouvement.h"
-
+#include "utils.h"
 
 int main(void){
 
@@ -11,7 +11,7 @@ int main(void){
   compute_fd_all_steps(50);
 
   printf("COMPUTE ALL SD STEPS\n\n");
-  //compute_sd_all_steps();
+  compute_sd_all_steps();
 
   return 0;
 }
