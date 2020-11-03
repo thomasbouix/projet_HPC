@@ -186,3 +186,37 @@ void compute_all_sd_up_cl() {
 
 	return;
 }
+void compute_all_sd_est() {
+
+	CHECK_ERROR(system("mkdir -p output/sd/estimation"));
+
+	int nrl, nrh, ncl, nch;
+
+	char diff_i_[40];					// output/sd/diff/diff000.pgm
+	char variance_i_[40];				// output/sd/variance/v001.pgm
+	char estimation_i_[50];				// output/sd/estimation/e001.pgm
+
+	for (int i=1; i<=199; i++) {
+		sprintf(diff_i_, "output/sd/diff/diff%.3d.pgm", i);
+		sprintf(variance_i_, "output/sd/up_cl/v%.3d.pgm", i);
+		sprintf(estimation_i_, "output/sd/estimation/e%.3d.pgm", i);
+		uint8** O_t = LoadPGM_ui8matrix(diff_i_, &nrl, &nrh, &ncl, &nch);
+		uint8** V_t = LoadPGM_ui8matrix(variance_i_, &nrl, &nrh, &ncl, &nch);
+		uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
+
+		for(int i = nrl; i <= nrh; i++) {
+			for(int j = ncl; j <= nch; j++) {
+				if (O_t[i][j] < V_t[i][j]) {
+					E_t[i][j] = 0;
+				} else {
+					E_t[i][j] = 255;
+				}
+			}
+		}
+		SavePGM_ui8matrix(E_t, nrl, nrh, ncl, nch, estimation_i_);
+		free_ui8matrix(O_t, nrl, nrh, ncl, nch);
+		free_ui8matrix(V_t, nrl, nrh, ncl, nch);
+		free_ui8matrix(E_t, nrl, nrh, ncl, nch);
+	}
+	return;
+}
