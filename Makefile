@@ -64,7 +64,3 @@ clean:
 	rm -rf $(OBJ_PATH)
 	rm -rf ${EXE_PATH}
 	rm -rf output
-
-tar:
-	tar -cvf deriche_SSE.tar Makefile src include
-	gzip -9 deriche_SSE.tar

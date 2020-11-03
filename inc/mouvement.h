@@ -23,6 +23,8 @@ void compute_all_fd(void);
 // Calcule 1 itération de moyenne récursive et renvoie le résultat sous forme de matrice
 uint8** routine_Mean(uint8** M_t_moins_1, uint8** I_t, int nrl, int nrh, int ncl, int nch);
 // Calcule toutes les images moyennes récursives et les stockes dans output/sd/mean
-void compute_all_means(void);
+void compute_all_sd_mean(void);
+// M_t() - I_t() stockés dnas output/sd/diff/diff_t_.pgm
+void compute_all_sd_diff(void);
 
 #endif

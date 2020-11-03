@@ -65,7 +65,7 @@ uint8** routine_Mean(uint8** M_t_moins_1, uint8** I_t, int nrl, int nrh, int ncl
 	}
 	return M_t;
 }
-void compute_all_means(void) {
+void compute_all_sd_mean(void) {
 
 	CHECK_ERROR(system("mkdir -p output/sd/mean"));
 
@@ -97,4 +97,32 @@ void compute_all_means(void) {
 
 	return;
 }
-void compute_all_diff();
+void compute_all_sd_diff() {
+
+	CHECK_ERROR(system("mkdir -p output/sd/diff"));
+
+	int nrl, nrh, ncl, nch;
+	char car_i_[30];					//
+	char moyenne_i_[30];				// output/sd/mean/mean000.pgm
+	char diff[30];						// output/sd/diff/diff000.pgm
+
+	for (int i=1; i<=199; i++) {
+
+		sprintf(car_i_, "car3/car_3%.3d.pgm", i);
+		sprintf(moyenne_i_, "output/sd/mean/mean%.3d.pgm", i);
+		sprintf(diff, "output/sd/diff/diff%.3d.pgm", i);
+		uint8** M_t = LoadPGM_ui8matrix(moyenne_i_, &nrl, &nrh, &ncl, &nch);
+		uint8** I_t = LoadPGM_ui8matrix(car_i_, &nrl, &nrh, &ncl, &nch);
+
+		uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
+
+		for(int i = nrl; i <= nrh; i++){
+			for(int j = ncl; j <= nch; j++){
+					O_t[i][j] = abs(M_t[i][j] - I_t[i][j]);
+			}
+		}
+		SavePGM_ui8matrix(O_t, nrl, nrh, ncl, nch, diff);
+	}
+
+	return;
+}
