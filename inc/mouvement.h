@@ -33,5 +33,7 @@ void compute_all_sd_diff(void);
 void compute_all_sd_up_cl(void);
 //
 void compute_all_sd_est(void);
+// 
+void compute_all_sd(void);
 
 #endif
