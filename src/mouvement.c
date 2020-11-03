@@ -65,7 +65,6 @@ uint8** routine_Mean(uint8** M_t_moins_1, uint8** I_t, int nrl, int nrh, int ncl
 	}
 	return M_t;
 }
-
 void compute_all_means(void) {
 
 	CHECK_ERROR(system("mkdir -p output/sd/mean"));
@@ -88,7 +87,7 @@ void compute_all_means(void) {
 
 		uint8** car3_i_ = LoadPGM_ui8matrix(car3_path, &nrl, &nrh, &ncl, &nch);
 		uint8** mean_i_moins_1 = LoadPGM_ui8matrix(mean_i_moins_1_path, &nrl, &nrh, &ncl, &nch);
-		uint8** mean_i_ = routine_Mean(mean_i_moins_1,car3_i_, nrl, nrh, ncl, nch);
+		uint8** mean_i_ = routine_Mean(mean_i_moins_1, car3_i_, nrl, nrh, ncl, nch);
 
 		SavePGM_ui8matrix(mean_i_, nrl, nrh, ncl, nch, mean_path);
 		free_ui8matrix(car3_i_, nrl, nrh, ncl, nch);
@@ -98,3 +97,4 @@ void compute_all_means(void) {
 
 	return;
 }
+void compute_all_diff();
