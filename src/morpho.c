@@ -31,7 +31,6 @@ uint8 ** routine_dilatation3(uint8** image, int nrl, int nrh, int ncl, int nch) 
 
   return res;
 }
-
 void compute_all_dilatation3(void) {
   CHECK_ERROR(system("mkdir -p output/morpho/d3"));
 
@@ -50,7 +49,6 @@ void compute_all_dilatation3(void) {
   }
 }
 
-// AND sur le voisinage
 uint8 ** routine_erosion3(uint8** image, int nrl, int nrh, int ncl, int nch) {
 
   uint8 ** res = ui8matrix(nrl, nrh, ncl, nch);
@@ -80,7 +78,6 @@ uint8 ** routine_erosion3(uint8** image, int nrl, int nrh, int ncl, int nch) {
   }
   return res;
 }
-
 void compute_all_erosion3(void) {
   CHECK_ERROR(system("mkdir -p output/morpho/e3"));
 
@@ -94,6 +91,30 @@ void compute_all_erosion3(void) {
 
     uint8 ** res = routine_erosion3(image, nrl, nrh, ncl, nch);
     sprintf(res_path, "output/morpho/e3/ero_t_%.3d.pgm", i);
+    SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
+    free_ui8matrix(res, nrl, nrh, ncl, nch);
+  }
+}
+
+uint8 ** routine_ouverture3(uint8** image, int nrl, int nrh, int ncl, int nch) {
+
+  uint8 ** res = routine_dilatation3( routine_erosion3(image, nrl, nrh, ncl, nch), nrl, nrh, ncl, nch );
+
+  return res;
+}
+void compute_all_ouverture3(void) {
+  CHECK_ERROR(system("mkdir -p output/morpho/o3"));
+
+  char image_path[40];
+  char res_path[40];
+  int nrl, nrh, ncl, nch;
+
+  for(int i = 1; i < 200; i++){
+    sprintf(image_path, "output/sd/E_t_%.3d.pgm", i);
+    uint8 ** image = LoadPGM_ui8matrix(image_path, &nrl, &nrh, &ncl, &nch);
+
+    uint8 ** res = routine_erosion3(image, nrl, nrh, ncl, nch);
+    sprintf(res_path, "output/morpho/o3/ouv_t_%.3d.pgm", i);
     SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
     free_ui8matrix(res, nrl, nrh, ncl, nch);
   }

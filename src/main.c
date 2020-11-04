@@ -20,5 +20,8 @@ int main(void){
   printf("COMPUTE ALL EROSION3\n\n");
   compute_all_erosion3();
 
+  printf("COMPUTE ALL OUVERTURE3\n\n");
+  compute_all_ouverture3();
+
   return 0;
 }
