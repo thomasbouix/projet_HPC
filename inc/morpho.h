@@ -10,4 +10,7 @@
 uint8 ** routine_dilatation3(uint8** image, int nrl, int nrh, int ncl, int nch);
 void compute_all_dilatation3(void);
 
+uint8 ** routine_erosion3(uint8** image, int nrl, int nrh, int ncl, int nch);
+void compute_all_erosion3(void);
+
 #endif

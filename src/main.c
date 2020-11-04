@@ -17,5 +17,8 @@ int main(void){
   printf("COMPUTE ALL DILATATION3\n\n");
   compute_all_dilatation3();
 
+  printf("COMPUTE ALL EROSION3\n\n");
+  compute_all_erosion3();
+
   return 0;
 }
