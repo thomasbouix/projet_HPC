@@ -74,7 +74,7 @@ uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_s
         for(int l = j-kernel_size; l <= j+kernel_size; l++){
           //printf("l=%d(%d)\t", l, img_with_padding[k][l]);
           res |= img_with_padding[k][l];
-          if(res == 1)
+          if(res >= 1)
             break;  // Sortie de la boucle K
         }
       }
