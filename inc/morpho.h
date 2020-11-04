@@ -19,4 +19,8 @@ void compute_all_erosion3(void);
 uint8 ** routine_ouverture3(uint8** image, int nrl, int nrh, int ncl, int nch);
 void compute_all_ouverture3(void);
 
+// erosion(dilatation(X))
+uint8 ** routine_fermture3(uint8** image, int nrl, int nrh, int ncl, int nch);
+void compute_all_fermture3(void);
+
 #endif

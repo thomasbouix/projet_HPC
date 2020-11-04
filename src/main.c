@@ -23,5 +23,8 @@ int main(void){
   printf("COMPUTE ALL OUVERTURE3\n\n");
   compute_all_ouverture3();
 
+  printf("COMPUTE ALL FERMETURE3\n\n");
+  compute_all_fermture3();
+
   return 0;
 }
