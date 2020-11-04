@@ -41,7 +41,7 @@ void compute_fd(int num_image, int threshold){
   }
 
   uint8** outpout_img = routine_FrameDifference(img2, img1, nrl1, nrh1, ncl1, nch1, threshold);
-  sprintf(buff, "output/fd/diff%.3d.pgm", num_image);
+  sprintf(buff, "output/fd/E_t_%.3d.pgm", num_image);
   SavePGM_ui8matrix(outpout_img, nrl1, nrh1, ncl1, nch1, buff);
 
   free_ui8matrix(outpout_img, nrl1, nrh1, ncl1, nch1);
