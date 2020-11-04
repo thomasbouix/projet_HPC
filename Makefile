@@ -6,7 +6,7 @@
 # with a little help of Stephane Piskorski and Joel Falcou
 
 # -- Lile list ----------
-FILE = main.c nrutil.c mouvement.c
+FILE = main.c nrutil.c mouvement.c morpho.c
 
 # -- Paths ----------
 SRC_PATH = src

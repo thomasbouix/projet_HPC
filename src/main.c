@@ -4,6 +4,7 @@
 #include "nrdef.h"
 #include "mouvement.h"
 #include "utils.h"
+#include "morpho.h"
 
 int main(void){
 
@@ -12,6 +13,9 @@ int main(void){
 
   printf("COMPUTE ALL SD STEPS\n\n");
   compute_sd_all_steps();
+
+  printf("COMPUTE ALL DILATATION3\n\n");
+  compute_all_dilatation3();
 
   return 0;
 }

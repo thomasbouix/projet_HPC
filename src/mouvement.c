@@ -1,9 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "nrutil.h"
 #include "mouvement.h"
-#include "utils.h"
 
 #define N 4
 #define V_MIN 1

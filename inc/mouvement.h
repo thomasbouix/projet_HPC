@@ -1,6 +1,12 @@
 #ifndef MOUVEMENT_H
 #define MOUVEMENT_H
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "nrutil.h"
+#include "utils.h"
+
 uint8** routine_FrameDifference(uint8** I_t, uint8** I_t_moins_1, int nrl, int nrh, int ncl, int nch, int theta);
 void compute_fd(int num_image, int threshold);
 void compute_fd_all_steps(int threshold);
