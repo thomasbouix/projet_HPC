@@ -45,6 +45,7 @@ void compute_all_dilatation3(void) {
     uint8 ** res = routine_dilatation3(image, nrl, nrh, ncl, nch);
     sprintf(res_path, "output/morpho/d3/dil_t_%.3d.pgm", i);
     SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
+    free_ui8matrix(image, nrl, nrh, ncl, nch);
     free_ui8matrix(res, nrl, nrh, ncl, nch);
   }
 }
@@ -92,6 +93,7 @@ void compute_all_erosion3(void) {
     uint8 ** res = routine_erosion3(image, nrl, nrh, ncl, nch);
     sprintf(res_path, "output/morpho/e3/ero_t_%.3d.pgm", i);
     SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
+    free_ui8matrix(image, nrl, nrh, ncl, nch);
     free_ui8matrix(res, nrl, nrh, ncl, nch);
   }
 }
@@ -116,6 +118,7 @@ void compute_all_ouverture3(void) {
     uint8 ** res = routine_erosion3(image, nrl, nrh, ncl, nch);
     sprintf(res_path, "output/morpho/o3/ouv_t_%.3d.pgm", i);
     SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
+    free_ui8matrix(image, nrl, nrh, ncl, nch);
     free_ui8matrix(res, nrl, nrh, ncl, nch);
   }
 }
@@ -140,6 +143,7 @@ void compute_all_fermture3(void) {
     uint8 ** res = routine_erosion3(image, nrl, nrh, ncl, nch);
     sprintf(res_path, "output/morpho/f3/fem_t_%.3d.pgm", i);
     SavePGM_ui8matrix(res, nrl, nrh, ncl, nch, res_path);
+    free_ui8matrix(image, nrl, nrh, ncl, nch);
     free_ui8matrix(res, nrl, nrh, ncl, nch);
   }
 }
