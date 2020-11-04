@@ -31,14 +31,14 @@ uint8** LoadPGM_padding_ui8matrix(char *filename, int* nrl, int* nrh, int* ncl, 
 // AND logique sur un voisinage de taille kernel_size
 uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size){
   kernel_size /= 2;
-  int res = 1;
+  int res = 255;
   //printf("kernel_size = %d\n\n", kernel_size);
   uint8** m = ui8matrix(0, height, 0, width);
 
   for(int i = 0; i < height; i++){
     //printf("i=%d\t", i);
     for(int j = 0; j < width; j++){
-      res = 1;
+      res = 255;
       //printf("j=%d\t", j);
       for(int k = i-kernel_size; k <= i+kernel_size; k++){
         //printf("k=%d\t", k);
