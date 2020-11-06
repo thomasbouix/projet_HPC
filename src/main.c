@@ -14,8 +14,8 @@ int main(void){
   printf("COMPUTE ALL SD STEPS\n\n");
   compute_sd_all_steps();
 
-  compute_dilatation("output/sd/E_t_", 5);
-  compute_erosion("output/sd/E_t_", 5);
+  compute_dilatation("output/sd/E_t_", 5, 0);
+  compute_erosion("output/sd/E_t_", 5, 1);
 
   return 0;
 }

@@ -28,6 +28,11 @@ uint8** LoadPGM_padding_ui8matrix(char *filename, int* nrl, int* nrh, int* ncl, 
   return m;
 }
 
+void free_padding_ui8matrix(uint8** img_with_padding, int nrl, int nrh, int ncl, int nch, int padding){
+  img_with_padding[-padding] -= padding*(nch-ncl+1);
+  free_ui8matrix(img_with_padding, nrl, nrh, ncl, nch);
+}
+
 // AND logique sur un voisinage de taille kernel_size
 uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size){
   kernel_size /= 2;
@@ -86,7 +91,7 @@ uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_s
   return m;
 }
 
-void compute_erosion(char* basePath, int kernel_size){
+void compute_erosion(char* basePath, int kernel_size, int save){
   CHECK_ERROR(system("mkdir -p output/erosion"));
   int padding = kernel_size/2;
   char buff[35];
@@ -98,15 +103,16 @@ void compute_erosion(char* basePath, int kernel_size){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
     img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
     output = erosion(img, IMG_ROWS+1, IMG_COLS+1, kernel_size);
-    sprintf(buff, "output/erosion/ero3%.3d.pgm", i);
-    SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
-    img[-padding] -= padding*(nch-ncl+1);
-    free_ui8matrix(img, nrl, nrh, ncl, nch);
+    if(save){
+      sprintf(buff, "output/erosion/ero3%.3d.pgm", i);
+      SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
+    }
+    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
     free_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS);
   }
 }
 
-void compute_dilatation(char* basePath, int kernel_size){
+void compute_dilatation(char* basePath, int kernel_size, int save){
   CHECK_ERROR(system("mkdir -p output/dilatation"));
   int padding = kernel_size/2;
   char buff[35];
@@ -118,10 +124,11 @@ void compute_dilatation(char* basePath, int kernel_size){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
     img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
     output = dilatation(img, IMG_ROWS+1, IMG_COLS+1, kernel_size);
-    sprintf(buff, "output/dilatation/dil3%.3d.pgm", i);
-    SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
-    img[-padding] -= padding*(nch-ncl+1);
-    free_ui8matrix(img, nrl, nrh, ncl, nch);
+    if(save){
+      sprintf(buff, "output/dilatation/dil3%.3d.pgm", i);
+      SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
+    }
+    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
     free_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS);
   }
 }
