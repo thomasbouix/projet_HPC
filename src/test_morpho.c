@@ -12,5 +12,5 @@ void test_erosion() {
 
   free_ui8matrix(m, nrl, nrh, ncl, nch);
 
-  return
+  return;
 }
