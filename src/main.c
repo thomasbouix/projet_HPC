@@ -5,6 +5,8 @@
 #include "mouvement.h"
 #include "utils.h"
 #include "morpho.h"
+#include "vnrutil.h"
+#include "vnrdef.h"
 
 int main(void){
 
