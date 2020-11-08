@@ -26,7 +26,7 @@ uint8** routine_FrameDifference(uint8** I_t, uint8** I_t_moins_1, int nrl, int n
   return E_t;
 }
 
-void compute_fd(int num_image, int threshold){
+void compute_fd(int num_image, int threshold, int save){
   int nrl1, nrh1, ncl1, nch1, nrl2, nrh2, ncl2, nch2;
   char buff[30];
 
@@ -41,19 +41,22 @@ void compute_fd(int num_image, int threshold){
   }
 
   uint8** outpout_img = routine_FrameDifference(img2, img1, nrl1, nrh1, ncl1, nch1, threshold);
-  sprintf(buff, "output/fd/E_t_%.3d.pgm", num_image);
-  SavePGM_ui8matrix(outpout_img, nrl1, nrh1, ncl1, nch1, buff);
+  if(save){
+    sprintf(buff, "output/fd/E_t_%.3d.pgm", num_image);
+    SavePGM_ui8matrix(outpout_img, nrl1, nrh1, ncl1, nch1, buff);
+  }
 
   free_ui8matrix(outpout_img, nrl1, nrh1, ncl1, nch1);
   free_ui8matrix(img1, nrl1, nrh1, ncl1, nch1);
   free_ui8matrix(img2, nrl1, nrh1, ncl1, nch1);
 }
 
-void compute_fd_all_steps(int threshold){
-  CHECK_ERROR(system("mkdir -p output/fd"));
+void compute_fd_all_steps(int threshold, int save){
+  if(save)
+    CHECK_ERROR(system("mkdir -p output/fd"));
 
   for(int i = 1; i < 200; i++)
-    compute_fd(i, threshold);
+    compute_fd(i, threshold, save);
 }
 
 
