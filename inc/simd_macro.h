@@ -6,10 +6,12 @@
 #ifndef __SIMD_MACRO_H__
 #define __SIMD_MACRO_H__
 
+#include "vnrutil.h"
+
 // a remplir
 
-#define vec_load(addr) (_mm_load_ps((float32*)addr))
-#define vec_store(addr,val) (_mm_store_ps((float*) addr, val))
+#define vec_load(addr) (_mm_load_si128((vuint8*)addr))
+#define vec_store(addr,val) (_mm_store_si128((vuint8*) addr, val))
 
 #define vec_left1(a,b) (_mm_shuffle_ps(_mm_shuffle_ps(a, b, _MM_SHUFFLE(0, 0, 3, 3)), b, _MM_SHUFFLE(2, 1, 3, 0))) // sortie : b2 b1 b0 a3
 #define vec_left2(a,b) (_mm_shuffle_ps(a, b, _MM_SHUFFLE(1, 0, 3, 2))) // sortie : b1 b0 a3 a2
@@ -35,5 +37,10 @@
 #define vAVERAGE3(x0,x1,x2) (vec_div3(vec_add3(x0, x1, x2)))
 #define vAVERAGE5(x0,x1,x2,x3,x4) (vec_div5(vec_add5(x0,x1,x2,x3,x4)))
 #define vAVERAGE_2D_9(x0,x1,x2,x3,x4,x5,x6,x7,x8) (vec_div9(vec_add_2D_9(x0,x1,x2,x3,x4,x5,x6,x7,x8)))
+
+#define vABS_DIFF(v0,v1) (_mm_or_si128(_mm_subs_epu8(v0,v1), _mm_subs_epu8(v1,v0)))
+
+#define vCMP_THRESHOLD(vec, threshold) (_mm_cmpgt_epi8(_mm_sub_epi8(vec, init_vuint8(128)), init_vsint8(threshold-128)))
+
 
 #endif // __SIMD_MACRO_H__
