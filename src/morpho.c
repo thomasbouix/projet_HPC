@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "nrutil.h"
-#include "utils.h"
 #include "morpho.h"
 
 

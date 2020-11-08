@@ -1,12 +1,17 @@
 #ifndef MORPHO_H
 #define MORPHO_H
 
-#define IMG_ROWS 239
-#define IMG_COLS 319
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include "nrutil.h"
+  #include "utils.h"
 
-uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size);
-uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_size);
-void compute_dilatation(char* basePath, int kernel_size, int save);
-void compute_erosion(char* basePath, int kernel_size, int save);
+  #define IMG_ROWS 239
+  #define IMG_COLS 319
+
+  uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size);
+  uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_size);
+  void compute_dilatation(char* basePath, int kernel_size, int save);
+  void compute_erosion(char* basePath, int kernel_size, int save);
 
 #endif
