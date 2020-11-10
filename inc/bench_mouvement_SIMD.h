@@ -3,8 +3,7 @@
 
   #include <stdio.h>
   #include <stdlib.h>
-  #include <time.h>
-
+  
   #include "nrutil.h"
   #include "nrdef.h"
   #include "utils.h"
@@ -14,8 +13,8 @@
   #include "mouvement.h"
   #include "mouvement_SIMD.h"
 
-  void mesure_routine_SIMD(void);
-  void mesure_compute_fd_SIMD(void);
+  void mesure_routine_FD_SIMD(void);
+  void mesure_all_fd_SIMD(void);
   void bench_mouvement_SIMD(void);
 
 #endif
