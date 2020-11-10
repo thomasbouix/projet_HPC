@@ -17,8 +17,8 @@
 
 int main(void){
 
-  bench_mouvement_SIMD();
   bench_mouvement();
+  // bench_mouvement_SIMD();
 
   return 0;
 }

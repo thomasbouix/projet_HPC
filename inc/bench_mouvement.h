@@ -13,8 +13,12 @@
 
   #include "mouvement.h"
 
-  void mesure_routine(void);
-  void mesure_compute_fd(void);
+  void mesure_routine_fd(void);
+  void mesure_all_fd(void);
+
+  void mesure_SigmaDelta_1step(void);
+
+
   void bench_mouvement(void);
 
 #endif
