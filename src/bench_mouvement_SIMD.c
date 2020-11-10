@@ -26,7 +26,7 @@ void mesure_routine_FD_SIMD(void) {
 
 void mesure_all_fd_SIMD(void) {
   CHRONO(compute_fd_SIMD(50, 0), cycles);
-  printf("compute_fd_SIMD : %.0f cycles\n", cycles);
+  printf("compute_all_fd_SIMD : %.0f cycles\n", cycles);
 
 }
 
