@@ -59,7 +59,8 @@ uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_s
   return m;
 }
 
-void compute_erosion(char* basePath, int kernel_size, int save){
+void compute_erosion(char* basePath, int kernel_size, int img_rows, int img_cols, int save)
+{
   CHECK_ERROR(system("mkdir -p output/erosion"));
   int padding = kernel_size/2;
   char buff[35];
@@ -70,17 +71,17 @@ void compute_erosion(char* basePath, int kernel_size, int save){
   for(int i = 1; i < 200; i++){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
     img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
-    output = erosion(img, IMG_ROWS+1, IMG_COLS+1, kernel_size);
+    output = erosion(img, img_rows, img_cols, kernel_size);
     if(save){
       sprintf(buff, "output/erosion/ero3%.3d.pgm", i);
-      SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
+      SavePGM_ui8matrix(output, 0, img_rows-1, 0, img_cols-1, buff);
     }
     free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
-    free_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS);
+    free_ui8matrix(output, 0, img_rows-1, 0, img_cols-1);
   }
 }
 
-void compute_dilatation(char* basePath, int kernel_size, int save){
+void compute_dilatation(char* basePath, int kernel_size, int img_rows, int img_cols, int save){
   CHECK_ERROR(system("mkdir -p output/dilatation"));
   int padding = kernel_size/2;
   char buff[35];
@@ -91,12 +92,12 @@ void compute_dilatation(char* basePath, int kernel_size, int save){
   for(int i = 1; i < 200; i++){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
     img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
-    output = dilatation(img, IMG_ROWS+1, IMG_COLS+1, kernel_size);
+    output = dilatation(img, img_rows, img_cols, kernel_size);
     if(save){
       sprintf(buff, "output/dilatation/dil3%.3d.pgm", i);
-      SavePGM_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS, buff);
+      SavePGM_ui8matrix(output, 0, img_rows-1, 0, img_cols-1, buff);
     }
     free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
-    free_ui8matrix(output, 0, IMG_ROWS, 0, IMG_COLS);
+    free_ui8matrix(output, 0, img_rows-1, 0, img_cols-1);
   }
 }

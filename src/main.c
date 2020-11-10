@@ -15,10 +15,16 @@
 #include "bench_mouvement.h"
 #include "bench_mouvement_SIMD.h"
 
+#include "test_morpho.h"
+
 int main(void){
 
   bench_mouvement();
   bench_mouvement_SIMD();
+
+  //test_erosion();
+
+
 
   return 0;
 }

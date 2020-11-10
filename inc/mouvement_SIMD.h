@@ -9,7 +9,8 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-uint8** routine_FrameDifference_SIMD(uint8** I_t, uint8** I_t_moins_1, int nrl, int nrh, int ncl, int nch, int theta);
+vuint8** routine_FrameDifference_SIMD(vuint8** I_t, vuint8** I_t_moins_1, int vi0, int vi1, int vj0, int vj1, int theta);
 void compute_fd_SIMD(int threshold, int save);
+void SigmaDelta_step0_SIMD(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, int* nch);
 
 #endif
