@@ -3,8 +3,7 @@
 
   #include <stdio.h>
   #include <stdlib.h>
-  #include <time.h>
-
+  
   #include "nrutil.h"
   #include "nrdef.h"
   #include "utils.h"
