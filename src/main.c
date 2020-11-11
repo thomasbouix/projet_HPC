@@ -17,11 +17,11 @@
 
 #include "test_morpho.h"
 
-int main(void){
+int main(int argc, char * argv[]) {
 
-  // bench_mouvement();
+  bench_mouvement();
   // bench_mouvement_SIMD();
-  test_morpho();
+  // test_morpho();
 
   return 0;
 }

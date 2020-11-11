@@ -50,7 +50,6 @@ void compute_fd_all_steps(int threshold, int save){
     compute_fd(i, threshold, save);
 }
 
-
 void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, int* nch){
   *M_0 = LoadPGM_ui8matrix("car3/car_3000.pgm", nrl, nrh, ncl, nch);
   *V_0 = ui8matrix(*nrl,*nrh, *ncl, *nch);
@@ -93,6 +92,46 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
         E_t[i][j] = (uint8)0;
       else
         E_t[i][j] = (uint8)255;
+    }
+  }
+
+  *M_t_save = M_t;
+  *V_t_save = V_t;
+  free_ui8matrix(O_t, nrl, nrh, ncl, nch);
+  return E_t;
+}
+
+uint8** SigmaDelta_1step_opti(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch){
+  uint8** M_t = ui8matrix(nrl, nrh, ncl, nch);
+  uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
+  uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
+  uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
+
+  uint8 M_0;   // M_t_moins_1[i][j]
+  uint8 V_0;   // V_t_moins_1[i][j]
+  uint8 I_1;   // I_t[i][j]
+  uint8 O_1;   // O_t[i][j]
+
+  for(int i = nrl; i <= nrh; i++){
+    for(int j = ncl; j <= nch; j++){
+      M_0 = M_t_moins_1[i][j];
+      V_0 = V_t_moins_1[i][j];
+      I_1 = I_t[i][j];
+
+      if( M_0 < I_1 )       M_t[i][j] = M_0 + 1;
+      else if( M_0 > I_1 )  M_t[i][j] = M_0 - 1;
+      else                  M_t[i][j] = M_0;
+
+      O_t[i][j] = abs( M_t[i][j] - I_1 );
+
+      if(V_0 < N*O_1)       V_t[i][j] = V_0 + 1;
+      else if(V_0 > N*O_1)  V_t[i][j] = V_0 - 1;
+      else                  V_t[i][j] = V_0;
+
+      V_t[i][j] = MAX(MIN(V_t[i][j], V_MAX), V_MIN);
+
+      if(O_1 < V_t[i][j])   E_t[i][j] = (uint8) 0;
+      else                  E_t[i][j] = (uint8) 255;
     }
   }
 

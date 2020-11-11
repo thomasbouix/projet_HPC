@@ -19,6 +19,7 @@
   void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, int* nch);
   // calcul M_t et V_t à partir de leurs précédents, et retourne E_t
   uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch);
+  uint8** SigmaDelta_1step_opti(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch);
   void compute_sd_all_steps(void);
 
 #endif
