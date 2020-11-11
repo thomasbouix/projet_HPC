@@ -19,12 +19,11 @@
 
 int main(void){
 
-  bench_mouvement();
-  bench_mouvement_SIMD();
+  /*bench_mouvement();
+  bench_mouvement_SIMD();*/
 
   //test_erosion();
 
-
-
+  compute_sd_SIMD_all_steps(1);
   return 0;
 }

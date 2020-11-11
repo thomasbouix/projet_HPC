@@ -68,7 +68,7 @@ void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, 
 uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch){
   uint8** M_t = ui8matrix(nrl, nrh, ncl, nch);
   uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
-  uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
+  uint8 O_t, N_O_t;
   uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
   //printf("\nnrl:%d, nrh:%d, ncl:%d, nch:%d\n", nrl, nrh, ncl, nch);
   for(int i = nrl; i <= nrh; i++){
@@ -82,18 +82,19 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
       else
         M_t[i][j] = M_t_moins_1[i][j];
 
-      O_t[i][j] = abs(M_t[i][j] - I_t[i][j]);
+      O_t = abs(M_t[i][j] - I_t[i][j]);
+      N_O_t = MIN(N*O_t, 255);
 
-      if(V_t_moins_1[i][j] < N*O_t[i][j])
+      if(V_t_moins_1[i][j] < N_O_t)
         V_t[i][j] = V_t_moins_1[i][j] + 1;
-      else if(V_t_moins_1[i][j] > N*O_t[i][j])
+      else if(V_t_moins_1[i][j] > N_O_t)
         V_t[i][j] = V_t_moins_1[i][j] - 1;
       else
         V_t[i][j] = V_t_moins_1[i][j];
 
       V_t[i][j] = MAX(MIN(V_t[i][j], V_MAX), V_MIN);
 
-      if(O_t[i][j] < V_t[i][j])
+      if(O_t < V_t[i][j])
         E_t[i][j] = (uint8)0;
       else
         E_t[i][j] = (uint8)255;
@@ -102,7 +103,6 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
 
   *M_t_save = M_t;
   *V_t_save = V_t;
-  free_ui8matrix(O_t, nrl, nrh, ncl, nch);
   return E_t;
 }
 
