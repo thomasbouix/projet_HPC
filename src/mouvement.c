@@ -123,6 +123,7 @@ uint8** SigmaDelta_1step_opti(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_
       else                  M_t[i][j] = M_0;
 
       O_t[i][j] = abs( M_t[i][j] - I_1 );
+      O_1 = O_t[i][j];
 
       if(V_0 < N*O_1)       V_t[i][j] = V_0 + 1;
       else if(V_0 > N*O_1)  V_t[i][j] = V_0 - 1;

@@ -83,10 +83,12 @@ void bench_mouvement(void) {
 
   printf("====================\n");
   printf("BENCH_MOUVEMENT\n");
-  mesure_routine_fd();
-  mesure_SigmaDelta_1step();
-  mesure_SigmaDelta_1step_opti();
-  mesure_all_fd();
+  printf("Frame différence =>\n");
+  printf("\t"); mesure_routine_fd();
+  printf("\t"); mesure_all_fd();
+  printf("Sigma-Delta =>\n");
+  printf("\t"); mesure_SigmaDelta_1step();
+  printf("\t"); mesure_SigmaDelta_1step_opti();
   printf("====================\n");
   return;
 }
