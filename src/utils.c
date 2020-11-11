@@ -87,3 +87,9 @@ uint8** add_borders(uint8 **m, int height, int width, int border)
   }
   return m_with_borders;
 }
+
+void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch) {
+  for (int i=nrl; i<nrh; i++)
+    for (int j=ncl; j<nch; j++)
+      (*m)[i][j] = 0;
+}

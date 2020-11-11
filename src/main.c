@@ -20,8 +20,8 @@
 int main(void){
 
   // bench_mouvement();
-  bench_mouvement_SIMD();
-  // test_morpho();
+  // bench_mouvement_SIMD();
+  test_morpho();
 
   return 0;
 }

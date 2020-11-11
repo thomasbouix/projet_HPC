@@ -41,4 +41,5 @@
   void free_padding_ui8matrix(uint8** img_with_padding, int nrl, int nrh, int ncl, int nch, int padding);
   vuint8** LoadPGM_vui8matrix(char *filename, int* si0, int* si1, int* sj0, int* sj1, int* vi0, int* vi1, int* vj0, int* vj1);
   uint8** add_borders(uint8 **m, int height, int width, int border);
+	void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch);
 #endif
