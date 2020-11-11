@@ -63,13 +63,13 @@ void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, 
 uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch){
   uint8** M_t = ui8matrix(nrl, nrh, ncl, nch);
   uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
-  uint8 O_t, N_O_t;
   uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
 
-  uint8 M_0;   // M_t_moins_1[i][j]
-  uint8 V_0;   // V_t_moins_1[i][j]
-  uint8 I_1;   // I_t[i][j]
-  uint8 O_1;   // O_t[i][j]
+  uint8 M_0;      // M_t_moins_1[i][j]
+  uint8 V_0;      // V_t_moins_1[i][j]
+  uint8 I_1;      // I_t[i][j]
+  uint8 O_t;      // O_t[i][j]
+  uint8 N_O_t;    // N * O_t[i][j] saturé
 
   for(int i = nrl; i <= nrh; i++){
     for(int j = ncl; j <= nch; j++){
@@ -81,17 +81,17 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
       else if( M_0 > I_1 )  M_t[i][j] = M_0 - 1;
       else                  M_t[i][j] = M_0;
 
-      O_t[i][j] = abs( M_t[i][j] - I_1 );
-      O_1 = O_t[i][j];
+      O_t = abs(M_t[i][j] - I_1);
+      N_O_t = MIN(N*O_t, 255);
 
-      if(V_0 < N*O_1)       V_t[i][j] = V_0 + 1;
-      else if(V_0 > N*O_1)  V_t[i][j] = V_0 - 1;
+      if(V_0 < N_O_t)       V_t[i][j] = V_0 + 1;
+      else if(V_0 > N_O_t)  V_t[i][j] = V_0 - 1;
       else                  V_t[i][j] = V_0;
 
       V_t[i][j] = MAX(MIN(V_t[i][j], V_MAX), V_MIN);
 
-      if(O_1 < V_t[i][j])   E_t[i][j] = (uint8) 0;
-      else                  E_t[i][j] = (uint8) 255;
+      if (O_t < V_t[i][j])   E_t[i][j] = (uint8) 0;
+      else                   E_t[i][j] = (uint8) 255;
     }
   }
 
