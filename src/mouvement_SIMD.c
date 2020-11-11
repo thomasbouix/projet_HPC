@@ -35,7 +35,7 @@ void compute_fd_SIMD(int threshold, int save)
 
   for(int i = 1; i < 200; i++){
     sprintf(buff, "car3/car_3%.3d.pgm", i);
-    img1 = LoadPGM_vui8matrix("car3/car_3000.pgm", &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
+    img1 = LoadPGM_vui8matrix(buff, &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
     output_img = (uint8**) routine_FrameDifference_SIMD(img1, img0, vi0, vi1, vj0, vj1, threshold);
     if(save){
       sprintf(buff, "output/fd_SIMD/out_3%.3d.pgm", i);
