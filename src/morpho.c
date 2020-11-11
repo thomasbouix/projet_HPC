@@ -1,6 +1,5 @@
 #include "morpho.h"
 
-
 // AND logique sur un voisinage de taille kernel_size
 uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size){
   kernel_size /= 2;

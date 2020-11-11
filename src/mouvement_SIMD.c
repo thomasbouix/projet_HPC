@@ -1,9 +1,5 @@
 #include "mouvement_SIMD.h"
 
-#define N 4
-#define V_MIN 1
-#define V_MAX 254
-
 vuint8** routine_FrameDifference_SIMD(vuint8** I_t, vuint8** I_t_moins_1, int vi0, int vi1, int vj0, int vj1, int theta)
 {
   vuint8 ** E_t = vui8matrix(vi0, vi1, vj0, vj1);
@@ -35,7 +31,7 @@ void compute_fd_SIMD(int threshold, int save)
 
   for(int i = 1; i < 200; i++){
     sprintf(buff, "car3/car_3%.3d.pgm", i);
-    img1 = LoadPGM_vui8matrix("car3/car_3000.pgm", &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
+    img1 = LoadPGM_vui8matrix(buff, &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
     output_img = (uint8**) routine_FrameDifference_SIMD(img1, img0, vi0, vi1, vj0, vj1, threshold);
     if(save){
       sprintf(buff, "output/fd_SIMD/out_3%.3d.pgm", i);

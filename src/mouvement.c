@@ -1,9 +1,5 @@
 #include "mouvement.h"
 
-#define N 4
-#define V_MIN 1
-#define V_MAX 254
-
 uint8** routine_FrameDifference(uint8** I_t, uint8** I_t_moins_1, int nrl, int nrh, int ncl, int nch, int theta){
 
   uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
@@ -54,7 +50,6 @@ void compute_fd_all_steps(int threshold, int save){
     compute_fd(i, threshold, save);
 }
 
-
 void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, int* nch){
   *M_0 = LoadPGM_ui8matrix("car3/car_3000.pgm", nrl, nrh, ncl, nch);
   *V_0 = ui8matrix(*nrl,*nrh, *ncl, *nch);
@@ -68,36 +63,35 @@ void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, 
 uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch){
   uint8** M_t = ui8matrix(nrl, nrh, ncl, nch);
   uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
-  uint8 O_t, N_O_t;
   uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
-  //printf("\nnrl:%d, nrh:%d, ncl:%d, nch:%d\n", nrl, nrh, ncl, nch);
+
+  uint8 M_0;      // M_t_moins_1[i][j]
+  uint8 V_0;      // V_t_moins_1[i][j]
+  uint8 I_1;      // I_t[i][j]
+  uint8 O_t;      // O_t[i][j]
+  uint8 N_O_t;    // N * O_t[i][j] saturé
+
   for(int i = nrl; i <= nrh; i++){
     for(int j = ncl; j <= nch; j++){
-      //printf("i:%d,j:%d\t",i,j);
+      M_0 = M_t_moins_1[i][j];
+      V_0 = V_t_moins_1[i][j];
+      I_1 = I_t[i][j];
 
-      if(M_t_moins_1[i][j] < I_t[i][j])
-        M_t[i][j] = M_t_moins_1[i][j] + 1;
-      else if(M_t_moins_1[i][j] > I_t[i][j])
-        M_t[i][j] = M_t_moins_1[i][j] - 1;
-      else
-        M_t[i][j] = M_t_moins_1[i][j];
+      if( M_0 < I_1 )       M_t[i][j] = M_0 + 1;
+      else if( M_0 > I_1 )  M_t[i][j] = M_0 - 1;
+      else                  M_t[i][j] = M_0;
 
-      O_t = abs(M_t[i][j] - I_t[i][j]);
+      O_t = abs(M_t[i][j] - I_1);
       N_O_t = MIN(N*O_t, 255);
 
-      if(V_t_moins_1[i][j] < N_O_t)
-        V_t[i][j] = V_t_moins_1[i][j] + 1;
-      else if(V_t_moins_1[i][j] > N_O_t)
-        V_t[i][j] = V_t_moins_1[i][j] - 1;
-      else
-        V_t[i][j] = V_t_moins_1[i][j];
+      if(V_0 < N_O_t)       V_t[i][j] = V_0 + 1;
+      else if(V_0 > N_O_t)  V_t[i][j] = V_0 - 1;
+      else                  V_t[i][j] = V_0;
 
       V_t[i][j] = MAX(MIN(V_t[i][j], V_MAX), V_MIN);
 
-      if(O_t < V_t[i][j])
-        E_t[i][j] = (uint8)0;
-      else
-        E_t[i][j] = (uint8)255;
+      if (O_t < V_t[i][j])   E_t[i][j] = (uint8) 0;
+      else                   E_t[i][j] = (uint8) 255;
     }
   }
 

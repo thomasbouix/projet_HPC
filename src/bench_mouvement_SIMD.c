@@ -8,18 +8,20 @@ static double cycles;
 
 void mesure_routine_FD_SIMD(void) {
 
-  int nrl, nrh, ncl, nch;
+  int si0, si1, sj0, sj1;
+  int vi0, vi1, vj0, vj1;
 
-  uint8** img0 = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
-  uint8** img1 = LoadPGM_ui8matrix("car3/car_3001.pgm", &nrl, &nrh, &ncl, &nch);
-  uint8** fd_simd;
+  vuint8** img0 = LoadPGM_vui8matrix("car3/car_3000.pgm", &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
+  vuint8** img1 = LoadPGM_vui8matrix("car3/car_3001.pgm", &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
+  vuint8** fd_simd = NULL;
 
-  CHRONO(fd_simd = routine_FrameDifference_SIMD(img1, img0, nrl, nrh, ncl, nch, 50), cycles);
+  // execute (nrun * niter) fois routine_fd_SIMD sans nettoyer la sortie
+  CHRONO(fd_simd = routine_FrameDifference_SIMD(img1, img0, vi0, vi1, vj0, vj1, 50), cycles);
   printf("routine_FrameDifference_SIMD : %.0f cycles\n", cycles);
 
-  free_ui8matrix(img0, nrl, nrh, ncl, nch);
-  free_ui8matrix(img1, nrl, nrh, ncl, nch);
-  free_ui8matrix(fd_simd, nrl, nrh, ncl, nch);
+  free_vui8matrix(img0, vi0, vi1, vj0, vj1);
+  free_vui8matrix(img1, vi0, vi1, vj0, vj1);
+  free_vui8matrix(fd_simd, vi0, vi1, vj0, vj1);
 
   return;
 }
@@ -32,10 +34,12 @@ void mesure_all_fd_SIMD(void) {
 
 void bench_mouvement_SIMD(void) {
 
-  printf("====================\n");
   printf("BENCH_MOUVEMENT_SIMD\n");
-  mesure_routine_FD_SIMD();
-  mesure_all_fd_SIMD();
+  printf("--------------------\n");
+  printf("Frame différence =>\n");
+  printf("\t"); mesure_routine_FD_SIMD();
+  // printf("\t"); mesure_all_fd_SIMD();
+  printf("Sigma-Delta =>\n");
   printf("====================\n");
   return;
 }

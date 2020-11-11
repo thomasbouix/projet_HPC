@@ -17,13 +17,13 @@
 
 #include "test_morpho.h"
 
-int main(void){
+int main(int argc, char * argv[]) {
 
-  /*bench_mouvement();
-  bench_mouvement_SIMD();*/
-
-  //test_erosion();
+  // bench_mouvement();
+  // bench_mouvement_SIMD();
+  // test_morpho();
 
   compute_sd_SIMD_all_steps(1);
+
   return 0;
 }

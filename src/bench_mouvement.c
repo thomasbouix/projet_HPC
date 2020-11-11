@@ -52,16 +52,18 @@ void mesure_SigmaDelta_1step(void) {
   free_ui8matrix(V_1, nrl, nrh, ncl, nch);
   free_ui8matrix(I_1, nrl, nrh, ncl, nch);
   free_ui8matrix(E_1, nrl, nrh, ncl, nch);
-
 }
 
 void bench_mouvement(void) {
 
-  printf("====================\n");
   printf("BENCH_MOUVEMENT\n");
-  mesure_routine_fd();
-  mesure_SigmaDelta_1step();
-  mesure_all_fd();
+  printf("--------------------\n");
+  printf("Frame différence =>\n");
+  printf("\t"); mesure_routine_fd();
+  // printf("\t"); mesure_all_fd();
+  printf("Sigma-Delta =>\n");
+  printf("\t"); mesure_SigmaDelta_1step();
+  // printf("\t"); mesure_all_sd();
   printf("====================\n");
   return;
 }
