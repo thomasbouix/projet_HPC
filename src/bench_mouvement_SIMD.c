@@ -34,10 +34,12 @@ void mesure_all_fd_SIMD(void) {
 
 void bench_mouvement_SIMD(void) {
 
-  printf("====================\n");
   printf("BENCH_MOUVEMENT_SIMD\n");
-  mesure_routine_FD_SIMD();
-  mesure_all_fd_SIMD();
+  printf("--------------------\n");
+  printf("Frame différence =>\n");
+  printf("\t"); mesure_routine_FD_SIMD();
+  // printf("\t"); mesure_all_fd_SIMD();
+  printf("Sigma-Delta =>\n");
   printf("====================\n");
   return;
 }

@@ -75,8 +75,8 @@ void test_dilatation(void) {
 
 void test_morpho(void) {
 
-  printf("====================\n");
-  printf("TEST_MORPHO\n\n");
+  printf("TEST_MORPHO\n");
+  printf("--------------------\n");
   test_erosion();
   printf("===\n");
   test_dilatation();
