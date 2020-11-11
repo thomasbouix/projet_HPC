@@ -60,8 +60,8 @@ void bench_mouvement(void) {
   printf("====================\n");
   printf("BENCH_MOUVEMENT\n");
   mesure_routine_fd();
-  mesure_SigmaDelta_1step();
-  mesure_all_fd();
+  // mesure_SigmaDelta_1step();
+  // mesure_all_fd();
   printf("====================\n");
   return;
 }

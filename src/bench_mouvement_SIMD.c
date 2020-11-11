@@ -15,6 +15,7 @@ void mesure_routine_FD_SIMD(void) {
   vuint8** img1 = LoadPGM_vui8matrix("car3/car_3001.pgm", &si0, &si1, &sj0, &sj1, &vi0, &vi1, &vj0, &vj1);
   vuint8** fd_simd = NULL;
 
+  // execute (nrun * niter) fois routine_fd_SIMD sans nettoyer la sortie
   CHRONO(fd_simd = routine_FrameDifference_SIMD(img1, img0, vi0, vi1, vj0, vj1, 50), cycles);
   printf("routine_FrameDifference_SIMD : %.0f cycles\n", cycles);
 

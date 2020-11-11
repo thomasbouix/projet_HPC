@@ -19,12 +19,9 @@
 
 int main(void){
 
-  bench_mouvement();
+  // bench_mouvement();
   bench_mouvement_SIMD();
-
-  //test_erosion();
-
-
+  // test_morpho();
 
   return 0;
 }

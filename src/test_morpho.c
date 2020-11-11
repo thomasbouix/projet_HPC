@@ -1,6 +1,6 @@
 #include "test_morpho.h"
 
-void test_erosion() {
+void test_erosion(void) {
 
   long nrl = 0;
   long nrh = 4;
@@ -35,6 +35,16 @@ void test_erosion() {
 
   free_ui8matrix(m_ero, nrl, nrh, ncl, nch);
   free_padding_ui8matrix(m_with_borders, nrl-border, nrh+border, ncl-border, nch+border, 1);
+
+  return;
+}
+
+void test_morpho(void) {
+
+  printf("====================\n");
+  printf("TEST_MORPHO\n");
+  test_erosion();
+  printf("====================\n");
 
   return;
 }

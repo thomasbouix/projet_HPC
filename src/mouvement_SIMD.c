@@ -1,9 +1,5 @@
 #include "mouvement_SIMD.h"
 
-#define N 4
-#define V_MIN 1
-#define V_MAX 254
-
 vuint8** routine_FrameDifference_SIMD(vuint8** I_t, vuint8** I_t_moins_1, int vi0, int vi1, int vj0, int vj1, int theta)
 {
   vuint8 ** E_t = vui8matrix(vi0, vi1, vj0, vj1);
