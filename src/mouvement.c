@@ -63,7 +63,7 @@ void SigmaDelta_step0(uint8*** M_0, uint8*** V_0, int* nrl, int* nrh, int* ncl, 
 uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moins_1, uint8*** V_t_save, uint8** I_t, int nrl, int nrh, int ncl, int nch){
   uint8** M_t = ui8matrix(nrl, nrh, ncl, nch);
   uint8** V_t = ui8matrix(nrl, nrh, ncl, nch);
-  uint8** O_t = ui8matrix(nrl, nrh, ncl, nch);
+  uint8 O_t, N_O_t;
   uint8** E_t = ui8matrix(nrl, nrh, ncl, nch);
 
   uint8 M_0;   // M_t_moins_1[i][j]
@@ -97,7 +97,6 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
 
   *M_t_save = M_t;
   *V_t_save = V_t;
-  free_ui8matrix(O_t, nrl, nrh, ncl, nch);
   return E_t;
 }
 
