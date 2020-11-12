@@ -93,3 +93,33 @@ void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch) {
     for (int j=ncl; j<=nch; j++)
       (*m)[i][j] = 0;
 }
+
+
+vbits** convert_to_binary(uint8** img, int img_height, int img_width)
+{
+  int indice;
+  // Nombre de vecteurs de 128 bits necessaire pour représenter toutes les colonnes de l'image
+  int nb_vbits_col = ceil((float)width/128);
+
+  // Tableau de uint64_t permettant la convertion de l'image en binaire
+  uint64_t *line_pixels = (uint64_t*)malloc(nb_vbits_col*2*sizeof(uint64_t));
+  for(int i = 0; i < nb_vbits_col*2; i++)
+    line_pixels[i] = 0;
+
+  // image de height lignes et nb_vbits_col * 128bits colonnes
+  vbits** converted_img = (vbits**)vui32matrix(0, height-1, 0, nb_vbits_col-1);
+
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < width; j++){
+      indice = j/64;
+      line_pixels[indice] = line_pixels[indice] << 1;
+      if(img[i][j] == 255)
+        line_pixels[indice]++;
+    }
+    for(int k = 0; k < nb_vbits_col*2; k+=2)
+      vec_store(&converted_img[i][k/2], _mm_set_epi64x(line_pixels[k], line_pixels[k+1]));
+  }
+
+  free(line_pixels);
+  return converted_img;
+}
