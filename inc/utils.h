@@ -13,6 +13,9 @@
 	#endif
 
 	#include "vnrdef.h"
+	#include <math.h>
+	#include <stdint.h>
+	#include "simd_macro.h"
 
 	// Error if a is true
 	#define CHECK_ERROR(a)                        \
@@ -46,4 +49,6 @@
 	void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch);
 	vbits** convert_to_binary(uint8** img, size_t height, size_t width);
 	uint8** convert_from_binary(vbits** binary_img, int height, int width);
+	void free_vbitsmatrix(vbits **m, int height, int width);
+	
 #endif

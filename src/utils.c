@@ -130,41 +130,6 @@ vbits** convert_to_binary(uint8** img, size_t height, size_t width)
   return converted_img;
 }
 
-vbits** convert_to_binary(uint8** img, size_t height, size_t width)
-{
-  int indice;
-  // Nombre de vecteurs de 128 bits necessaire pour représenter toutes les colonnes de l'image
-  int nb_vbits_col = ceil((float)width/128);
-  int nb_unused_col = (128-(width%128))%128;
-
-  // Tableau de uint64_t permettant la convertion de l'image en binaire
-  uint64_t *line_pixels = (uint64_t*)malloc(nb_vbits_col*2*sizeof(uint64_t));
-  for(int i = 0; i < nb_vbits_col*2; i++)
-    line_pixels[i] = 0;
-
-  // image de height lignes et nb_vbits_col * 128bits colonnes
-  vbits** converted_img = (vbits**)vui32matrix(0, height-1, 0, nb_vbits_col-1);
-
-  for(int i = 0; i < height; i++){
-    for(int j = 0; j < width; j++){
-      indice = j/64;
-      line_pixels[indice] = line_pixels[indice] << 1;
-      if(img[i][j] == 255)
-        line_pixels[indice]++;
-    }
-    if(nb_unused_col > 64)
-      line_pixels[nb_vbits_col*2-2] = line_pixels[nb_vbits_col*2-2] << (nb_unused_col-64);
-    else if(nb_unused_col < 64)
-      line_pixels[nb_vbits_col*2-1] = line_pixels[nb_vbits_col*2-1] << (nb_unused_col-64);
-
-    for(int k = 0; k < nb_vbits_col*2; k+=2){
-      vec_store(&converted_img[i][k/2], _mm_set_epi64x((line_pixels[k+1] << 32) | (line_pixels[k+1] >> 32), (line_pixels[k] << 32) | (line_pixels[k] >> 32)));
-    }
-  }
-  free(line_pixels);
-  return converted_img;
-}
-
 uint8** convert_from_binary(vbits** binary_img, int height, int width)
 {
   uint8** m;
@@ -205,4 +170,9 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
     }
   }
   return m;
+}
+
+void free_vbitsmatrix(vbits **m, int height, int width)
+{
+  free_vui32matrix(m, 0, height-1, 0, ceil((float)width/128)-1);
 }
