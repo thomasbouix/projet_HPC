@@ -23,7 +23,7 @@ int main(int argc, char * argv[]) {
   // bench_mouvement_SIMD();
   // test_morpho();
 
-  //compute_sd_SIMD_all_steps(1);
+  compute_sd_SIMD_all_steps(1);
 
   /*int nrl, nrh, ncl, nch;
   uint8** m = LoadPGM_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch);
@@ -36,5 +36,6 @@ int main(int argc, char * argv[]) {
   free_ui8matrix(m,  nrl,  nrh,  ncl,  nch);
   free_ui8matrix(m2,  nrl,  nrh,  ncl, nch);
   free_vbitsmatrix(v, height, width);*/
+
   return 0;
 }

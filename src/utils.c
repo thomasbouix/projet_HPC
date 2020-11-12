@@ -56,10 +56,7 @@ vuint8** LoadPGM_vui8matrix(char *filename, int* si0, int* si1, int* sj0, int* s
   uint8** img = LoadPGM_ui8matrix(filename, si0, si1, sj0, sj1);
   s2v(*si0, *si1, *sj0, *sj1, card, vi0, vi1, vj0, vj1);
 
-  vuint8** img_vuint8 = vui8matrix_map(*vi0, *vi1, *vj0, *vj1);
-  int ncol = (*(vj1) - *(vj0)) + 1;
-  img_vuint8 = vui8matrix_map_1D_pitch(img_vuint8, *vi0, *vi1, *vj0, *vj1, img[0], ncol);
-  free(img);
+  vuint8** img_vuint8 = (vuint8**) img;
   return img_vuint8;
 }
 
