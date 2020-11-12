@@ -129,3 +129,80 @@ vbits** convert_to_binary(uint8** img, size_t height, size_t width)
   free(line_pixels);
   return converted_img;
 }
+
+vbits** convert_to_binary(uint8** img, size_t height, size_t width)
+{
+  int indice;
+  // Nombre de vecteurs de 128 bits necessaire pour représenter toutes les colonnes de l'image
+  int nb_vbits_col = ceil((float)width/128);
+  int nb_unused_col = (128-(width%128))%128;
+
+  // Tableau de uint64_t permettant la convertion de l'image en binaire
+  uint64_t *line_pixels = (uint64_t*)malloc(nb_vbits_col*2*sizeof(uint64_t));
+  for(int i = 0; i < nb_vbits_col*2; i++)
+    line_pixels[i] = 0;
+
+  // image de height lignes et nb_vbits_col * 128bits colonnes
+  vbits** converted_img = (vbits**)vui32matrix(0, height-1, 0, nb_vbits_col-1);
+
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < width; j++){
+      indice = j/64;
+      line_pixels[indice] = line_pixels[indice] << 1;
+      if(img[i][j] == 255)
+        line_pixels[indice]++;
+    }
+    if(nb_unused_col > 64)
+      line_pixels[nb_vbits_col*2-2] = line_pixels[nb_vbits_col*2-2] << (nb_unused_col-64);
+    else if(nb_unused_col < 64)
+      line_pixels[nb_vbits_col*2-1] = line_pixels[nb_vbits_col*2-1] << (nb_unused_col-64);
+
+    for(int k = 0; k < nb_vbits_col*2; k+=2){
+      vec_store(&converted_img[i][k/2], _mm_set_epi64x((line_pixels[k+1] << 32) | (line_pixels[k+1] >> 32), (line_pixels[k] << 32) | (line_pixels[k] >> 32)));
+    }
+  }
+  free(line_pixels);
+  return converted_img;
+}
+
+uint8** convert_from_binary(vbits** binary_img, int height, int width)
+{
+  uint8** m;
+  m = ui8matrix(0, height-1, 0, width-1);
+
+  int nb_vbits_col = ceil((float)width/128);
+  int nb_unused_col = (128-(width%128))%128;
+  uint64_t line_pixels_lo;
+  uint64_t line_pixels_hi;
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < nb_vbits_col; j++){
+      line_pixels_lo = _mm_extract_epi64(vec_load(&binary_img[i][j]), 1);
+      line_pixels_lo = (line_pixels_lo << 32) | (line_pixels_lo >> 32);
+      line_pixels_hi = _mm_extract_epi64(vec_load(&binary_img[i][j]), 0);
+      line_pixels_hi = (line_pixels_hi << 32) | (line_pixels_hi >> 32);
+
+      for(int k = 63; k >= 0; k--){
+        int indice = (j*128)+k;
+
+        if(indice < width){
+          if(line_pixels_hi & 1)
+            m[i][indice] = 255;
+          else
+            m[i][indice] = 0;
+        }
+
+        indice =(j*128)+k+64;
+        if(indice < width){
+          if(line_pixels_lo & 1)
+            m[i][indice] = 255;
+          else
+            m[i][indice] = 0;
+        }
+
+        line_pixels_lo >>= 1;
+        line_pixels_hi >>= 1;
+      }
+    }
+  }
+  return m;
+}

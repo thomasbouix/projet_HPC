@@ -45,4 +45,5 @@
   uint8** add_borders(uint8 **m, int height, int width, int border);
 	void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch);
 	vbits** convert_to_binary(uint8** img, size_t height, size_t width);
+	uint8** convert_from_binary(vbits** binary_img, int height, int width);
 #endif
