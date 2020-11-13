@@ -10,7 +10,9 @@
 
 #include "mouvement.h"
 #include "mouvement_SIMD.h"
+
 #include "morpho.h"
+#include "morpho_SIMD.h"
 
 #include "bench_mouvement.h"
 #include "bench_mouvement_SIMD.h"
@@ -25,19 +27,23 @@ int main(int argc, char * argv[]) {
   // bench_mouvement_SIMD();
   // test_morpho();
 
-  compute_sd_SIMD_all_steps(1);
+  //compute_sd_SIMD_all_steps(1);
+  //compute_dilatation("output/sd_SIMD/E_t_", 3, 1);
+  compute_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 1);
 
-  /*int nrl, nrh, ncl, nch;
-  uint8** m = LoadPGM_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch);
-  int height = nrh - nrl + 1;
-  int width = nch - ncl + 1;
+  /*int height = 240;
+  int width = 320;
+  int nb_vbits_col = ceil((float)width/128);
+
+  int nrl, nrh, ncl, nch;
+  uint8** m = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_106.pgm", &nrl, &nrh, &ncl, &nch, 1);
+  uint8** res_m = erosion(m, height, width, 3);
+  //display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
+
   vbits** v = convert_to_binary(m, height, width);
-	uint8** m2 = convert_from_binary(v, height, width);
-  //display_ui8matrix (m,nrl,nrh,ncl,nch, "%d\t", NULL);
-  display_ui8matrix (m2,nrl,nrh,ncl,nch, "%d\t", NULL);
-  free_ui8matrix(m,  nrl,  nrh,  ncl,  nch);
-  free_ui8matrix(m2,  nrl,  nrh,  ncl, nch);
-  free_vbitsmatrix(v, height, width);*/
+  vbits** res_v = erosion_3x3(v, height, width);
+  uint8** m2 = convert_from_binary(res_v, height, width);*/
+  //display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);
 
     /*vbits** test;
     size_t width = 384;
@@ -70,46 +76,14 @@ int main(int argc, char * argv[]) {
       }
       m[i][383] = (uint8)0;
       m[i][128] = (uint8)0;
+      m[i][255] = (uint8)0;
     }
     test = convert_to_binary(m, height, width);
     display_hexa_vbits_matrix(test, height, width);
     printf("\n\n");
 
-    vbits a0, b0, c0;
-
-    vbits aa0, cc0;
-    vbits aa1, cc1;
-    vbits aa2, cc2;
-
-    int i = 1;
-    int j = 1;
-
-    a0 = vec_load(&test[i-1][j-1]);
-    b0 = vec_load(&test[i-1][j-0]);
-    c0 = vec_load(&test[i-1][j+1]);
-
-    printf("A0\n");
-    display_hexa_vbits(a0);
-    printf("\n\n");
-    printf("B0\n");
-    display_hexa_vbits(b0);
-    printf("\n\n");
-    printf("C0\n");
-    display_hexa_vbits(c0);
-    printf("\n\n");
-
-    aa0 = vec_left1_bin(a0, b0);
-    printf("AA0\n");
-    display_hexa_vbits(aa0);
-    printf("\n\n");*/
-
-  /*__m128i val = _mm_set_epi64x(0, 1);
-
-  int height = 3;
-  int width = 2;
-  vbits** m = (vbits**)vui8matrix (0, height-1, 0, width-1);
-  vec_store(&m[0][0],val);
-  display_hexa_vbits_matrix(m, height, width*128);*/
+    vbits** res = erosion_3x3(test, height, width);
+    display_hexa_vbits_matrix(res, height, width);*/
 
   return 0;
 }

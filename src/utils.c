@@ -124,9 +124,7 @@ vbits** convert_to_binary(uint8** img, size_t height, size_t width)
       line_pixels[nb_vbits_col*2-1] = line_pixels[nb_vbits_col*2-1] << (nb_unused_col-64);
 
     for(int k = 0; k < nb_vbits_col*2; k+=2)
-    vec_store(&converted_img[i][k/2], _mm_set_epi64x(line_pixels[k], line_pixels[k+1]));
-      // vec_store(&converted_img[i][k/2], _mm_set_epi64x((line_pixels[k+1] << 32) | (line_pixels[k+1] >> 32), (line_pixels[k] << 32) | (line_pixels[k] >> 32)));
-
+      vec_store(&converted_img[i][k/2], _mm_set_epi64x(line_pixels[k], line_pixels[k+1]));
   }
   free(line_pixels);
   return converted_img;
@@ -144,10 +142,7 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
   for(int i = 0; i < height; i++){
     for(int j = 0; j < nb_vbits_col; j++){
       line_pixels_hi = _mm_extract_epi64(vec_load(&binary_img[i][j]), 1);
-      //line_pixels_lo = (line_pixels_lo << 32) | (line_pixels_lo >> 32);
       line_pixels_lo = _mm_extract_epi64(vec_load(&binary_img[i][j]), 0);
-      //line_pixels_hi = (line_pixels_hi << 32) | (line_pixels_hi >> 32);
-      //printf("%.16llx %.16llx\t", _mm_extract_epi64(m[i][j], 1), _mm_extract_epi64(m[i][j], 0));
 
       for(int k = 63; k >= 0; k--){
         int indice = (j*128)+k;
