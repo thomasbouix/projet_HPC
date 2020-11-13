@@ -5,7 +5,7 @@ uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size
   kernel_size /= 2;
   int res = 255;
   //printf("kernel_size = %d\n\n", kernel_size);
-  uint8** m = ui8matrix(0, height, 0, width);
+  uint8** m = ui8matrix(0, height-1, 0, width-1);
 
   for(int i = 0; i < height; i++){
     //printf("i=%d\t", i);
@@ -34,7 +34,7 @@ uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_s
   kernel_size /= 2;
   int res = 0;
   //printf("kernel_size = %d\n\n", kernel_size);
-  uint8** m = ui8matrix(0, height, 0, width);
+  uint8** m = ui8matrix(0, height-1, 0, width-1);
 
   for(int i = 0; i < height; i++){
     //printf("i=%d\t", i);

@@ -39,6 +39,9 @@
 	#define MAX(a,b) ((a >= b) ? a : b)
 	#define MIN(a,b) ((a <= b) ? a : b)
 
+	extern uint64_t mask_left_1bit[2];
+	extern uint64_t mask_right_1bit[2];
+
 	typedef __m128i vbits;
 
   void convert_coding(uint8** img, int nrl, int nrh, int ncl, int nch, int from, int to);
@@ -50,5 +53,11 @@
 	vbits** convert_to_binary(uint8** img, size_t height, size_t width);
 	uint8** convert_from_binary(vbits** binary_img, int height, int width);
 	void free_vbitsmatrix(vbits **m, int height, int width);
-	
+	void display_hexa_vbits_matrix(vbits** m, int height, int width);
+	void display_hexa_vbits(vbits v);
+
+	// Méthode inspirée de Stack overflow (voir schema explicatif dans le rapport)
+	__m128i _mm_bitshift_left(__m128i x, unsigned char offset);
+	__m128i _mm_bitshift_right(__m128i x, unsigned char offset);
+
 #endif

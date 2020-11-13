@@ -7,6 +7,10 @@
 #include "vnrdef.h"
 #include "vnrutil.h"
 
+// MASKS
+uint64_t mask_left_1bit[2] = {0, 0x8000000000000000};
+uint64_t mask_right_1bit[2] = {1, 0};
+
 // Perform convertion between logical and binary convert_coding
 // if from = 255 and to = 1 --> conversion from logical to binary coding
 // if from = 1 and to = 255 --> conversion from binary to logical coding
@@ -119,9 +123,10 @@ vbits** convert_to_binary(uint8** img, size_t height, size_t width)
     else if(nb_unused_col < 64)
       line_pixels[nb_vbits_col*2-1] = line_pixels[nb_vbits_col*2-1] << (nb_unused_col-64);
 
-    for(int k = 0; k < nb_vbits_col*2; k+=2){
-      vec_store(&converted_img[i][k/2], _mm_set_epi64x((line_pixels[k+1] << 32) | (line_pixels[k+1] >> 32), (line_pixels[k] << 32) | (line_pixels[k] >> 32)));
-    }
+    for(int k = 0; k < nb_vbits_col*2; k+=2)
+    vec_store(&converted_img[i][k/2], _mm_set_epi64x(line_pixels[k], line_pixels[k+1]));
+      // vec_store(&converted_img[i][k/2], _mm_set_epi64x((line_pixels[k+1] << 32) | (line_pixels[k+1] >> 32), (line_pixels[k] << 32) | (line_pixels[k] >> 32)));
+
   }
   free(line_pixels);
   return converted_img;
@@ -138,10 +143,11 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
   uint64_t line_pixels_hi;
   for(int i = 0; i < height; i++){
     for(int j = 0; j < nb_vbits_col; j++){
-      line_pixels_lo = _mm_extract_epi64(vec_load(&binary_img[i][j]), 1);
-      line_pixels_lo = (line_pixels_lo << 32) | (line_pixels_lo >> 32);
-      line_pixels_hi = _mm_extract_epi64(vec_load(&binary_img[i][j]), 0);
-      line_pixels_hi = (line_pixels_hi << 32) | (line_pixels_hi >> 32);
+      line_pixels_hi = _mm_extract_epi64(vec_load(&binary_img[i][j]), 1);
+      //line_pixels_lo = (line_pixels_lo << 32) | (line_pixels_lo >> 32);
+      line_pixels_lo = _mm_extract_epi64(vec_load(&binary_img[i][j]), 0);
+      //line_pixels_hi = (line_pixels_hi << 32) | (line_pixels_hi >> 32);
+      //printf("%.16llx %.16llx\t", _mm_extract_epi64(m[i][j], 1), _mm_extract_epi64(m[i][j], 0));
 
       for(int k = 63; k >= 0; k--){
         int indice = (j*128)+k;
@@ -172,4 +178,45 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
 void free_vbitsmatrix(vbits **m, int height, int width)
 {
   free_vui32matrix(m, 0, height-1, 0, ceil((float)width/128)-1);
+}
+
+// Méthode inspirée de Stack overflow (voir schema explicatif dans le rapport)
+__m128i _mm_bitshift_left(__m128i x, unsigned char offset)
+{
+  __m128i carry = _mm_bslli_si128(x, 8); // sll de 8 octets
+  if(offset >= 64)
+    return _mm_slli_epi64(carry, offset-64); // sll des 64 MSB et LSB de carry de offset-64 bits
+  carry = _mm_srli_epi64(carry, 64-offset);
+  x = _mm_slli_epi64(x, offset);
+  return _mm_or_si128(x, carry);
+}
+
+__m128i _mm_bitshift_right(__m128i x, unsigned char offset)
+{
+  __m128i carry = _mm_bsrli_si128(x, 8); // sll de 8 octets
+  if(offset >= 64)
+    return _mm_srli_epi64(carry, offset-64); // sll des 64 MSB et LSB de carry de offset-64 bits
+  carry = _mm_slli_epi64(carry, 64-offset);
+  x = _mm_srli_epi64(x, offset);
+  return _mm_or_si128(x, carry);
+}
+
+// MSB affichés a gauche
+void display_hexa_vbits_matrix(vbits** m, int height, int width)
+{
+  int nb_vbits_col = ceil((float)width/128);
+
+  for(int i = 0; i < height; i++){
+    for(int j = 0; j < nb_vbits_col; j++){
+      printf("%.16llx %.16llx\t", _mm_extract_epi64(m[i][j], 1), _mm_extract_epi64(m[i][j], 0));
+    }
+    printf("\n");
+  }
+  printf("\n");
+}
+
+// MSB affichés a gauche
+void display_hexa_vbits(vbits v)
+{
+  printf("%.16llx %.16llx\t", _mm_extract_epi64(v, 1), _mm_extract_epi64(v, 0));
 }

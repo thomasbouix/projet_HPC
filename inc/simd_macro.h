@@ -7,23 +7,19 @@
 #define __SIMD_MACRO_H__
 
 #include "vnrutil.h"
-
+#include "utils.h"
 
 // ACCES MEMOIRE
 #define vec_load(addr) (_mm_load_si128((vuint8*)addr))
 #define vec_store(addr,val) (_mm_store_si128((vuint8*) addr, val))
 
-// A MODIFIER
-#define vec_left1(a,b) (_mm_shuffle_ps(_mm_shuffle_ps(a, b, _MM_SHUFFLE(0, 0, 3, 3)), b, _MM_SHUFFLE(2, 1, 3, 0))) // sortie : b2 b1 b0 a3
-#define vec_left2(a,b) (_mm_shuffle_ps(a, b, _MM_SHUFFLE(1, 0, 3, 2))) // sortie : b1 b0 a3 a2
+// DECALLAGES
+#define vec_left1_bin(a,b) (_mm_or_si128(_mm_bitshift_right(_mm_and_si128(b, vec_load(mask_left_1bit)), 127), _mm_bitshift_left(a, 1)))
+#define vec_left2(v0,v1) v0
 #define vec_left3(v0,v1)  v0
 #define vec_left4(v0,v1)  v0
 
-#define vec_right1(b,c) (_mm_shuffle_ps(b, _mm_shuffle_ps(c, b, _MM_SHUFFLE(3, 3, 0, 0)), _MM_SHUFFLE(0, 3, 2, 1)))  // sortie : c0 b3 b2 b1
-#define vec_right2(b,c) (_mm_shuffle_ps(b, c, _MM_SHUFFLE(1, 0, 3, 2))) // sortie : c1 c0 b3 b2
-#define vec_right3(v1, v2) v1
-#define vec_right4(v1, v2) v1
-
+#define vec_right1(v0,v1) v0
 
 // DIVISIONS (A MODIFIER)
 #define vec_div3(x) (_mm_mul_ps(x, _mm_set_ps((float)1/3, (float)1/3, (float)1/3, (float)1/3)))
