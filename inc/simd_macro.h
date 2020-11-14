@@ -44,6 +44,7 @@
 
 // AND
 #define vAND_2D_9(x0,x1,x2,x3,x4,x5,x6,x7,x8) (_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(x0,x1),x2),x3),x4),x5),x6),x7),x8))
+#define vAND3(x0,x1,x2) (_mm_and_si128(_mm_and_si128(x0,x1),x2))
 
 // VAL ABS DIFF
 #define vABS_DIFF(v0,v1) (_mm_or_si128(_mm_subs_epu8(v0,v1), _mm_subs_epu8(v1,v0)))
