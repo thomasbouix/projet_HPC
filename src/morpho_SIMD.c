@@ -30,31 +30,37 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
 
   // Cas particulier des images à moins de 128 colonnes
   if(nb_vbits_col == 1){
-    for(int i = 0; i < height; i++){
-      b0 = vec_load(&img_bin_extra_lines[i-1][0]);
-      b1 = vec_load(&img_bin_extra_lines[i+0][0]);
+
+    // PRELOAD
+    b0 = vec_load(&img_bin_extra_lines[-1][0]);
+    b1 = vec_load(&img_bin_extra_lines[0][0]);
+    a0 = _mm_bitshift_right(b0, 127);
+    a1 = _mm_bitshift_right(b1, 127);
+    c0 = _mm_bitshift_left(b0, 127-nb_unused_col);
+    c1 = _mm_bitshift_left(b1, 127-nb_unused_col);
+    aa0 = vec_left1_bin(a0, b0);
+    cc0 = vec_right1_bin_unused_col(b0, c0, nb_unused_col);
+    aa1 = vec_left1_bin(a1, b1);
+    cc1 = vec_right1_bin_unused_col(b1, c1, nb_unused_col);
+
+    for(int i=0; i<height; i++){
+
       b2 = vec_load(&img_bin_extra_lines[i+1][0]);
-
-      a0 = _mm_bitshift_right(b0, 127);
-      a1 = _mm_bitshift_right(b1, 127);
       a2 = _mm_bitshift_right(b2, 127);
-
-      c0 = _mm_bitshift_left(b0, 127-nb_unused_col);
-      c1 = _mm_bitshift_left(b1, 127-nb_unused_col);
       c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
-
-      aa0 = vec_left1_bin(a0,b0);
-      cc0 = vec_right1_bin_unused_col(b0,c0,nb_unused_col);
-
-      aa1 = vec_left1_bin(a1,b1);
-      cc1 = vec_right1_bin_unused_col(b1,c1,nb_unused_col);
-
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
-
       y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
       vec_store(&m[i][0], y);
+
+      // ROTATION
+      b0 = b1; b1 = b2;
+      a0 = a1; a1 = a2;
+      c0 = c1; c1 = c2;
+      aa0 = aa1; aa1 = aa2;
+      cc0 = cc1; cc1 = cc2;
     }
+
     _mm_free(img_bin_extra_lines-1);
     return m;
   }
