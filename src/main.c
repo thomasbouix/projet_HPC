@@ -28,10 +28,17 @@ int main(int argc, char * argv[]) {
   // test_morpho();
 
   //compute_sd_SIMD_all_steps(1);
-  //compute_dilatation("output/sd_SIMD/E_t_", 3, 1);
-  compute_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 1);
+  /*clock_t begin0 = clock();
+  compute_erosion("output/sd_SIMD/E_t_", 3, 0);
+  clock_t end0 = clock();
+  printf("erosion scalaire : %ld ms\n", (end0 - begin0)*1000 / CLOCKS_PER_SEC);
 
-  /*int height = 240;
+  clock_t begin1 = clock();
+  compute_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 0);
+  clock_t end1 = clock();
+  printf("erosion SIMD : %ld ms\n", (end1 - begin1)*1000 / CLOCKS_PER_SEC);*/
+
+  int height = 240;
   int width = 320;
   int nb_vbits_col = ceil((float)width/128);
 
@@ -42,8 +49,8 @@ int main(int argc, char * argv[]) {
 
   vbits** v = convert_to_binary(m, height, width);
   vbits** res_v = erosion_3x3(v, height, width);
-  uint8** m2 = convert_from_binary(res_v, height, width);*/
-  //display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);
+  uint8** m2 = convert_from_binary(res_v, height, width);
+  display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);
 
     /*vbits** test;
     size_t width = 384;
@@ -82,8 +89,8 @@ int main(int argc, char * argv[]) {
     display_hexa_vbits_matrix(test, height, width);
     printf("\n\n");
 
-    vbits** res = erosion_3x3(test, height, width);
-    display_hexa_vbits_matrix(res, height, width);*/
+    vbits** res = erosion_3x3(test, height, width);*/
+    //display_hexa_vbits_matrix(res, height, width);
 
   return 0;
 }
