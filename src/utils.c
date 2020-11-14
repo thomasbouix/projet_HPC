@@ -7,10 +7,6 @@
 #include "vnrdef.h"
 #include "vnrutil.h"
 
-// MASKS
-uint64_t mask_left_1bit[2] = {0, 0x8000000000000000};
-uint64_t mask_right_1bit[2] = {1, 0};
-
 // Perform convertion between logical and binary convert_coding
 // if from = 255 and to = 1 --> conversion from logical to binary coding
 // if from = 1 and to = 255 --> conversion from binary to logical coding
@@ -137,18 +133,17 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
 
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
-  uint64_t line_pixels_lo;
-  uint64_t line_pixels_hi;
+  uint64_t line_pixels[2];
+
   for(int i = 0; i < height; i++){
     for(int j = 0; j < nb_vbits_col; j++){
-      line_pixels_hi = _mm_extract_epi64(vec_load(&binary_img[i][j]), 1);
-      line_pixels_lo = _mm_extract_epi64(vec_load(&binary_img[i][j]), 0);
+      vec_store(&line_pixels, binary_img[i][j]);
 
       for(int k = 63; k >= 0; k--){
         int indice = (j*128)+k;
 
         if(indice < width){
-          if(line_pixels_hi & 1)
+          if(line_pixels[1] & 1)
             m[i][indice] = 255;
           else
             m[i][indice] = 0;
@@ -156,14 +151,14 @@ uint8** convert_from_binary(vbits** binary_img, int height, int width)
 
         indice =(j*128)+k+64;
         if(indice < width){
-          if(line_pixels_lo & 1)
+          if(line_pixels[0] & 1)
             m[i][indice] = 255;
           else
             m[i][indice] = 0;
         }
 
-        line_pixels_lo >>= 1;
-        line_pixels_hi >>= 1;
+        line_pixels[0] >>= 1;
+        line_pixels[1] >>= 1;
       }
     }
   }

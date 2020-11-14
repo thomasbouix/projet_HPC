@@ -38,7 +38,7 @@ int main(int argc, char * argv[]) {
   clock_t end1 = clock();
   printf("erosion SIMD : %ld ms\n", (end1 - begin1)*1000 / CLOCKS_PER_SEC);*/
 
-  int height = 240;
+  /*int height = 240;
   int width = 320;
   int nb_vbits_col = ceil((float)width/128);
 
@@ -50,7 +50,7 @@ int main(int argc, char * argv[]) {
   vbits** v = convert_to_binary(m, height, width);
   vbits** res_v = erosion_3x3(v, height, width);
   uint8** m2 = convert_from_binary(res_v, height, width);
-  display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);
+  display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
 
     /*vbits** test;
     size_t width = 384;
