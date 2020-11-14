@@ -30,6 +30,7 @@ void test_erosion_SIMD(void) {
   display_hexa_vbits_matrix(img_ero, height, width);
 }
 
+/*
 void test_dilatation_SIMD(void) {
   long nrl = 0;
   long nrh = 4;
@@ -58,7 +59,9 @@ void test_dilatation_SIMD(void) {
   vbits** img_dil = dilatation_3x3(img_bin, height, width);
   display_hexa_vbits_matrix(img_dil, height, width);
 
+  return;
 }
+*/
 
 void test_morpho_SIMD(void) {
 
@@ -66,7 +69,7 @@ void test_morpho_SIMD(void) {
   printf("--------------------\n");
   test_erosion_SIMD();
   printf("===\n");
-  test_dilatation_SIMD();
+  // test_dilatation_SIMD();
   printf("====================\n");
 
   return;
