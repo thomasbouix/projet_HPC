@@ -26,7 +26,7 @@ void test_erosion_SIMD(void) {
   display_hexa_vbits_matrix(img_bin, height, width);
 
   printf("losange erosion binaire\n");
-  vbits** img_ero = erosion_3x3(img_bin, height, width);
+  vbits** img_ero = erosion_3x3_SIMD(img_bin, height, width);
   display_hexa_vbits_matrix(img_ero, height, width);
 }
 
