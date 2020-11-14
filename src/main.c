@@ -43,14 +43,14 @@ int main(int argc, char * argv[]) {
   int nb_vbits_col = ceil((float)width/128);
 
   int nrl, nrh, ncl, nch;
-  uint8** m = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_106.pgm", &nrl, &nrh, &ncl, &nch, 1);
+  uint8** m = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_004.pgm", &nrl, &nrh, &ncl, &nch, 1);
   uint8** res_m = erosion(m, height, width, 3);
-  //display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
+  display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
 
   vbits** v = convert_to_binary(m, height, width);
-  vbits** res_v = erosion_3x3(v, height, width);
+  vbits** res_v = erosion_3x3_SIMD(v, height, width);
   uint8** m2 = convert_from_binary(res_v, height, width);
-  display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
+  //display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
 
     /*vbits** test;
     size_t width = 384;
