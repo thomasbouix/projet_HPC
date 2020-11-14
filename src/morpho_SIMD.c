@@ -1,7 +1,7 @@
 #include "morpho_SIMD.h"
 
 // AND logique sur un voisinage de taille 3x3
-vbits** erosion_3x3(vbits** img_bin, int height, int width)
+vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -121,8 +121,7 @@ void compute_erosion_3x3_SIMD(char* basePath, int save)
     width = nch-ncl+1;
 
     img_bin = convert_to_binary(img, height, width);
-    output_bin = erosion_3x3(img_bin, height, width);
-
+    output_bin = erosion_3x3_SIMD(img_bin, height, width);
     output = convert_from_binary(output_bin, height, width);
     if(save){
       sprintf(buff, "output/erosion_3x3_SIMD/ero3%.3d.pgm", i);

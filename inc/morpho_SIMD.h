@@ -6,7 +6,7 @@
   #include "utils.h"
   #include "vnrutil.h"
 
-  vbits** erosion_3x3(vbits** img_bin, int height, int width);
-  void compute_erosion_3x3_SIMD(char* basePath, int save);
+  vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width);
+  void compute_all_erosion_3x3_SIMD(char* basePath, int save);
 
 #endif

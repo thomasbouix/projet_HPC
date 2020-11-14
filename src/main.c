@@ -10,22 +10,22 @@
 
 #include "mouvement.h"
 #include "mouvement_SIMD.h"
-
 #include "morpho.h"
 #include "morpho_SIMD.h"
 
 #include "bench_mouvement.h"
 #include "bench_mouvement_SIMD.h"
+#include "bench_morpho.h"
+#include "bench_morpho_SIMD.h"
 
 #include "test_morpho.h"
-
+#include "test_morpho_SIMD.h"
 
 
 int main(int argc, char * argv[]) {
 
-  // bench_mouvement();
-  // bench_mouvement_SIMD();
   // test_morpho();
+  // test_morpho_SIMD();
 
   //compute_sd_SIMD_all_steps(1);
   /*clock_t begin0 = clock();
