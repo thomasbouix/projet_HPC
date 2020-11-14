@@ -39,9 +39,6 @@
 	#define MAX(a,b) ((a >= b) ? a : b)
 	#define MIN(a,b) ((a <= b) ? a : b)
 
-	extern uint64_t mask_left_1bit[2];
-	extern uint64_t mask_right_1bit[2];
-
 	typedef __m128i vbits;
 
   void convert_coding(uint8** img, int nrl, int nrh, int ncl, int nch, int from, int to);
