@@ -18,6 +18,7 @@
 #include "bench_mouvement_SIMD.h"
 
 #include "test_morpho.h"
+#include "test_morpho_SIMD.h"
 
 
 
@@ -27,9 +28,11 @@ int main(int argc, char * argv[]) {
   // bench_mouvement_SIMD();
   // test_morpho();
 
+  test_morpho_SIMD();
+
   //compute_sd_SIMD_all_steps(1);
   //compute_dilatation("output/sd_SIMD/E_t_", 3, 1);
-  compute_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 1);
+  // compute_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 1);
 
   /*int height = 240;
   int width = 320;
