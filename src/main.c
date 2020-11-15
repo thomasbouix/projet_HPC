@@ -25,10 +25,16 @@
 int main(int argc, char * argv[]) {
 
   // test_morpho();
-  //test_morpho_SIMD();
+  test_morpho_SIMD();
 
-  /*compute_sd_SIMD_all_steps(1);
-  clock_t begin0 = clock();
+  //bench_mouvement();
+  //bench_mouvement_SIMD();
+
+  //bench_morpho();
+  //bench_morpho_SIMD();
+
+  //compute_sd_SIMD_all_steps(1);
+  /*clock_t begin0 = clock();
   compute_erosion("output/sd_SIMD/E_t_", 3, 0);
   clock_t end0 = clock();
   printf("erosion scalaire : %ld ms\n", (end0 - begin0)*1000 / CLOCKS_PER_SEC);
@@ -85,8 +91,9 @@ int main(int argc, char * argv[]) {
     test = convert_to_binary(m, height, width);
     display_hexa_vbits_matrix(test, height, width);
     printf("\n\n");
-    vbits** res = erosion_3x3(test, height, width);*/
-    //display_hexa_vbits_matrix(res, height, width);
+    vbits** res = erosion_3x3_SIMD(test, height, width);
+    display_hexa_vbits_matrix(res, height, width);
+    printf("\n\n");*/
 
   return 0;
 }

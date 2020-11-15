@@ -33,7 +33,9 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
   // Cas particulier des images à moins de 128 colonnes
   if(nb_vbits_col == 1){
 
-    // PRELOAD
+    // PROLOGUE
+    int n = height%3;
+
     b0 = vec_load(&img_bin_extra_lines[-1][0]);
     b1 = vec_load(&img_bin_extra_lines[0][0]);
 
@@ -51,7 +53,7 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
     and0 = vAND3(aa0, b0, cc0);
     and1 = vAND3(aa1, b1, cc1);
 
-    for(int i=0; i<height; i++){
+    for(int i=0; i < height-n; i+=3){
 
       b2 = vec_load(&img_bin_extra_lines[i+1][0]);
       a2 = _mm_bitshift_right(b2, 127);
@@ -62,8 +64,58 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
       y = vAND3(and0, and1, and2);
       vec_store(&m[i][0], y);
 
-      // ROTATION
-      and0 = and1; and1 = and2;
+      b2 = vec_load(&img_bin_extra_lines[i+2][0]);
+      a2 = _mm_bitshift_right(b2, 127);
+      c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
+      aa2 = vec_left1_bin(a2,b2);
+      cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
+      and0 = vAND3(aa2, b2, cc2);
+      y = vAND3(and0, and1, and2);
+      vec_store(&m[i+1][0], y);
+
+      b2 = vec_load(&img_bin_extra_lines[i+3][0]);
+      a2 = _mm_bitshift_right(b2, 127);
+      c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
+      aa2 = vec_left1_bin(a2,b2);
+      cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
+      and1 = vAND3(aa2, b2, cc2);
+      y = vAND3(and0, and1, and2);
+      vec_store(&m[i+2][0], y);
+    }
+
+    // EPILOGUE
+    switch (n) {
+      case 2:
+        b2 = vec_load(&img_bin_extra_lines[height-1][0]);
+        a2 = _mm_bitshift_right(b2, 127);
+        c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
+        aa2 = vec_left1_bin(a2,b2);
+        cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
+        and2 = vAND3(aa2, b2, cc2);
+        y = vAND3(and0, and1, and2);
+        vec_store(&m[height-2][0], y);
+
+        b2 = vec_load(&img_bin_extra_lines[height][0]);
+        a2 = _mm_bitshift_right(b2, 127);
+        c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
+        aa2 = vec_left1_bin(a2,b2);
+        cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
+        and0 = vAND3(aa2, b2, cc2);
+        y = vAND3(and0, and1, and2);
+        vec_store(&m[height-1][0], y);
+        break;
+      case 1:
+        b2 = vec_load(&img_bin_extra_lines[height][0]);
+        a2 = _mm_bitshift_right(b2, 127);
+        c2 = _mm_bitshift_left(b2, 127-nb_unused_col);
+        aa2 = vec_left1_bin(a2,b2);
+        cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
+        and2 = vAND3(aa2, b2, cc2);
+        y = vAND3(and0, and1, and2);
+        vec_store(&m[height-1][0], y);
+        break;
+      default:
+        break;
     }
 
     _mm_free(img_bin_extra_lines-1);

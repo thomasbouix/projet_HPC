@@ -54,6 +54,6 @@ void bench_morpho(void) {
   printf("---\n");
   bench_dilatation();
   printf("====================\n");
-  
+
   return;
 }
