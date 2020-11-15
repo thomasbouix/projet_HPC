@@ -107,8 +107,6 @@ vbits** convert_to_binary(uint8** img, size_t height, size_t width)
 
   // Tableau de uint64_t permettant la convertion de l'image en binaire
   uint64_t *line_pixels = (uint64_t*)malloc(nb_vbits_col*2*sizeof(uint64_t));
-  for(int i = 0; i < nb_vbits_col*2; i++)
-    line_pixels[i] = 0;
 
   // image de height lignes et nb_vbits_col * 128bits colonnes
   vbits** converted_img = (vbits**)vui32matrix(0, height-1, 0, nb_vbits_col-1);
