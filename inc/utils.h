@@ -47,6 +47,7 @@
   vuint8** LoadPGM_vui8matrix(char *filename, int* si0, int* si1, int* sj0, int* sj1, int* vi0, int* vi1, int* vj0, int* vj1);
   uint8** add_borders(uint8 **m, int height, int width, int border);
 	void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch);
+	void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value);
 	vbits** convert_to_binary(uint8** img, size_t height, size_t width);
 	uint8** convert_from_binary(vbits** binary_img, int height, int width);
 	void free_vbitsmatrix(vbits **m, int height, int width);

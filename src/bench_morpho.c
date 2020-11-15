@@ -8,8 +8,12 @@ static double cycles;
 
 void bench_erosion(void) {
 
-  int nrl, nrh, ncl, nch;
-  uint8** img = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img, nrl, nrh, ncl, nch, 255);
 
   int height = nrh-nrl+1;
   int width = nch-ncl+1;
@@ -28,8 +32,12 @@ void bench_erosion(void) {
 
 void bench_dilatation(void) {
 
-  int nrl, nrh, ncl, nch;
-  uint8** img = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img, nrl, nrh, ncl, nch, 0);
 
   int height = nrh-nrl+1;
   int width = nch-ncl+1;
@@ -43,7 +51,6 @@ void bench_dilatation(void) {
 
   CHRONO(img_ero = dilatation(img_with_borders, height, width, kernel_size), cycles);
   printf("dilatation 3x3 : %.0f cycles\n", cycles);
-
 }
 
 void bench_morpho(void) {

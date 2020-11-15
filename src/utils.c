@@ -91,6 +91,12 @@ void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch) {
       (*m)[i][j] = 0;
 }
 
+void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value) {
+  for (int i=nrl; i<=nrh; i++)
+    for (int j=ncl; j<=nch; j++)
+      (*m)[i][j] = value;
+}
+
 
 vbits** convert_to_binary(uint8** img, size_t height, size_t width)
 {
