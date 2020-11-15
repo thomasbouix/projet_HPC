@@ -206,5 +206,5 @@ void display_hexa_vbits_matrix(vbits** m, int height, int width)
 // MSB affichés a gauche
 void display_hexa_vbits(vbits v)
 {
-  printf("%.16llx %.16llx\t", _mm_extract_epi64(v, 1), _mm_extract_epi64(v, 0));
+  printf("\n\n%.16llx %.16llx\n\n", _mm_extract_epi64(v, 1), _mm_extract_epi64(v, 0));
 }

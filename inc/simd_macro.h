@@ -19,11 +19,6 @@
 #define vec_right1_bin(b,c) (_mm_or_si128(_mm_bitshift_right(c, 127), _mm_bitshift_left(b, 1)))
 #define vec_right1_bin_unused_col(b,c,nb_unused_col) (_mm_or_si128(_mm_bitshift_right(c, 127-nb_unused_col), _mm_bitshift_left(b, 1)))
 
-// DIVISIONS (A MODIFIER)
-#define vec_div3(x) (_mm_mul_ps(x, _mm_set_ps((float)1/3, (float)1/3, (float)1/3, (float)1/3)))
-#define vec_div5(x) (_mm_mul_ps(x, _mm_set_ps((float)1/5, (float)1/5, (float)1/5, (float)1/5)))
-#define vec_div9(x) (_mm_mul_ps(x, _mm_set_ps((float)1/9, (float)1/9, (float)1/9, (float)1/9)))
-
 // ADDITIONS
 #define vec_add2(x0,x1) (_mm_add_epi8(x0, x1))
 
@@ -45,6 +40,9 @@
 // AND
 #define vAND_2D_9(x0,x1,x2,x3,x4,x5,x6,x7,x8) (_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(_mm_and_si128(x0,x1),x2),x3),x4),x5),x6),x7),x8))
 #define vAND3(x0,x1,x2) (_mm_and_si128(_mm_and_si128(x0,x1),x2))
+
+//OR
+#define vOR3(x0,x1,x2) (_mm_or_si128(_mm_or_si128(x0,x1),x2))
 
 // VAL ABS DIFF
 #define vABS_DIFF(v0,v1) (_mm_or_si128(_mm_subs_epu8(v0,v1), _mm_subs_epu8(v1,v0)))

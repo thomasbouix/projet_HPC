@@ -9,4 +9,7 @@
   vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width);
   void compute_all_erosion_3x3_SIMD(char* basePath, int save);
 
+  vbits** dilatation_3x3_SIMD(vbits** img_bin, int height, int width);
+  void compute_all_dilatation_3x3_SIMD(char* basePath, int save);
+
 #endif
