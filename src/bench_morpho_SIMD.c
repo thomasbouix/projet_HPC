@@ -8,8 +8,12 @@ static double cycles;
 
 void bench_erosion_SIMD(void) {
 
-  int nrl, nrh, ncl, nch;
-  uint8** img_u8 = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img_u8, nrl, nrh, ncl, nch, 255);
 
   int height = nrh-nrl+1;
   int width = nch-ncl+1;
@@ -25,8 +29,12 @@ void bench_erosion_SIMD(void) {
 /*
 void bench_dilatation_SIMD(void) {
 
-  int nrl, nrh, ncl, nch;
-  uint8** img_u8 = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img_u8, nrl, nrh, ncl, nch, 0);
 
   int height = nrh-nrl+1;
   int width = nch-ncl+1;
