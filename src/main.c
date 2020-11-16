@@ -33,7 +33,7 @@ int main(int argc, char * argv[]) {
   //bench_morpho();
   //bench_morpho_SIMD();
 
-  compute_sd_SIMD_all_steps(1);
+  //compute_sd_SIMD_all_steps(1);
   /*clock_t begin0 = clock();
   compute_erosion("output/sd_SIMD/E_t_", 3, 0);
   clock_t end0 = clock();
@@ -49,13 +49,13 @@ int main(int argc, char * argv[]) {
   int nrl, nrh, ncl, nch;
   uint8** m = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch, 1);
   uint8** res_m = dilatation(m, height, width, 3);
-  //display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
+  display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
   vbits** v = convert_to_binary(m, height, width);
   vbits** res_v = dilatation_3x3_SIMD(v, height, width);
   uint8** m2 = convert_from_binary(res_v, height, width);
-  display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
+  //display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
 
-  
+
     /*vbits** test;
     size_t width = 384;
     size_t height = 4;
@@ -95,6 +95,28 @@ int main(int argc, char * argv[]) {
     vbits** res = erosion_3x3_SIMD(test, height, width);
     display_hexa_vbits_matrix(res, height, width);
     printf("\n\n");*/
+
+    /*size_t width = 679;
+    size_t height = 5;
+    uint8 **m = ui8matrix(0, height-1, 0, width-1);
+    vbits** test;
+
+    for(int i = 0; i < height; i++){
+      for(int j = 32; j < 320; j++){
+        m[i][j] = (uint8)255;
+      }
+      for(int j = 320; j < 345; j++){
+        m[i][j] = (uint8)0;
+      }
+      for(int j = 345; j < 645; j++){
+        m[i][j] = (uint8)255;
+      }
+    }
+    test = convert_to_binary(m, height, width);
+    vbits** v_res = ouverture_SIMD(test, height, width);
+    vbits** v_ref = dilatation_3x3_SIMD(erosion_3x3_SIMD(test, height, width), height, width);
+    display_ui8matrix(convert_from_binary(v_res, height, width), 0, height-1, 0, width-1, "%d\t", NULL);
+    //display_ui8matrix(convert_from_binary(v_ref, height, width), 0, height-1, 0, width-1, "%d\t", NULL);*/
 
   return 0;
 }

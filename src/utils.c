@@ -100,6 +100,7 @@ void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value)
 
 vbits** convert_to_binary(uint8** img, size_t height, size_t width)
 {
+
   int indice;
   // Nombre de vecteurs de 128 bits necessaire pour représenter toutes les colonnes de l'image
   int nb_vbits_col = ceil((float)width/128);
