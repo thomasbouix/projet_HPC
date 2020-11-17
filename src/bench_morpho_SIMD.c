@@ -87,7 +87,6 @@ void bench_ouverture_naive_SIMD(void) {
   return;
 }
 
-
 void bench_morpho_SIMD(void) {
 
   printf("BENCH_MORPHO SIMD\n");
