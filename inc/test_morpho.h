@@ -13,7 +13,7 @@
   #include "morpho.h"
   #include "mouvement.h"
 
-  void test_erosion(void);
+  void ero_losange_plein(void);
   void test_morpho(void);
 
 #endif

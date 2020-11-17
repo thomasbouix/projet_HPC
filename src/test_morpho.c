@@ -1,6 +1,6 @@
 #include "test_morpho.h"
 
-void test_erosion(void) {
+void ero_losange_plein(void) {
 
   long nrl = 0;
   long nrh = 4;
@@ -15,7 +15,7 @@ void test_erosion(void) {
   m[3][2] = 1; m[3][3] = 1; m[3][4] = 1;
   m[4][3] = 1;
 
-  display_ui8matrix(m, nrl, nrh, ncl, nch, "%hhu", "losange plein");
+  // display_ui8matrix(m, nrl, nrh, ncl, nch, "%hhu", "losange plein");
   convert_coding(m, nrl, nrh, ncl, nch, 1, 255);
 
   int height = nrh-nrl+1;
@@ -28,7 +28,23 @@ void test_erosion(void) {
   uint8** m_ero = erosion(m_with_borders, height, width, 3);
 
   convert_coding(m_ero, nrl, nrh, ncl, nch, 255, 1);
-  display_ui8matrix(m_ero, nrl, nrh, ncl, nch, "%hhu", "\nlosange_erosion");
+  // display_ui8matrix(m_ero, nrl, nrh, ncl, nch, "%hhu", "\nlosange_erosion");
+
+  for (int i=nrl; i<=nrh; i++) {
+    for (int j=ncl; j<=nch; j++) {
+      if(i==2 && j==3) {
+        if (m_ero[i][j] != 1) {
+          ERROR("ero_losange_plein");
+        }
+      }
+      else {
+        if (m_ero[i][j] != 0) {
+          ERROR("ero_losange_plein");
+        }
+      }
+    }
+  }
+  SUCCESS("ero_losange_plein");
 
   free_ui8matrix(m_ero, nrl, nrh, ncl, nch);
   free_padding_ui8matrix(m_with_borders, nrl-border, nrh+border, ncl-border, nch+border, 1);
@@ -52,7 +68,7 @@ void test_dilatation(void) {
   m[3][2] = 1; m[3][4] = 1;
   m[4][3] = 1;
 
-  display_ui8matrix(m, nrl, nrh, ncl, nch, "%hhu", "losange creux");
+  // display_ui8matrix(m, nrl, nrh, ncl, nch, "%hhu", "losange creux");
   convert_coding(m, nrl, nrh, ncl, nch, 1, 255);
 
   int height = nrh-nrl+1;
@@ -65,7 +81,7 @@ void test_dilatation(void) {
   uint8** m_dil = dilatation(m_with_borders, height, width, 3);
 
   convert_coding(m_dil, nrl, nrh, ncl, nch, 255, 1);
-  display_ui8matrix(m_dil, nrl, nrh, ncl, nch, "%hhu", "\nlosange_dilatation");
+  // display_ui8matrix(m_dil, nrl, nrh, ncl, nch, "%hhu", "\nlosange_dilatation");
 
   free_ui8matrix(m_dil, nrl, nrh, ncl, nch);
   free_padding_ui8matrix(m_with_borders, nrl-border, nrh+border, ncl-border, nch+border, 1);
@@ -77,7 +93,7 @@ void test_morpho(void) {
 
   printf("TEST_MORPHO\n");
   printf("--------------------\n");
-  test_erosion();
+  ero_losange_plein();
   printf("===\n");
   test_dilatation();
   printf("====================\n");

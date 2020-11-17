@@ -18,6 +18,17 @@
 	#include "vnrdef.h"
 	#include "simd_macro.h"
 
+	#define ERROR(message) 							\
+		fprintf(stderr, "*** Error : ");	\
+		fprintf(stderr, message);					\
+		fprintf(stderr, "\n");						\
+		exit(-1);
+
+	#define SUCCESS(message)	\
+		printf("Sucess : ");		\
+	 	printf(message);				\
+		printf("\n");						\
+
 	// Error if a is true
 	#define CHECK_ERROR(a)                        \
 	if (a) {                                      \
