@@ -105,24 +105,24 @@ int main(int argc, char * argv[]) {
     double t0, t1, dt, tmin, t;
     double cycles;*/
     /*int nrl, nrh, ncl, nch;
-    size_t width = 679;
-    size_t height = 500;
+    size_t width = 50;
+    size_t height = 10;
     uint8 **m = ui8matrix(0, height-1, 0, width-1);
     vbits** test;
     uint8** m2 = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch, 1);
 
     for(int i = 0; i < height; i++){
-      for(int j = 32; j < 320; j++){
+      for(int j = 3; j < 15; j++){
         m[i][j] = (uint8)255;
       }
-      for(int j = 320; j < 345; j++){
+      for(int j = 15; j < 27; j++){
         m[i][j] = (uint8)0;
       }
-      for(int j = 345; j < 645; j++){
+      for(int j = 27; j < 50; j++){
         m[i][j] = (uint8)255;
       }
     }
-    int count_row = 0;
+    /*int count_row = 0;
     int count_col = 0;
     for(int i = 500-240-1; i < 500; i++){
       for(int j = 679-320-1; j < 679; j++){
@@ -131,8 +131,8 @@ int main(int argc, char * argv[]) {
       }
       count_col = 0;
       count_row++;
-    }
-    test = convert_to_binary(m, height, width);
+    }*/
+    /*test = convert_to_binary(m, height, width);
     vbits **v_res, **v_ref;
     v_res = ouverture_SIMD(test, height, width);
     //printf("ouverture fusion SIMD : %.0f cycles\n", cycles);
