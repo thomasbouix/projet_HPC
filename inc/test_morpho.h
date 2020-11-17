@@ -14,6 +14,7 @@
   #include "mouvement.h"
 
   void ero_losange_plein(void);
+  void test_dilatation(void);
   void test_morpho(void);
 
 #endif
