@@ -26,7 +26,6 @@ void bench_erosion_SIMD(void) {
   return;
 }
 
-/*
 void bench_dilatation_SIMD(void) {
 
   long nrl = 0;
@@ -48,7 +47,6 @@ void bench_dilatation_SIMD(void) {
   return;
 
 }
-*/
 
 void bench_morpho_SIMD(void) {
 
@@ -56,7 +54,7 @@ void bench_morpho_SIMD(void) {
   printf("--------------------\n");
   bench_erosion_SIMD();
   printf("---\n");
-  // bench_dilatation_SIMD();
+  bench_dilatation_SIMD();
   printf("====================\n");
   return;
 }

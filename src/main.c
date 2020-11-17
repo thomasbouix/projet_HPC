@@ -37,23 +37,27 @@ int main(int argc, char * argv[]) {
   /*clock_t begin0 = clock();
   compute_erosion("output/sd_SIMD/E_t_", 3, 0);
   clock_t end0 = clock();
-  printf("erosion scalaire : %ld ms\n", (end0 - begin0)*1000 / CLOCKS_PER_SEC);
+  //printf("erosion scalaire : %ld ms\n", (end0 - begin0)*1000 / CLOCKS_PER_SEC);
   clock_t begin1 = clock();
   compute_all_erosion_3x3_SIMD("output/sd_SIMD/E_t_", 0);
   clock_t end1 = clock();
-  printf("erosion SIMD : %ld ms\n", (end1 - begin1)*1000 / CLOCKS_PER_SEC);*/
+  //printf("erosion SIMD : %ld ms\n", (end1 - begin1)*1000 / CLOCKS_PER_SEC);*/
 
   /*int height = 240;
   int width = 320;
   int nb_vbits_col = ceil((float)width/128);
   int nrl, nrh, ncl, nch;
   uint8** m = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch, 1);
-  uint8** res_m = dilatation(m, height, width, 3);
-  display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
   vbits** v = convert_to_binary(m, height, width);
-  vbits** res_v = dilatation_3x3_SIMD(v, height, width);
-  uint8** m2 = convert_from_binary(res_v, height, width);
-  //display_ui8matrix(m2, 0, height-1, 0, width-1, "%d\t", NULL);*/
+  //uint8** res_m = dilatation(m, height, width, 3);
+  //display_ui8matrix(res_m, 0, height-1, 0, width-1, "%d\t", NULL);
+  //vbits** res_v = dilatation_3x3_SIMD(v, height, width);
+  /*vbits** ouverture_sans_fusion = dilatation_3x3_SIMD(erosion_3x3_SIMD(v, height, width), height, width);
+  uint8** res_ouverture_sans_fusion = convert_from_binary(ouverture_sans_fusion, height, width);
+  display_ui8matrix(res_ouverture_sans_fusion, 0, height-1, 0, width-1, "%d\t", NULL);*/
+  /*vbits** ouverture_fusion = ouverture_SIMD(v, height, width);
+  uint8** res_ouverture_fusion = convert_from_binary(ouverture_fusion, height, width);
+  display_ui8matrix(res_ouverture_fusion, 0, height-1, 0, width-1, "%d\t", NULL);*/
 
 
     /*vbits** test;
@@ -96,10 +100,16 @@ int main(int argc, char * argv[]) {
     display_hexa_vbits_matrix(res, height, width);
     printf("\n\n");*/
 
-    /*size_t width = 679;
-    size_t height = 5;
+    /*int iter, niter = 4;
+    int run, nrun = 5;
+    double t0, t1, dt, tmin, t;
+    double cycles;*/
+    /*int nrl, nrh, ncl, nch;
+    size_t width = 679;
+    size_t height = 500;
     uint8 **m = ui8matrix(0, height-1, 0, width-1);
     vbits** test;
+    uint8** m2 = LoadPGM_padding_ui8matrix("output/sd_SIMD/E_t_007.pgm", &nrl, &nrh, &ncl, &nch, 1);
 
     for(int i = 0; i < height; i++){
       for(int j = 32; j < 320; j++){
@@ -112,9 +122,24 @@ int main(int argc, char * argv[]) {
         m[i][j] = (uint8)255;
       }
     }
+    int count_row = 0;
+    int count_col = 0;
+    for(int i = 500-240-1; i < 500; i++){
+      for(int j = 679-320-1; j < 679; j++){
+        m[i][j] = m2[count_row][count_col];
+        count_col++;
+      }
+      count_col = 0;
+      count_row++;
+    }
     test = convert_to_binary(m, height, width);
-    vbits** v_res = ouverture_SIMD(test, height, width);
-    vbits** v_ref = dilatation_3x3_SIMD(erosion_3x3_SIMD(test, height, width), height, width);
+    vbits **v_res, **v_ref;
+    v_res = ouverture_SIMD(test, height, width);
+    //printf("ouverture fusion SIMD : %.0f cycles\n", cycles);
+
+    v_ref = dilatation_3x3_SIMD(erosion_3x3_SIMD(test, height, width), height, width);
+    //printf("ouverture SIMD : %.0f cycles\n", cycles);
+    //display_ui8matrix(m, 0, height-1, 0, width-1, "%d\t", NULL);
     display_ui8matrix(convert_from_binary(v_res, height, width), 0, height-1, 0, width-1, "%d\t", NULL);
     //display_ui8matrix(convert_from_binary(v_ref, height, width), 0, height-1, 0, width-1, "%d\t", NULL);*/
 
