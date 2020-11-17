@@ -24,7 +24,8 @@
 
 int main(int argc, char * argv[]) {
 
-  bench_morpho_SIMD();
+  // bench_morpho_SIMD();
+  bench_morpho();
 
   return 0;
 }
