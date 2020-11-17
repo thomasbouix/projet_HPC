@@ -47,6 +47,46 @@ void bench_dilatation_SIMD(void) {
   return;
 }
 
+void bench_ouverture_fusion_SIMD(void) {
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix_0255(&img_u8, nrl, nrh, ncl, nch);
+
+  int height = nrh-nrl+1;
+  int width = nch-ncl+1;
+  vbits ** img_bin = convert_to_binary(img_u8, height, width);
+
+  vbits ** res;
+
+  CHRONO(res = ouverture_SIMD(img_bin, height, width), cycles);
+  printf("ouverture fusion SIMD : %.0f cycles\n", cycles);
+
+  return;
+}
+
+void bench_ouverture_naive_SIMD(void) {
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix_0255(&img_u8, nrl, nrh, ncl, nch);
+
+  int height = nrh-nrl+1;
+  int width = nch-ncl+1;
+  vbits ** img_bin = convert_to_binary(img_u8, height, width);
+
+  vbits ** res;
+
+  CHRONO(res = ouverture_naive_SIMD(img_bin, height, width), cycles);
+  printf("ouverture naive SIMD : %.0f cycles\n", cycles);
+
+  return;
+}
+
 
 void bench_morpho_SIMD(void) {
 
@@ -55,6 +95,10 @@ void bench_morpho_SIMD(void) {
   bench_erosion_SIMD();
   printf("---\n");
   bench_dilatation_SIMD();
+  printf("---\n");
+  bench_ouverture_fusion_SIMD();
+  printf("---\n");
+  bench_ouverture_naive_SIMD();
   printf("====================\n");
   return;
 }

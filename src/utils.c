@@ -97,6 +97,19 @@ void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value)
       (*m)[i][j] = value;
 }
 
+// 0 or 255
+void set_ui8matrix_0255(uint8 *** m, int nrl, int nrh, int ncl, int nch) {
+  srand(time(NULL));
+  for (int i=nrl; i<=nrh; i++) {
+    for (int j=ncl; j<=nch; j++) {
+      if (rand() % 2 == 0)
+        (*m)[i][j] = 0;
+      else
+        (*m)[i][j] = 255;
+    }
+  }
+}
+
 
 vbits** convert_to_binary(uint8** img, size_t height, size_t width)
 {

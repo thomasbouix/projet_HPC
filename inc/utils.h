@@ -12,9 +12,10 @@
 
 	#endif
 
-	#include "vnrdef.h"
+	#include <time.h>
 	#include <math.h>
 	#include <stdint.h>
+	#include "vnrdef.h"
 	#include "simd_macro.h"
 
 	// Error if a is true
@@ -48,6 +49,8 @@
   uint8** add_borders(uint8 **m, int height, int width, int border);
 	void zero_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch);
 	void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value);
+	// value is 0 or 1
+	void set_ui8matrix_0255(uint8 *** m, int nrl, int nrh, int ncl, int nch);
 	vbits** convert_to_binary(uint8** img, size_t height, size_t width);
 	uint8** convert_from_binary(vbits** binary_img, int height, int width);
 	void free_vbitsmatrix(vbits **m, int height, int width);
