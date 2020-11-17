@@ -13,5 +13,6 @@
   void compute_all_dilatation_3x3_SIMD(char* basePath, int save);
 
   vbits** ouverture_SIMD(vbits** img_bin, int height, int width);
+  vbits ** ouverture_naive_SIMD(vbits** img_bin, int height, int width);
 
 #endif

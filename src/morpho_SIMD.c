@@ -374,7 +374,6 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
   return m;
 }
 
-
 void compute_all_erosion_3x3_SIMD(char* basePath, int save)
 {
   CHECK_ERROR(system("mkdir -p output/erosion_3x3_SIMD"));
@@ -403,10 +402,6 @@ void compute_all_erosion_3x3_SIMD(char* basePath, int save)
     free_vbitsmatrix(output_bin, height, width);
   }
 }
-
-
-
-
 
 // OR logique sur un voisinage de taille 3x3
 vbits** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
@@ -783,7 +778,6 @@ vbits** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
   return m;
 }
 
-
 void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
 {
   CHECK_ERROR(system("mkdir -p output/dilatation_3x3_SIMD"));
@@ -812,10 +806,6 @@ void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
     free_vbitsmatrix(output_bin, height, width);
   }
 }
-
-
-
-
 
 vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
 {
@@ -1298,4 +1288,10 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
 
   _mm_free(img_bin_extra_lines-2);
   return m;
+}
+
+// dilatation( erosion() )
+vbits ** ouverture_naive_SIMD(vbits** img_bin, int height, int width) {
+
+  return dilatation_3x3_SIMD(erosion_3x3_SIMD(img_bin, height, width), height, width);
 }
