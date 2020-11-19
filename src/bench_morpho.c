@@ -53,6 +53,26 @@ void bench_dilatation(void) {
   printf("dilatation 3x3 : %.0f cycles\n", cycles);
 }
 
+void bench_ouverture(void) {
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix_0255(&img, nrl, nrh, ncl, nch);
+
+  int height = nrh-nrl+1;
+  int width = nch-ncl+1;
+  int border = 1;
+  int kernel_size = 3;
+
+  uint8** img_with_borders = add_borders(img, height, width, border);
+  free_ui8matrix(img, nrl, nrh, ncl, nch);
+  uint8 ** res;
+  CHRONO(res = ouverture(img_with_borders, height, width, kernel_size), cycles);
+  printf("ouverture 3x3 : %.0f cycles\n", cycles);
+}
+
 void bench_morpho(void) {
 
   printf("BENCH_MORPHO\n");
@@ -60,6 +80,8 @@ void bench_morpho(void) {
   bench_erosion();
   printf("---\n");
   bench_dilatation();
+  printf("---\n");
+  bench_ouverture();
   printf("====================\n");
 
   return;

@@ -101,3 +101,11 @@ void compute_dilatation(char* basePath, int kernel_size, int save)
     free_ui8matrix(output, nrl+padding, nrh-padding, ncl+padding, nch-padding);
   }
 }
+
+uint8** ouverture(uint8** img_with_padding, int height, int width, int kernel_size) {
+  int border = 1;
+  uint8 ** ero = erosion(img_with_padding, height, width, kernel_size);
+  uint8 ** ero_borders = add_borders(ero, height, width, border);
+  free_ui8matrix(ero, 0, height-1, 0, width-1);
+  return dilatation(ero_borders, height, width, kernel_size);
+}

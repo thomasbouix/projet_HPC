@@ -97,6 +97,19 @@ void set_ui8matrix(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 value)
       (*m)[i][j] = value;
 }
 
+// 0 or 255
+void set_ui8matrix_0255(uint8 *** m, int nrl, int nrh, int ncl, int nch) {
+  srand(time(NULL));
+  for (int i=nrl; i<=nrh; i++) {
+    for (int j=ncl; j<=nch; j++) {
+      if (rand() % 2 == 0)
+        (*m)[i][j] = 0;
+      else
+        (*m)[i][j] = 255;
+    }
+  }
+}
+
 
 vbits** convert_to_binary(uint8** img, size_t height, size_t width)
 {
@@ -214,4 +227,18 @@ void display_hexa_vbits_matrix(vbits** m, int height, int width)
 void display_hexa_vbits(vbits v)
 {
   printf("\n\n%.16llx %.16llx\n\n", _mm_extract_epi64(v, 1), _mm_extract_epi64(v, 0));
+}
+
+// remplie les bordures d'une matrice avec une valeur
+void set_ui8_bordures(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 val) {
+  // bordures horizontales
+  for (int j=ncl; j<=nch; j++) {
+    (*m)[nrl][j] = val;
+    (*m)[nrh][j] = val;
+  }
+  // bordures verticales
+  for (int i=nrl; i<=nrh; i++) {
+    (*m)[i][ncl] = val;
+    (*m)[i][nch] = val;
+  }
 }
