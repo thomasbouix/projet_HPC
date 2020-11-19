@@ -19,6 +19,7 @@
 	#include "simd_macro.h"
 
 	#define ERROR(message) 							\
+		printf("\n");											\
 		fprintf(stderr, "*** Error : ");	\
 		fprintf(stderr, message);					\
 		fprintf(stderr, "\n");						\
