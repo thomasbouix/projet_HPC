@@ -826,14 +826,12 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
   vbits **m = (vbits**)vui32matrix(0, height-1, 0, nb_vbits_col-1);
 
   // Ajout d'un pointeur vers les lignes 0 et height-1 de l'image pour gérer plus facilement les bords
-  vbits **img_bin_extra_lines=(vbits **) _mm_malloc ((size_t)((height+2)*sizeof(vbits*)), 16);
+  vbits **img_bin_extra_lines=(vbits **) _mm_malloc ((size_t)((height+1)*sizeof(vbits*)), 16);
   if (!img_bin_extra_lines) vnrerror("allocation failure in ouverture_SIMD()");
-  img_bin_extra_lines++;
 
   for(int i = 0; i < height; i++)
     img_bin_extra_lines[i] = img_bin[i];
 
-  img_bin_extra_lines[-1] = img_bin_extra_lines[0];
   img_bin_extra_lines[height] = img_bin_extra_lines[height-1];
 
   vbits a0, a1, a2;
@@ -984,7 +982,7 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
       break;
     }
 
-    _mm_free(img_bin_extra_lines-1);
+    _mm_free(img_bin_extra_lines);
     return m;
   }
 
@@ -1232,7 +1230,7 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
       break;
     }
 
-    _mm_free(img_bin_extra_lines-1);
+    _mm_free(img_bin_extra_lines);
     return m;
   }
 
@@ -1583,7 +1581,7 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
       break;
     }
 
-    _mm_free(img_bin_extra_lines-1);
+    _mm_free(img_bin_extra_lines);
     return m;
   }
 
@@ -2389,6 +2387,6 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
     break;
   }
 
-  _mm_free(img_bin_extra_lines-1);
+  _mm_free(img_bin_extra_lines);
   return m;
 }

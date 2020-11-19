@@ -54,10 +54,10 @@ int main(int argc, char * argv[]) {
   //vbits** res_v = dilatation_3x3_SIMD(v, height, width);
   vbits** ouverture_sans_fusion = dilatation_3x3_SIMD(erosion_3x3_SIMD(v, height, width), height, width);
   uint8** res_ouverture_sans_fusion = convert_from_binary(ouverture_sans_fusion, height, width);
-  //display_ui8matrix(res_ouverture_sans_fusion, 0, height-1, 0, width-1, "%d\t", NULL);
+  display_ui8matrix(res_ouverture_sans_fusion, 0, height-1, 0, width-1, "%d\t", NULL);
   vbits** ouverture_fusion = ouverture_SIMD(v, height, width);
   uint8** res_ouverture_fusion = convert_from_binary(ouverture_fusion, height, width);
-  display_ui8matrix(res_ouverture_fusion, 0, height-1, 0, width-1, "%d\t", NULL);*/
+  //display_ui8matrix(res_ouverture_fusion, 0, height-1, 0, width-1, "%d\t", NULL);*/
 
 
     /*int nrl, nrh, ncl, nch;
@@ -96,8 +96,8 @@ int main(int argc, char * argv[]) {
     v_ref = dilatation_3x3_SIMD(erosion_3x3_SIMD(test, height, width), height, width);
     //printf("ouverture SIMD : %.0f cycles\n", cycles);
     //display_ui8matrix(m, 0, height-1, 0, width-1, "%d\t", NULL);
-    display_ui8matrix(convert_from_binary(v_res, height, width), 0, height-1, 0, width-1, "%d\t", NULL);
-    //display_ui8matrix(convert_from_binary(v_ref, height, width), 0, height-1, 0, width-1, "%d\t", NULL);*/
+    //display_ui8matrix(convert_from_binary(v_res, height, width), 0, height-1, 0, width-1, "%d\t", NULL);
+    display_ui8matrix(convert_from_binary(v_ref, height, width), 0, height-1, 0, width-1, "%d\t", NULL);*/
 
   return 0;
 }
