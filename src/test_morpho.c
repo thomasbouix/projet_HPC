@@ -134,7 +134,6 @@ void test_dil_bordure(int height, int width) {
   printf(__func__);
   printf(" %dx%d\n", height, width);
 
-
   free_padding_ui8matrix(m_with_borders, nrl-border, nrh+border, ncl-border, nch+border, 1);
   free_ui8matrix(m_res, nrl, nrh, ncl, nch);
 
@@ -143,7 +142,7 @@ void test_dil_bordure(int height, int width) {
 
 void test_morpho(void) {
 
-  printf("TEST_MORPHO\n");
+  printf("TEST MORPHO SCALAIRE\n");
   printf("--------------------\n");
   test_ero_5x7_losange_plein();
   test_dil_bordure(3, 3);
