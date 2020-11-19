@@ -228,3 +228,17 @@ void display_hexa_vbits(vbits v)
 {
   printf("\n\n%.16llx %.16llx\n\n", _mm_extract_epi64(v, 1), _mm_extract_epi64(v, 0));
 }
+
+// remplie les bordures d'une matrice avec une valeur
+void set_ui8_bordures(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 val) {
+  // bordures horizontales
+  for (int j=ncl; j<=nch; j++) {
+    (*m)[nrl][j] = val;
+    (*m)[nrh][j] = val;
+  }
+  // bordures verticales
+  for (int i=nrl; i<=nrh; i++) {
+    (*m)[i][ncl] = val;
+    (*m)[i][nch] = val;
+  }
+}

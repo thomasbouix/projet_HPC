@@ -25,6 +25,7 @@
 int main(int argc, char * argv[]) {
 
   test_morpho();
+  // bench_morpho_SIMD();
 
   return 0;
 }

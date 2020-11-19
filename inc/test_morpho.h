@@ -13,8 +13,9 @@
   #include "morpho.h"
   #include "mouvement.h"
 
-  void ero_losange_plein(void);
-  void test_dilatation(void);
+  void test_ero_5x7_losange_plein(void);
+  // test une dilatation sur une image de taille height x width et des bordures à 1
+  void test_dil_bordure(int height, int width);
   void test_morpho(void);
 
 #endif
