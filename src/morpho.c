@@ -17,20 +17,25 @@ uint8** erosion_3x3(uint8** img_with_padding, int height, int width){
 
   x0 = img_with_padding[-1][-1]; x1 = img_with_padding[-1][0];
   x3 = img_with_padding[-0][-1]; x4 = img_with_padding[-0][0];
-  for(int i = 0; i < height; i++){
-    x6 = img_with_padding[i+1][-1]; x7 = img_with_padding[i+1][-0];
-    and0 = x0 & x3 & x6;
-    and1 = x1 & x4 & x7;
-    for(int j = 0; j < width; j++){
-      x2 = img_with_padding[i-1][j+1];
-      x5 = img_with_padding[i-0][j+1];
-      x8 = img_with_padding[i+1][j+1];
-      and2 = x2 & x5 & x8;
-      m[i][j] = and0 & and1 & and2;
-      and0 = and1; and1 = and2;
+
+  # pragma omp parallel
+  {
+    # pragma omp for
+    for(int i = 0; i < height; i++){
+      x6 = img_with_padding[i+1][-1]; x7 = img_with_padding[i+1][-0];
+      and0 = x0 & x3 & x6;
+      and1 = x1 & x4 & x7;
+      for(int j = 0; j < width; j++){
+        x2 = img_with_padding[i-1][j+1];
+        x5 = img_with_padding[i-0][j+1];
+        x8 = img_with_padding[i+1][j+1];
+        and2 = x2 & x5 & x8;
+        m[i][j] = and0 & and1 & and2;
+        and0 = and1; and1 = and2;
+      }
+      x0 = x3; x3 = x6;
+      x1 = x4; x4 = x7;
     }
-    x0 = x3; x3 = x6;
-    x1 = x4; x4 = x7;
   }
   return m;
 }

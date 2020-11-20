@@ -15,6 +15,7 @@
 	#include <time.h>
 	#include <math.h>
 	#include <stdint.h>
+	#include <omp.h>
 	#include "vnrdef.h"
 	#include "simd_macro.h"
 
