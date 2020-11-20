@@ -2395,6 +2395,9 @@ vbits ** fermeture_naive_SIMD(vbits** img_bin, int height, int width)
   return erosion_3x3_SIMD(dilatation_3x3_SIMD(img_bin, height, width), height, width);
 }
 
+
+
+
 vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
@@ -2417,9 +2420,9 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   vbits c0, c1, c2;
   vbits aa0, aa1, aa2;
   vbits cc0, cc1, cc2;
-  vbits or0, or1, or2, or0_bis, or1_bis, or2_bis, or0_ter, or1_ter, or2_ter;
-  vbits and0, and1, and2, and3, and4, and5, and6, and7, and8;
-  vbits and0_0, and0_1, and0_2, and1_0, and1_1, and1_2, and2_0, and2_1, and2_2;
+  vbits and0, and1, and2, and0_bis, and1_bis, and2_bis, and0_ter, and1_ter, and2_ter;
+  vbits or0, or1, or2, or3, or4, or5, or6, or7, or8;
+  vbits or0_0, or0_1, or0_2, or1_0, or1_1, or1_2, or2_0, or2_1, or2_2;
   vbits y;
 
 
@@ -2440,17 +2443,17 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(b0,c0);
     cc1 = vec_right1_bin(b1,c1);
 
-    and0_0 = vOR3(aa0, b0, cc0);
-    and0_1 = vOR3(aa1, b1, cc1);
+    or0_0 = vOR3(aa0, b0, cc0);
+    or0_1 = vOR3(aa1, b1, cc1);
 
-    and0 = vOR3(and0_0, and0_0, and0_1);
-    and3 = and0;
+    or0 = vOR3(or0_0, or0_0, or0_1);
+    or3 = or0;
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-    cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-    or0 = vAND3(aa0, and0, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+    cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+    and0 = vAND3(aa0, or0, cc0);
 
-    or1 = or0;
+    and1 = and0;
 
     for(int i = 0; i < height-3; i+=3){
       b2 = vec_load(&img_bin_extra_lines[i+2][0]);
@@ -2460,14 +2463,14 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-      cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+      cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+      and2 = vAND3(aa0, or6, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[i][0], y);
 
 
@@ -2478,14 +2481,14 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-      and0_0 = vOR3(aa2, b2, cc2);
-      and0 = vOR3(and0_0, and0_2, and0_1);
+      or0_0 = vOR3(aa2, b2, cc2);
+      or0 = vOR3(or0_0, or0_2, or0_1);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-      cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-      or0 = vAND3(aa0, and0, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+      cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+      and0 = vAND3(aa0, or0, cc0);
 
-      y = vAND3(or0, or2, or1);
+      y = vAND3(and0, and2, and1);
       vec_store(&m[i+1][0], y);
 
 
@@ -2496,34 +2499,34 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-      and0_1 = vOR3(aa2, b2, cc2);
-      and3 = vOR3(and0_1, and0_0, and0_2);
+      or0_1 = vOR3(aa2, b2, cc2);
+      or3 = vOR3(or0_1, or0_0, or0_2);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and3, 127),and3);
-      cc0 = vec_right1_bin_unused_col(and3, _mm_bitshift_left(and3, 127-nb_unused_col),nb_unused_col);
-      or1 = vAND3(aa0, and3, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or3, 127),or3);
+      cc0 = vec_right1_bin_unused_col(or3, _mm_bitshift_left(or3, 127-nb_unused_col),nb_unused_col);
+      and1 = vAND3(aa0, or3, cc0);
 
-      y = vAND3(or1, or0, or2);
+      y = vAND3(and1, and0, and2);
       vec_store(&m[i+2][0], y);
     }
 
     switch(n){
       case 2 :
-        and6 = vOR3(and0_1, and0_1, and0_0);
+        or6 = vOR3(or0_1, or0_1, or0_0);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+        and2 = vAND3(aa0, or6, cc0);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-2][0], y);
 
-        y = vAND3(or1, or2, or2);
+        y = vAND3(and1, and2, and2);
         vec_store(&m[height-1][0], y);
 
       break;
       case 1 :
-        y = vAND3(or0, or1, or1);
+        y = vAND3(and0, and1, and1);
         vec_store(&m[height-1][0], y);
       break;
       case 0 :
@@ -2534,28 +2537,28 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
         aa2 = vec_left1_bin(a2,b2);
         cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-        and0_2 = vOR3(aa2, b2, cc2);
-        and6 = vOR3(and0_2, and0_1, and0_0);
+        or0_2 = vOR3(aa2, b2, cc2);
+        or6 = vOR3(or0_2, or0_1, or0_0);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+        and2 = vAND3(aa0, or6, cc0);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-3][0], y);
 
 
-        and0 = vOR3(and0_2, and0_2, and0_1);
+        or0 = vOR3(or0_2, or0_2, or0_1);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-        cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-        or0 = vAND3(aa0, and0, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+        cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+        and0 = vAND3(aa0, or0, cc0);
 
-        y = vAND3(or0, or2, or1);
+        y = vAND3(and0, and2, and1);
         vec_store(&m[height-2][0], y);
 
 
-        y = vAND3(or2, or0, or0);
+        y = vAND3(and2, and0, and0);
         vec_store(&m[height-1][0], y);
       break;
     }
@@ -2584,11 +2587,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(b0,c0);
     cc1 = vec_right1_bin(b1,c1);
 
-    and0_0 = vOR3(aa0, b0, cc0);
-    and0_1 = vOR3(aa1, b1, cc1);
+    or0_0 = vOR3(aa0, b0, cc0);
+    or0_1 = vOR3(aa1, b1, cc1);
 
-    and0 = vOR3(and0_0, and0_0, and0_1);
-    and3 = and0;
+    or0 = vOR3(or0_0, or0_0, or0_1);
+    or3 = or0;
 
     a0 = _mm_bitshift_left(c0, 127-nb_unused_col);
     a1 = _mm_bitshift_left(c1, 127-nb_unused_col);
@@ -2599,22 +2602,22 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(c0,a0);
     cc1 = vec_right1_bin(c1,a1);
 
-    and1_0 = vOR3(aa0, c0, cc0);
-    and1_1 = vOR3(aa1, c1, cc1);
+    or1_0 = vOR3(aa0, c0, cc0);
+    or1_1 = vOR3(aa1, c1, cc1);
 
-    and1 = vOR3(and1_0, and1_0, and1_1);
-    and4 = and1;
+    or1 = vOR3(or1_0, or1_0, or1_1);
+    or4 = or1;
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-    cc0 = vec_right1_bin(and0,and1);
-    or0 = vAND3(aa0, and0, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+    cc0 = vec_right1_bin(or0,or1);
+    and0 = vAND3(aa0, or0, cc0);
 
-    aa0 = vec_left1_bin(and0,and1);
-    cc0 = vec_right1_bin_unused_col(and1, _mm_bitshift_left(and1, 127-nb_unused_col),nb_unused_col);
-    or0_bis = vAND3(aa0, and1, cc0);
+    aa0 = vec_left1_bin(or0,or1);
+    cc0 = vec_right1_bin_unused_col(or1, _mm_bitshift_left(or1, 127-nb_unused_col),nb_unused_col);
+    and0_bis = vAND3(aa0, or1, cc0);
 
-    or1 = or0;
-    or1_bis = or0_bis;
+    and1 = and0;
+    and1_bis = and0_bis;
 
     for(int i = 0; i < height-3; i+=3){
       b2 = vec_load(&img_bin_extra_lines[i+2][0]);
@@ -2624,29 +2627,29 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
       a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin_unused_col(c2,a2,nb_unused_col);
 
-      and1_2 = vOR3(aa2, c2, cc2);
-      and7 = vOR3(and1_2, and1_1, and1_0);
+      or1_2 = vOR3(aa2, c2, cc2);
+      or7 = vOR3(or1_2, or1_1, or1_0);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-      cc0 = vec_right1_bin(and6,and7);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+      cc0 = vec_right1_bin(or6,or7);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and6,and7);
-      cc0 = vec_right1_bin_unused_col(and7, _mm_bitshift_left(and7, 127-nb_unused_col),nb_unused_col);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or6,or7);
+      cc0 = vec_right1_bin_unused_col(or7, _mm_bitshift_left(or7, 127-nb_unused_col),nb_unused_col);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      y = vAND3(or2, or0, or1);
+      y = vAND3(and2, and0, and1);
       vec_store(&m[i][0], y);
 
-      y = vAND3(or2_bis, or0_bis, or1_bis);
+      y = vAND3(and2_bis, and0_bis, and1_bis);
       vec_store(&m[i][1], y);
 
 
@@ -2657,29 +2660,29 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_0 = vOR3(aa2, b2, cc2);
-      and0 = vOR3(and0_0, and0_2, and0_1);
+      or0_0 = vOR3(aa2, b2, cc2);
+      or0 = vOR3(or0_0, or0_2, or0_1);
 
       a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin_unused_col(c2,a2,nb_unused_col);
 
-      and1_0 = vOR3(aa2, c2, cc2);
-      and1 = vOR3(and1_0, and1_2, and1_1);
+      or1_0 = vOR3(aa2, c2, cc2);
+      or1 = vOR3(or1_0, or1_2, or1_1);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-      cc0 = vec_right1_bin(and0,and1);
-      or0 = vAND3(aa0, and0, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+      cc0 = vec_right1_bin(or0,or1);
+      and0 = vAND3(aa0, or0, cc0);
 
-      aa0 = vec_left1_bin(and0,and1);
-      cc0 = vec_right1_bin_unused_col(and1, _mm_bitshift_left(and1, 127-nb_unused_col),nb_unused_col);
-      or0_bis = vAND3(aa0, and1, cc0);
+      aa0 = vec_left1_bin(or0,or1);
+      cc0 = vec_right1_bin_unused_col(or1, _mm_bitshift_left(or1, 127-nb_unused_col),nb_unused_col);
+      and0_bis = vAND3(aa0, or1, cc0);
 
-      y = vAND3(or0, or2, or1);
+      y = vAND3(and0, and2, and1);
       vec_store(&m[i+1][0], y);
 
-      y = vAND3(or0_bis, or2_bis, or1_bis);
+      y = vAND3(and0_bis, and2_bis, and1_bis);
       vec_store(&m[i+1][1], y);
 
 
@@ -2690,62 +2693,62 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_1 = vOR3(aa2, b2, cc2);
-      and3 = vOR3(and0_1, and0_0, and0_2);
+      or0_1 = vOR3(aa2, b2, cc2);
+      or3 = vOR3(or0_1, or0_0, or0_2);
 
       a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin_unused_col(c2,a2,nb_unused_col);
 
-      and1_1 = vOR3(aa2, c2, cc2);
-      and4 = vOR3(and1_1, and1_0, and1_2);
+      or1_1 = vOR3(aa2, c2, cc2);
+      or4 = vOR3(or1_1, or1_0, or1_2);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and3, 127),and3);
-      cc0 = vec_right1_bin(and3,and4);
-      or1 = vAND3(aa0, and3, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or3, 127),or3);
+      cc0 = vec_right1_bin(or3,or4);
+      and1 = vAND3(aa0, or3, cc0);
 
-      aa0 = vec_left1_bin(and3,and4);
-      cc0 = vec_right1_bin_unused_col(and4, _mm_bitshift_left(and4, 127-nb_unused_col),nb_unused_col);
-      or1_bis = vAND3(aa0, and4, cc0);
+      aa0 = vec_left1_bin(or3,or4);
+      cc0 = vec_right1_bin_unused_col(or4, _mm_bitshift_left(or4, 127-nb_unused_col),nb_unused_col);
+      and1_bis = vAND3(aa0, or4, cc0);
 
-      y = vAND3(or1, or0, or2);
+      y = vAND3(and1, and0, and2);
       vec_store(&m[i+2][0], y);
 
-      y = vAND3(or1_bis, or0_bis, or2_bis);
+      y = vAND3(and1_bis, and0_bis, and2_bis);
       vec_store(&m[i+2][1], y);
 
     }
 
     switch(n){
       case 2 :
-        and6 = vOR3(and0_1, and0_1, and0_0);
-        and7 = vOR3(and1_1, and1_1, and1_0);
+        or6 = vOR3(or0_1, or0_1, or0_0);
+        or7 = vOR3(or1_1, or1_1, or1_0);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin(and6,and7);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin(or6,or7);
+        and2 = vAND3(aa0, or6, cc0);
 
-        aa0 = vec_left1_bin(and6,and7);
-        cc0 = vec_right1_bin_unused_col(and7, _mm_bitshift_left(and7, 127-nb_unused_col),nb_unused_col);
-        or2_bis = vAND3(aa0, and7, cc0);
+        aa0 = vec_left1_bin(or6,or7);
+        cc0 = vec_right1_bin_unused_col(or7, _mm_bitshift_left(or7, 127-nb_unused_col),nb_unused_col);
+        and2_bis = vAND3(aa0, or7, cc0);
 
-        y = vAND3(or2, or0, or1);
+        y = vAND3(and2, and0, and1);
         vec_store(&m[height-2][0], y);
 
-        y = vAND3(or2_bis, or0_bis, or1_bis);
+        y = vAND3(and2_bis, and0_bis, and1_bis);
         vec_store(&m[height-2][1], y);
 
-        y = vAND3(or1, or2, or2);
+        y = vAND3(and1, and2, and2);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or1_bis, or2_bis, or2_bis);
+        y = vAND3(and1_bis, and2_bis, and2_bis);
         vec_store(&m[height-1][1], y);
 
       break;
       case 1 :
-        y = vAND3(or0, or1, or1);
+        y = vAND3(and0, and1, and1);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or0_bis, or1_bis, or1_bis);
+        y = vAND3(and0_bis, and1_bis, and1_bis);
         vec_store(&m[height-1][1], y);
       break;
       case 0 :
@@ -2756,52 +2759,52 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
         aa2 = vec_left1_bin(a2,b2);
         cc2 = vec_right1_bin(b2,c2);
 
-        and0_2 = vOR3(aa2, b2, cc2);
-        and6 = vOR3(and0_0, and0_1, and0_0);
+        or0_2 = vOR3(aa2, b2, cc2);
+        or6 = vOR3(or0_0, or0_1, or0_0);
 
         a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
         aa2 = vec_left1_bin(b2,c2);
         cc2 = vec_right1_bin(c2,a2);
 
-        and1_2 = vOR3(aa2, c2, cc2);
-        and7 = vOR3(and1_2, and1_1, and1_0);
+        or1_2 = vOR3(aa2, c2, cc2);
+        or7 = vOR3(or1_2, or1_1, or1_0);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin(and6,and7);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin(or6,or7);
+        and2 = vAND3(aa0, or6, cc0);
 
-        aa0 = vec_left1_bin(and6,and7);
-        cc0 = vec_right1_bin_unused_col(and7, _mm_bitshift_left(and7, 127-nb_unused_col),nb_unused_col);
-        or2_bis = vAND3(aa0, and7, cc0);
+        aa0 = vec_left1_bin(or6,or7);
+        cc0 = vec_right1_bin_unused_col(or7, _mm_bitshift_left(or7, 127-nb_unused_col),nb_unused_col);
+        and2_bis = vAND3(aa0, or7, cc0);
 
-        y = vAND3(or2, or0, or1);
+        y = vAND3(and2, and0, and1);
         vec_store(&m[height-3][0], y);
 
-        y = vAND3(or2_bis, or0_bis, or1_bis);
+        y = vAND3(and2_bis, and0_bis, and1_bis);
         vec_store(&m[height-3][1], y);
 
 
-        and0 = vOR3(and0_2, and0_2, and0_1);
-        and1 = vOR3(and1_2, and1_2, and1_1);
+        or0 = vOR3(or0_2, or0_2, or0_1);
+        or1 = vOR3(or1_2, or1_2, or1_1);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-        cc0 = vec_right1_bin(and0,and1);
-        or0 = vAND3(aa0, and0, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+        cc0 = vec_right1_bin(or0,or1);
+        and0 = vAND3(aa0, or0, cc0);
 
-        aa0 = vec_left1_bin(and0,and1);
-        cc0 = vec_right1_bin_unused_col(and1, _mm_bitshift_left(and1, 127-nb_unused_col),nb_unused_col);
-        or0_bis = vAND3(aa0, and1, cc0);
+        aa0 = vec_left1_bin(or0,or1);
+        cc0 = vec_right1_bin_unused_col(or1, _mm_bitshift_left(or1, 127-nb_unused_col),nb_unused_col);
+        and0_bis = vAND3(aa0, or1, cc0);
 
-        y = vAND3(or0, or2, or1);
+        y = vAND3(and0, and2, and1);
         vec_store(&m[height-2][0], y);
 
-        y = vAND3(or0_bis, or2_bis, or1_bis);
+        y = vAND3(and0_bis, and2_bis, and1_bis);
         vec_store(&m[height-2][1], y);
 
-        y = vAND3(or2, or0, or0);
+        y = vAND3(and2, and0, and0);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or2_bis, or0_bis, or0_bis);
+        y = vAND3(and2_bis, and0_bis, and0_bis);
         vec_store(&m[height-1][1], y);
       break;
       default:
@@ -2811,6 +2814,10 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     _mm_free(img_bin_extra_lines);
     return m;
   }
+
+
+
+
 
 
 
@@ -2832,11 +2839,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(b0,c0);
     cc1 = vec_right1_bin(b1,c1);
 
-    and0_0 = vOR3(aa0, b0, cc0);
-    and0_1 = vOR3(aa1, b1, cc1);
+    or0_0 = vOR3(aa0, b0, cc0);
+    or0_1 = vOR3(aa1, b1, cc1);
 
-    and0 = vOR3(and0_0, and0_0, and0_1);
-    and3 = and0;
+    or0 = vOR3(or0_0, or0_0, or0_1);
+    or3 = or0;
 
     a0 = vec_load(&img_bin_extra_lines[0][2]);
     a1 = vec_load(&img_bin_extra_lines[1][2]);
@@ -2847,11 +2854,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(c0,a0);
     cc1 = vec_right1_bin(c1,a1);
 
-    and1_0 = vOR3(aa0, c0, cc0);
-    and1_1 = vOR3(aa1, c1, cc1);
+    or1_0 = vOR3(aa0, c0, cc0);
+    or1_1 = vOR3(aa1, c1, cc1);
 
-    and1 = vOR3(and1_0, and1_0, and1_1);
-    and4 = and1;
+    or1 = vOR3(or1_0, or1_0, or1_1);
+    or4 = or1;
 
     b0 = _mm_bitshift_left(a0, 127-nb_unused_col);
     b1 = _mm_bitshift_left(a1, 127-nb_unused_col);
@@ -2862,27 +2869,27 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin_unused_col(a0, b0, nb_unused_col);
     cc1 = vec_right1_bin_unused_col(a1, b1, nb_unused_col);
 
-    and2_0 = vOR3(aa0, a0, cc0);
-    and2_1 = vOR3(aa1, a1, cc1);
+    or2_0 = vOR3(aa0, a0, cc0);
+    or2_1 = vOR3(aa1, a1, cc1);
 
-    and2 = vOR3(and2_0, and2_0, and2_1);
-    and5 = and2;
+    or2 = vOR3(or2_0, or2_0, or2_1);
+    or5 = or2;
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-    cc0 = vec_right1_bin(and0,and1);
-    or0 = vAND3(aa0, and0, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+    cc0 = vec_right1_bin(or0,or1);
+    and0 = vAND3(aa0, or0, cc0);
 
-    aa0 = vec_left1_bin(and0,and1);
-    cc0 = vec_right1_bin(and1,and2);
-    or0_bis = vAND3(aa0, and1, cc0);
+    aa0 = vec_left1_bin(or0,or1);
+    cc0 = vec_right1_bin(or1,or2);
+    and0_bis = vAND3(aa0, or1, cc0);
 
-    aa0 = vec_left1_bin(and1,and2);
-    cc0 = vec_right1_bin_unused_col(and2, _mm_bitshift_left(and2, 127-nb_unused_col),nb_unused_col);
-    or0_ter = vAND3(aa0, and2, cc0);
+    aa0 = vec_left1_bin(or1,or2);
+    cc0 = vec_right1_bin_unused_col(or2, _mm_bitshift_left(or2, 127-nb_unused_col),nb_unused_col);
+    and0_ter = vAND3(aa0, or2, cc0);
 
-    or1 = or0;
-    or1_bis = or0_bis;
-    or1_ter = or0_ter;
+    and1 = and0;
+    and1_bis = and0_bis;
+    and1_ter = and0_ter;
 
     for(int i = 0; i < height-3; i+=3){
       b2 = vec_load(&img_bin_extra_lines[i+2][0]);
@@ -2892,44 +2899,44 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
       a2 = vec_load(&img_bin_extra_lines[i+2][2]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_2 = vOR3(aa2, c2, cc2);
-      and7 = vOR3(and1_2, and1_1, and1_0);
+      or1_2 = vOR3(aa2, c2, cc2);
+      or7 = vOR3(or1_2, or1_1, or1_0);
 
       b2 = _mm_bitshift_left(a2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin_unused_col(a2,b2,nb_unused_col);
 
-      and2_2 = vOR3(aa2, a2, cc2);
-      and8 = vOR3(and2_2, and2_1, and2_0);
+      or2_2 = vOR3(aa2, a2, cc2);
+      or8 = vOR3(or2_2, or2_1, or2_0);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-      cc0 = vec_right1_bin(and6,and7);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+      cc0 = vec_right1_bin(or6,or7);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and6,and7);
-      cc0 = vec_right1_bin(and7,and8);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or6,or7);
+      cc0 = vec_right1_bin(or7,or8);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      aa0 = vec_left1_bin(and7,and8);
-      cc0 = vec_right1_bin_unused_col(and8, _mm_bitshift_left(and8, 127-nb_unused_col),nb_unused_col);
-      or2_ter = vAND3(aa0, and8, cc0);
+      aa0 = vec_left1_bin(or7,or8);
+      cc0 = vec_right1_bin_unused_col(or8, _mm_bitshift_left(or8, 127-nb_unused_col),nb_unused_col);
+      and2_ter = vAND3(aa0, or8, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[i][0], y);
 
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[i][1], y);
 
-      y = vAND3(or0_ter, or1_ter, or2_ter);
+      y = vAND3(and0_ter, and1_ter, and2_ter);
       vec_store(&m[i][2], y);
 
 
@@ -2940,44 +2947,44 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_0 = vOR3(aa2, b2, cc2);
-      and0 = vOR3(and0_0, and0_2, and0_1);
+      or0_0 = vOR3(aa2, b2, cc2);
+      or0 = vOR3(or0_0, or0_2, or0_1);
 
       a2 = vec_load(&img_bin_extra_lines[i+3][2]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_0 = vOR3(aa2, c2, cc2);
-      and1 = vOR3(and1_0, and1_2, and1_1);
+      or1_0 = vOR3(aa2, c2, cc2);
+      or1 = vOR3(or1_0, or1_2, or1_1);
 
       b2 = _mm_bitshift_left(a2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin_unused_col(a2,b2,nb_unused_col);
 
-      and2_0 = vOR3(aa2, a2, cc2);
-      and2 = vOR3(and2_0, and2_2, and2_1);
+      or2_0 = vOR3(aa2, a2, cc2);
+      or2 = vOR3(or2_0, or2_2, or2_1);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-      cc0 = vec_right1_bin(and0,and1);
-      or0 = vAND3(aa0, and0, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+      cc0 = vec_right1_bin(or0,or1);
+      and0 = vAND3(aa0, or0, cc0);
 
-      aa0 = vec_left1_bin(and0,and1);
-      cc0 = vec_right1_bin(and1,and2);
-      or0_bis = vAND3(aa0, and1, cc0);
+      aa0 = vec_left1_bin(or0,or1);
+      cc0 = vec_right1_bin(or1,or2);
+      and0_bis = vAND3(aa0, or1, cc0);
 
-      aa0 = vec_left1_bin(and1,and2);
-      cc0 = vec_right1_bin_unused_col(and2, _mm_bitshift_left(and2, 127-nb_unused_col),nb_unused_col);
-      or0_ter = vAND3(aa0, and2, cc0);
+      aa0 = vec_left1_bin(or1,or2);
+      cc0 = vec_right1_bin_unused_col(or2, _mm_bitshift_left(or2, 127-nb_unused_col),nb_unused_col);
+      and0_ter = vAND3(aa0, or2, cc0);
 
-      y = vAND3(or0, or2, or1);
+      y = vAND3(and0, and2, and1);
       vec_store(&m[i+1][0], y);
 
-      y = vAND3(or0_bis, or2_bis, or1_bis);
+      y = vAND3(and0_bis, and2_bis, and1_bis);
       vec_store(&m[i+1][1], y);
 
-      y = vAND3(or0_ter, or2_ter, or1_ter);
+      y = vAND3(and0_ter, and2_ter, and1_ter);
       vec_store(&m[i+1][2], y);
 
 
@@ -2988,87 +2995,87 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_1 = vOR3(aa2, b2, cc2);
-      and3 = vOR3(and0_1, and0_0, and0_2);
+      or0_1 = vOR3(aa2, b2, cc2);
+      or3 = vOR3(or0_1, or0_0, or0_2);
 
       a2 = vec_load(&img_bin_extra_lines[i+4][2]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_1 = vOR3(aa2, c2, cc2);
-      and4 = vOR3(and1_1, and1_0, and1_2);
+      or1_1 = vOR3(aa2, c2, cc2);
+      or4 = vOR3(or1_1, or1_0, or1_2);
 
       b2 = _mm_bitshift_left(a2, 127-nb_unused_col);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin_unused_col(a2,b2,nb_unused_col);
 
-      and2_1 = vOR3(aa2, a2, cc2);
-      and5 = vOR3(and2_1, and2_0, and2_2);
+      or2_1 = vOR3(aa2, a2, cc2);
+      or5 = vOR3(or2_1, or2_0, or2_2);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and3, 127),and3);
-      cc0 = vec_right1_bin(and3,and4);
-      or1 = vAND3(aa0, and3, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or3, 127),or3);
+      cc0 = vec_right1_bin(or3,or4);
+      and1 = vAND3(aa0, or3, cc0);
 
-      aa0 = vec_left1_bin(and3,and4);
-      cc0 = vec_right1_bin(and4,and5);
-      or1_bis = vAND3(aa0, and4, cc0);
+      aa0 = vec_left1_bin(or3,or4);
+      cc0 = vec_right1_bin(or4,or5);
+      and1_bis = vAND3(aa0, or4, cc0);
 
-      aa0 = vec_left1_bin(and4,and5);
-      cc0 = vec_right1_bin_unused_col(and5, _mm_bitshift_left(and5, 127-nb_unused_col),nb_unused_col);
-      or1_ter = vAND3(aa0, and5, cc0);
+      aa0 = vec_left1_bin(or4,or5);
+      cc0 = vec_right1_bin_unused_col(or5, _mm_bitshift_left(or5, 127-nb_unused_col),nb_unused_col);
+      and1_ter = vAND3(aa0, or5, cc0);
 
-      y = vAND3(or1, or0, or2);
+      y = vAND3(and1, and0, and2);
       vec_store(&m[i+2][0], y);
 
-      y = vAND3(or1_bis, or0_bis, or2_bis);
+      y = vAND3(and1_bis, and0_bis, and2_bis);
       vec_store(&m[i+2][1], y);
 
-      y = vAND3(or1_ter, or0_ter, or2_ter);
+      y = vAND3(and1_ter, and0_ter, and2_ter);
       vec_store(&m[i+2][2], y);
     }
     switch (n) {
       case 2:
-        and6 = vOR3(and0_1, and0_1, and0_0);
-        and7 = vOR3(and1_1, and1_1, and1_0);
-        and8 = vOR3(and2_1, and2_1, and2_0);
+        or6 = vOR3(or0_1, or0_1, or0_0);
+        or7 = vOR3(or1_1, or1_1, or1_0);
+        or8 = vOR3(or2_1, or2_1, or2_0);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin(and6,and7);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin(or6,or7);
+        and2 = vAND3(aa0, or6, cc0);
 
-        aa0 = vec_left1_bin(and6,and7);
-        cc0 = vec_right1_bin(and7,and8);
-        or2_bis = vAND3(aa0, and7, cc0);
+        aa0 = vec_left1_bin(or6,or7);
+        cc0 = vec_right1_bin(or7,or8);
+        and2_bis = vAND3(aa0, or7, cc0);
 
-        aa0 = vec_left1_bin(and7,and8);
-        cc0 = vec_right1_bin_unused_col(and8, _mm_bitshift_left(and8, 127-nb_unused_col),nb_unused_col);
-        or2_ter = vAND3(aa0, and8, cc0);
+        aa0 = vec_left1_bin(or7,or8);
+        cc0 = vec_right1_bin_unused_col(or8, _mm_bitshift_left(or8, 127-nb_unused_col),nb_unused_col);
+        and2_ter = vAND3(aa0, or8, cc0);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-2][0], y);
 
-        y = vAND3(or0_bis, or1_bis, or2_bis);
+        y = vAND3(and0_bis, and1_bis, and2_bis);
         vec_store(&m[height-2][1], y);
 
-        y = vAND3(or0_ter, or1_ter, or2_ter);
+        y = vAND3(and0_ter, and1_ter, and2_ter);
         vec_store(&m[height-2][2], y);
 
 
-        y = vAND3(or1, or2, or2);
+        y = vAND3(and1, and2, and2);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or1_bis, or2_bis, or2_bis);
+        y = vAND3(and1_bis, and2_bis, and2_bis);
         vec_store(&m[height-1][1], y);
-        y = vAND3(or1_ter, or2_ter, or2_ter);
+        y = vAND3(and1_ter, and2_ter, and2_ter);
         vec_store(&m[height-1][2], y);
       break;
       case 1 :
-        y = vAND3(or0, or1, or1);
+        y = vAND3(and0, and1, and1);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or0_bis, or1_bis, or1_bis);
+        y = vAND3(and0_bis, and1_bis, and1_bis);
         vec_store(&m[height-1][1], y);
-        y = vAND3(or0_ter, or1_ter, or1_ter);
+        y = vAND3(and0_ter, and1_ter, and1_ter);
         vec_store(&m[height-1][2], y);
       break;
       case 0 :
@@ -3079,78 +3086,78 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
         aa2 = vec_left1_bin(a2,b2);
         cc2 = vec_right1_bin(b2,c2);
 
-        and0_2 = vOR3(aa2, b2, cc2);
-        and6 = vOR3(and0_0, and0_2, and0_1);
+        or0_2 = vOR3(aa2, b2, cc2);
+        or6 = vOR3(or0_0, or0_2, or0_1);
 
         a2 = vec_load(&img_bin_extra_lines[height-1][2]);
 
         aa2 = vec_left1_bin(b2,c2);
         cc2 = vec_right1_bin(c2,a2);
 
-        and1_2 = vOR3(aa2, c2, cc2);
-        and7 = vOR3(and1_0, and1_2, and1_1);
+        or1_2 = vOR3(aa2, c2, cc2);
+        or7 = vOR3(or1_0, or1_2, or1_1);
 
         b2 = _mm_bitshift_left(a2, 127-nb_unused_col);
 
         aa2 = vec_left1_bin(c2,a2);
         cc2 = vec_right1_bin_unused_col(a2,b2,nb_unused_col);
 
-        and2_2 = vOR3(aa2, a2, cc2);
-        and8 = vOR3(and2_0, and2_2, and2_1);
+        or2_2 = vOR3(aa2, a2, cc2);
+        or8 = vOR3(or2_0, or2_2, or2_1);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-        cc0 = vec_right1_bin(and6,and7);
-        or2 = vAND3(aa0, and6, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+        cc0 = vec_right1_bin(or6,or7);
+        and2 = vAND3(aa0, or6, cc0);
 
-        aa0 = vec_left1_bin(and6,and7);
-        cc0 = vec_right1_bin(and7,and8);
-        or2_bis = vAND3(aa0, and7, cc0);
+        aa0 = vec_left1_bin(or6,or7);
+        cc0 = vec_right1_bin(or7,or8);
+        and2_bis = vAND3(aa0, or7, cc0);
 
-        aa0 = vec_left1_bin(and7,and8);
-        cc0 = vec_right1_bin_unused_col(and8, _mm_bitshift_left(and8, 127-nb_unused_col),nb_unused_col);
-        or2_ter = vAND3(aa0, and8, cc0);
+        aa0 = vec_left1_bin(or7,or8);
+        cc0 = vec_right1_bin_unused_col(or8, _mm_bitshift_left(or8, 127-nb_unused_col),nb_unused_col);
+        and2_ter = vAND3(aa0, or8, cc0);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-3][0], y);
 
-        y = vAND3(or0_bis, or1_bis, or2_bis);
+        y = vAND3(and0_bis, and1_bis, and2_bis);
         vec_store(&m[height-3][1], y);
 
-        y = vAND3(or0_ter, or1_ter, or2_ter);
+        y = vAND3(and0_ter, and1_ter, and2_ter);
         vec_store(&m[height-3][2], y);
 
 
-        and0 = vOR3(and0_2, and0_2, and0_1);
-        and1 = vOR3(and1_2, and1_2, and1_1);
-        and2 = vOR3(and2_2, and2_2, and2_1);
+        or0 = vOR3(or0_2, or0_2, or0_1);
+        or1 = vOR3(or1_2, or1_2, or1_1);
+        or2 = vOR3(or2_2, or2_2, or2_1);
 
-        aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-        cc0 = vec_right1_bin(and0,and1);
-        or0 = vAND3(aa0, and0, cc0);
+        aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+        cc0 = vec_right1_bin(or0,or1);
+        and0 = vAND3(aa0, or0, cc0);
 
-        aa0 = vec_left1_bin(and0,and1);
-        cc0 = vec_right1_bin(and1,and2);
-        or0_bis = vAND3(aa0, and1, cc0);
+        aa0 = vec_left1_bin(or0,or1);
+        cc0 = vec_right1_bin(or1,or2);
+        and0_bis = vAND3(aa0, or1, cc0);
 
-        aa0 = vec_left1_bin(and1,and2);
-        cc0 = vec_right1_bin_unused_col(and2, _mm_bitshift_left(and2, 127-nb_unused_col),nb_unused_col);
-        or0_ter = vAND3(aa0, and2, cc0);
+        aa0 = vec_left1_bin(or1,or2);
+        cc0 = vec_right1_bin_unused_col(or2, _mm_bitshift_left(or2, 127-nb_unused_col),nb_unused_col);
+        and0_ter = vAND3(aa0, or2, cc0);
 
-        y = vAND3(or0, or2, or1);
+        y = vAND3(and0, and2, and1);
         vec_store(&m[height-2][0], y);
 
-        y = vAND3(or0_bis, or2_bis, or1_bis);
+        y = vAND3(and0_bis, and2_bis, and1_bis);
         vec_store(&m[height-2][1], y);
 
-        y = vAND3(or0_ter, or2_ter, or1_ter);
+        y = vAND3(and0_ter, and2_ter, and1_ter);
         vec_store(&m[height-2][2], y);
 
 
-        y = vAND3(or2, or0, or0);
+        y = vAND3(and2, and0, and0);
         vec_store(&m[height-1][0], y);
-        y = vAND3(or2_bis, or0_bis, or0_bis);
+        y = vAND3(and2_bis, and0_bis, and0_bis);
         vec_store(&m[height-1][1], y);
-        y = vAND3(or2_ter, or0_ter, or0_ter);
+        y = vAND3(and2_ter, and0_ter, and0_ter);
         vec_store(&m[height-1][2], y);
       break;
     }
@@ -3181,11 +3188,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin(b0,c0);
   cc1 = vec_right1_bin(b1,c1);
 
-  and0_0 = vOR3(aa0, b0, cc0);
-  and0_1 = vOR3(aa1, b1, cc1);
+  or0_0 = vOR3(aa0, b0, cc0);
+  or0_1 = vOR3(aa1, b1, cc1);
 
-  and0 = vOR3(and0_0, and0_0, and0_1);
-  and3 = and0;
+  or0 = vOR3(or0_0, or0_0, or0_1);
+  or3 = or0;
 
   a0 = vec_load(&img_bin_extra_lines[0][2]);
   a1 = vec_load(&img_bin_extra_lines[1][2]);
@@ -3196,11 +3203,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin(c0,a0);
   cc1 = vec_right1_bin(c1,a1);
 
-  and1_0 = vOR3(aa0, c0, cc0);
-  and1_1 = vOR3(aa1, c1, cc1);
+  or1_0 = vOR3(aa0, c0, cc0);
+  or1_1 = vOR3(aa1, c1, cc1);
 
-  and1 = vOR3(and1_0, and1_0, and1_1);
-  and4 = and1;
+  or1 = vOR3(or1_0, or1_0, or1_1);
+  or4 = or1;
 
   b0 = vec_load(&img_bin_extra_lines[0][3]);
   b1 = vec_load(&img_bin_extra_lines[1][3]);
@@ -3211,22 +3218,22 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin(a0,b0);
   cc1 = vec_right1_bin(a1,b1);
 
-  and2_0 = vOR3(aa0, a0, cc0);
-  and2_1 = vOR3(aa1, a1, cc1);
+  or2_0 = vOR3(aa0, a0, cc0);
+  or2_1 = vOR3(aa1, a1, cc1);
 
-  and2 = vOR3(and2_0, and2_0, and2_1);
-  and5 = and2;
+  or2 = vOR3(or2_0, or2_0, or2_1);
+  or5 = or2;
 
-  aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-  cc0 = vec_right1_bin(and0,and1);
-  or0 = vAND3(aa0, and0, cc0);
+  aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+  cc0 = vec_right1_bin(or0,or1);
+  and0 = vAND3(aa0, or0, cc0);
 
-  aa0 = vec_left1_bin(and0,and1);
-  cc0 = vec_right1_bin(and1,and2);
-  or0_bis = vAND3(aa0, and1, cc0);
+  aa0 = vec_left1_bin(or0,or1);
+  cc0 = vec_right1_bin(or1,or2);
+  and0_bis = vAND3(aa0, or1, cc0);
 
-  or1 = or0;
-  or1_bis = or0_bis;
+  and1 = and0;
+  and1_bis = and0_bis;
 
   for(int i = 0; i < height-3; i+=3){
     b2 = vec_load(&img_bin_extra_lines[i+2][0]);
@@ -3236,36 +3243,36 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    and0_2 = vOR3(aa2, b2, cc2);
-    and6 = vOR3(and0_2, and0_1, and0_0);
+    or0_2 = vOR3(aa2, b2, cc2);
+    or6 = vOR3(or0_2, or0_1, or0_0);
 
     a2 = vec_load(&img_bin_extra_lines[i+2][2]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and1_2 = vOR3(aa2, c2, cc2);
-    and7 = vOR3(and1_2, and1_1, and1_0);
+    or1_2 = vOR3(aa2, c2, cc2);
+    or7 = vOR3(or1_2, or1_1, or1_0);
 
     b2 = vec_load(&img_bin_extra_lines[i+2][3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and2_2 = vOR3(aa2, a2, cc2);
-    and8 = vOR3(and2_2, and2_1, and2_0);
+    or2_2 = vOR3(aa2, a2, cc2);
+    or8 = vOR3(or2_2, or2_1, or2_0);
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-    cc0 = vec_right1_bin(and6,and7);
-    or2 = vAND3(aa0, and6, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+    cc0 = vec_right1_bin(or6,or7);
+    and2 = vAND3(aa0, or6, cc0);
 
-    aa0 = vec_left1_bin(and6,and7);
-    cc0 = vec_right1_bin(and7,and8);
-    or2_bis = vAND3(aa0, and7, cc0);
+    aa0 = vec_left1_bin(or6,or7);
+    cc0 = vec_right1_bin(or7,or8);
+    and2_bis = vAND3(aa0, or7, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i][0], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i][1], y);
 
 
@@ -3276,36 +3283,36 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    and0_0 = vOR3(aa2, b2, cc2);
-    and0 = vOR3(and0_0, and0_2, and0_1);
+    or0_0 = vOR3(aa2, b2, cc2);
+    or0 = vOR3(or0_0, or0_2, or0_1);
 
     a2 = vec_load(&img_bin_extra_lines[i+3][2]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and1_0 = vOR3(aa2, c2, cc2);
-    and1 = vOR3(and1_0, and1_2, and1_1);
+    or1_0 = vOR3(aa2, c2, cc2);
+    or1 = vOR3(or1_0, or1_2, or1_1);
 
     b2 = vec_load(&img_bin_extra_lines[i+3][3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and2_0 = vOR3(aa2, a2, cc2);
-    and2 = vOR3(and2_0, and2_2, and2_1);
+    or2_0 = vOR3(aa2, a2, cc2);
+    or2 = vOR3(or2_0, or2_2, or2_1);
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-    cc0 = vec_right1_bin(and0,and1);
-    or0 = vAND3(aa0, and0, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+    cc0 = vec_right1_bin(or0,or1);
+    and0 = vAND3(aa0, or0, cc0);
 
-    aa0 = vec_left1_bin(and0,and1);
-    cc0 = vec_right1_bin(and1,and2);
-    or0_bis = vAND3(aa0, and1, cc0);
+    aa0 = vec_left1_bin(or0,or1);
+    cc0 = vec_right1_bin(or1,or2);
+    and0_bis = vAND3(aa0, or1, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i+1][0], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i+1][1], y);
 
 
@@ -3316,66 +3323,66 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    and0_1 = vOR3(aa2, b2, cc2);
-    and3 = vOR3(and0_1, and0_0, and0_2);
+    or0_1 = vOR3(aa2, b2, cc2);
+    or3 = vOR3(or0_1, or0_0, or0_2);
 
     a2 = vec_load(&img_bin_extra_lines[i+4][2]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and1_1 = vOR3(aa2, c2, cc2);
-    and4 = vOR3(and1_1, and1_0, and1_2);
+    or1_1 = vOR3(aa2, c2, cc2);
+    or4 = vOR3(or1_1, or1_0, or1_2);
 
     b2 = vec_load(&img_bin_extra_lines[i+4][3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and2_1 = vOR3(aa2, a2, cc2);
-    and5 = vOR3(and2_1, and2_0, and2_2);
+    or2_1 = vOR3(aa2, a2, cc2);
+    or5 = vOR3(or2_1, or2_0, or2_2);
 
-    aa0 = vec_left1_bin(_mm_bitshift_right(and3, 127),and3);
-    cc0 = vec_right1_bin(and3,and4);
-    or1 = vAND3(aa0, and3, cc0);
+    aa0 = vec_left1_bin(_mm_bitshift_right(or3, 127),or3);
+    cc0 = vec_right1_bin(or3,or4);
+    and1 = vAND3(aa0, or3, cc0);
 
-    aa0 = vec_left1_bin(and3,and4);
-    cc0 = vec_right1_bin(and4,and5);
-    or1_bis = vAND3(aa0, and4, cc0);
+    aa0 = vec_left1_bin(or3,or4);
+    cc0 = vec_right1_bin(or4,or5);
+    and1_bis = vAND3(aa0, or4, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i+2][0], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i+2][1], y);
   }
   switch(n) {
     case 2 :
-      and6 = vOR3(and0_1, and0_1, and0_0);
-      and7 = vOR3(and1_1, and1_1, and1_0);
-      and8 = vOR3(and2_1, and2_1, and2_0);
+      or6 = vOR3(or0_1, or0_1, or0_0);
+      or7 = vOR3(or1_1, or1_1, or1_0);
+      or8 = vOR3(or2_1, or2_1, or2_0);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-      cc0 = vec_right1_bin(and6,and7);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+      cc0 = vec_right1_bin(or6,or7);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and6,and7);
-      cc0 = vec_right1_bin(and7,and8);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or6,or7);
+      cc0 = vec_right1_bin(or7,or8);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-2][0], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-2][1], y);
 
-      y = vAND3(or1, or2, or2);
+      y = vAND3(and1, and2, and2);
       vec_store(&m[height-1][0], y);
-      y = vAND3(or1_bis, or2_bis, or2_bis);
+      y = vAND3(and1_bis, and2_bis, and2_bis);
       vec_store(&m[height-1][1], y);
     break;
     case 1 :
-      y = vAND3(or0, or1, or1);
+      y = vAND3(and0, and1, and1);
       vec_store(&m[height-1][0], y);
-      y = vAND3(or0_bis, or1_bis, or1_bis);
+      y = vAND3(and0_bis, and1_bis, and1_bis);
       vec_store(&m[height-1][1], y);
     break;
     case 0:
@@ -3386,59 +3393,59 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
       a2 = vec_load(&img_bin_extra_lines[height-1][2]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_2 = vOR3(aa2, c2, cc2);
-      and7 = vOR3(and1_2, and1_1, and1_0);
+      or1_2 = vOR3(aa2, c2, cc2);
+      or7 = vOR3(or1_2, or1_1, or1_0);
 
       b2 = vec_load(&img_bin_extra_lines[height-1][3]);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin(a2,b2);
 
-      and2_2 = vOR3(aa2, a2, cc2);
-      and8 = vOR3(and2_2, and2_1, and2_0);
+      or2_2 = vOR3(aa2, a2, cc2);
+      or8 = vOR3(or2_2, or2_1, or2_0);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and6, 127),and6);
-      cc0 = vec_right1_bin(and6,and7);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or6, 127),or6);
+      cc0 = vec_right1_bin(or6,or7);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and6,and7);
-      cc0 = vec_right1_bin(and7,and8);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or6,or7);
+      cc0 = vec_right1_bin(or7,or8);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-3][0], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-3][1], y);
 
 
-      and0 = vOR3(and0_2, and0_2, and0_1);
-      and1 = vOR3(and1_2, and1_2, and1_1);
-      and2 = vOR3(and2_2, and2_2, and2_1);
+      or0 = vOR3(or0_2, or0_2, or0_1);
+      or1 = vOR3(or1_2, or1_2, or1_1);
+      or2 = vOR3(or2_2, or2_2, or2_1);
 
-      aa0 = vec_left1_bin(_mm_bitshift_right(and0, 127),and0);
-      cc0 = vec_right1_bin(and0,and1);
-      or0 = vAND3(aa0, and0, cc0);
+      aa0 = vec_left1_bin(_mm_bitshift_right(or0, 127),or0);
+      cc0 = vec_right1_bin(or0,or1);
+      and0 = vAND3(aa0, or0, cc0);
 
-      aa0 = vec_left1_bin(and0,and1);
-      cc0 = vec_right1_bin(and1,and2);
-      or0_bis = vAND3(aa0, and1, cc0);
+      aa0 = vec_left1_bin(or0,or1);
+      cc0 = vec_right1_bin(or1,or2);
+      and0_bis = vAND3(aa0, or1, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-2][0], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-2][1], y);
 
-      y = vAND3(or2, or0, or0);
+      y = vAND3(and2, and0, and0);
       vec_store(&m[height-1][0], y);
-      y = vAND3(or2_bis, or0_bis, or0_bis);
+      y = vAND3(and2_bis, and0_bis, and0_bis);
       vec_store(&m[height-1][1], y);
     break;
     default:
@@ -3462,11 +3469,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(b0,c0);
     cc1 = vec_right1_bin(b1,c1);
 
-    and0_0 = vOR3(aa0, b0, cc0);
-    and0_1 = vOR3(aa1, b1, cc1);
+    or0_0 = vOR3(aa0, b0, cc0);
+    or0_1 = vOR3(aa1, b1, cc1);
 
-    and0 = vOR3(and0_0, and0_0, and0_1);
-    and3 = and0;
+    or0 = vOR3(or0_0, or0_0, or0_1);
+    or3 = or0;
 
     a0 = vec_load(&img_bin_extra_lines[0][j+1]);
     a1 = vec_load(&img_bin_extra_lines[1][j+1]);
@@ -3477,11 +3484,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(c0,a0);
     cc1 = vec_right1_bin(c1,a1);
 
-    and1_0 = vOR3(aa0, c0, cc0);
-    and1_1 = vOR3(aa1, c1, cc1);
+    or1_0 = vOR3(aa0, c0, cc0);
+    or1_1 = vOR3(aa1, c1, cc1);
 
-    and1 = vOR3(and1_0, and1_0, and1_1);
-    and4 = and1;
+    or1 = vOR3(or1_0, or1_0, or1_1);
+    or4 = or1;
 
     b0 = vec_load(&img_bin_extra_lines[0][j+2]);
     b1 = vec_load(&img_bin_extra_lines[1][j+2]);
@@ -3492,17 +3499,17 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     cc0 = vec_right1_bin(a0,b0);
     cc1 = vec_right1_bin(a1,b1);
 
-    and2_0 = vOR3(aa0, a0, cc0);
-    and2_1 = vOR3(aa1, a1, cc1);
+    or2_0 = vOR3(aa0, a0, cc0);
+    or2_1 = vOR3(aa1, a1, cc1);
 
-    and2 = vOR3(and2_0, and2_0, and2_1);
-    and5 = and2;
+    or2 = vOR3(or2_0, or2_0, or2_1);
+    or5 = or2;
 
-    aa0 = vec_left1_bin(and0, and1);
-    cc0 = vec_right1_bin(and1, and2);
-    or0 = vAND3(aa0, and1, cc0);
+    aa0 = vec_left1_bin(or0, or1);
+    cc0 = vec_right1_bin(or1, or2);
+    and0 = vAND3(aa0, or1, cc0);
 
-    or1 = or0;
+    and1 = and0;
 
     for(int i = 0; i < height-3; i+=3){
       a2 = vec_load(&img_bin_extra_lines[i+2][j-2]);
@@ -3512,30 +3519,30 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
       a2 = vec_load(&img_bin_extra_lines[i+2][j+1]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_2 = vOR3(aa2, c2, cc2);
-      and7 = vOR3(and1_2, and1_1, and1_0);
+      or1_2 = vOR3(aa2, c2, cc2);
+      or7 = vOR3(or1_2, or1_1, or1_0);
 
       b2 = vec_load(&img_bin_extra_lines[i+2][j+2]);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin(a2,b2);
 
-      and2_2 = vOR3(aa2, a2, cc2);
-      and8 = vOR3(and2_2, and2_1, and2_0);
+      or2_2 = vOR3(aa2, a2, cc2);
+      or8 = vOR3(or2_2, or2_1, or2_0);
 
-      aa2 = vec_left1_bin(and6, and7);
-      cc2 = vec_right1_bin(and7, and8);
-      or2 = vAND3(aa2, and7, cc2);
+      aa2 = vec_left1_bin(or6, or7);
+      cc2 = vec_right1_bin(or7, or8);
+      and2 = vAND3(aa2, or7, cc2);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[i][j], y);
 
 
@@ -3546,30 +3553,30 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_0 = vOR3(aa2, b2, cc2);
-      and0 = vOR3(and0_0, and0_2, and0_1);
+      or0_0 = vOR3(aa2, b2, cc2);
+      or0 = vOR3(or0_0, or0_2, or0_1);
 
       a2 = vec_load(&img_bin_extra_lines[i+3][j+1]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_0 = vOR3(aa2, c2, cc2);
-      and1 = vOR3(and1_0, and1_2, and1_1);
+      or1_0 = vOR3(aa2, c2, cc2);
+      or1 = vOR3(or1_0, or1_2, or1_1);
 
       b2 = vec_load(&img_bin_extra_lines[i+3][j+2]);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin(a2,b2);
 
-      and2_0 = vOR3(aa2, a2, cc2);
-      and2 = vOR3(and2_0, and2_2, and2_1);
+      or2_0 = vOR3(aa2, a2, cc2);
+      or2 = vOR3(or2_0, or2_2, or2_1);
 
-      aa2 = vec_left1_bin(and0, and1);
-      cc2 = vec_right1_bin(and1, and2);
-      or0 = vAND3(aa2, and1, cc2);
+      aa2 = vec_left1_bin(or0, or1);
+      cc2 = vec_right1_bin(or1, or2);
+      and0 = vAND3(aa2, or1, cc2);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[i+1][j], y);
 
 
@@ -3580,50 +3587,50 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      and0_1 = vOR3(aa2, b2, cc2);
-      and3 = vOR3(and0_1, and0_0, and0_2);
+      or0_1 = vOR3(aa2, b2, cc2);
+      or3 = vOR3(or0_1, or0_0, or0_2);
 
       a2 = vec_load(&img_bin_extra_lines[i+4][j+1]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and1_1 = vOR3(aa2, c2, cc2);
-      and4 = vOR3(and1_1, and1_0, and1_2);
+      or1_1 = vOR3(aa2, c2, cc2);
+      or4 = vOR3(or1_1, or1_0, or1_2);
 
       b2 = vec_load(&img_bin_extra_lines[i+4][j+2]);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin(a2,b2);
 
-      and2_1 = vOR3(aa2, a2, cc2);
-      and5 = vOR3(and2_1, and2_0, and2_2);
+      or2_1 = vOR3(aa2, a2, cc2);
+      or5 = vOR3(or2_1, or2_0, or2_2);
 
-      aa2 = vec_left1_bin(and3, and4);
-      cc2 = vec_right1_bin(and4, and5);
-      or1 = vAND3(aa2, and4, cc2);
+      aa2 = vec_left1_bin(or3, or4);
+      cc2 = vec_right1_bin(or4, or5);
+      and1 = vAND3(aa2, or4, cc2);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[i+2][j], y);
     }
     switch(n){
       case 2:
-        and6 = vOR3(and0_1, and0_1, and0_0);
-        and7 = vOR3(and1_1, and1_1, and1_0);
-        and8 = vOR3(and2_1, and2_1, and2_0);
+        or6 = vOR3(or0_1, or0_1, or0_0);
+        or7 = vOR3(or1_1, or1_1, or1_0);
+        or8 = vOR3(or2_1, or2_1, or2_0);
 
-        aa2 = vec_left1_bin(and6, and7);
-        cc2 = vec_right1_bin(and7, and8);
-        or2 = vAND3(aa2, and7, cc2);
+        aa2 = vec_left1_bin(or6, or7);
+        cc2 = vec_right1_bin(or7, or8);
+        and2 = vAND3(aa2, or7, cc2);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-2][j], y);
 
-        y = vAND3(or1, or2, or2);
+        y = vAND3(and1, and2, and2);
         vec_store(&m[height-1][j], y);
       break;
       case 1:
-        y = vAND3(or0, or1, or1);
+        y = vAND3(and0, and1, and1);
         vec_store(&m[height-1][j], y);
       break;
       case 0:
@@ -3634,45 +3641,45 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
         aa2 = vec_left1_bin(a2,b2);
         cc2 = vec_right1_bin(b2,c2);
 
-        and0_2 = vOR3(aa2, b2, cc2);
-        and6 = vOR3(and0_2, and0_1, and0_0);
+        or0_2 = vOR3(aa2, b2, cc2);
+        or6 = vOR3(or0_2, or0_1, or0_0);
 
         a2 = vec_load(&img_bin_extra_lines[height-1][j+1]);
 
         aa2 = vec_left1_bin(b2,c2);
         cc2 = vec_right1_bin(c2,a2);
 
-        and1_2 = vOR3(aa2, c2, cc2);
-        and7 = vOR3(and1_2, and1_1, and1_0);
+        or1_2 = vOR3(aa2, c2, cc2);
+        or7 = vOR3(or1_2, or1_1, or1_0);
 
         b2 = vec_load(&img_bin_extra_lines[height-1][j+2]);
 
         aa2 = vec_left1_bin(c2,a2);
         cc2 = vec_right1_bin(a2,b2);
 
-        and2_2 = vOR3(aa2, a2, cc2);
-        and8 = vOR3(and2_2, and2_1, and2_0);
+        or2_2 = vOR3(aa2, a2, cc2);
+        or8 = vOR3(or2_2, or2_1, or2_0);
 
-        aa2 = vec_left1_bin(and6, and7);
-        cc2 = vec_right1_bin(and7, and8);
-        or2 = vAND3(aa2, and7, cc2);
+        aa2 = vec_left1_bin(or6, or7);
+        cc2 = vec_right1_bin(or7, or8);
+        and2 = vAND3(aa2, or7, cc2);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-3][j], y);
 
 
-        and0 = vOR3(and0_2, and0_2, and0_1);
-        and1 = vOR3(and1_2, and1_2, and1_1);
-        and2 = vOR3(and2_2, and2_2, and2_1);
+        or0 = vOR3(or0_2, or0_2, or0_1);
+        or1 = vOR3(or1_2, or1_2, or1_1);
+        or2 = vOR3(or2_2, or2_2, or2_1);
 
-        aa2 = vec_left1_bin(and0, and1);
-        cc2 = vec_right1_bin(and1, and2);
-        or0 = vAND3(aa2, and1, cc2);
+        aa2 = vec_left1_bin(or0, or1);
+        cc2 = vec_right1_bin(or1, or2);
+        and0 = vAND3(aa2, or1, cc2);
 
-        y = vAND3(or0, or1, or2);
+        y = vAND3(and0, and1, and2);
         vec_store(&m[height-2][j], y);
 
-        y = vAND3(or2, or0, or0);
+        y = vAND3(and2, and0, and0);
         vec_store(&m[height-1][j], y);
       break;
       default:
@@ -3697,11 +3704,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin_unused_col(b0,c0,nb_unused_col);
   cc1 = vec_right1_bin_unused_col(b1,c1,nb_unused_col);
 
-  and0_0 = vOR3(aa0, b0, cc0);
-  and0_1 = vOR3(aa1, b1, cc1);
+  or0_0 = vOR3(aa0, b0, cc0);
+  or0_1 = vOR3(aa1, b1, cc1);
 
-  and0 = vOR3(and0_0, and0_0, and0_1);
-  and3 = and0;
+  or0 = vOR3(or0_0, or0_0, or0_1);
+  or3 = or0;
 
   c0 = vec_load(&img_bin_extra_lines[0][nb_vbits_col-3]);
   c1 = vec_load(&img_bin_extra_lines[1][nb_vbits_col-3]);
@@ -3712,11 +3719,11 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin(a0,b0);
   cc1 = vec_right1_bin(a1,b1);
 
-  and1_0 = vOR3(aa0, a0, cc0);
-  and1_1 = vOR3(aa1, a1, cc1);
+  or1_0 = vOR3(aa0, a0, cc0);
+  or1_1 = vOR3(aa1, a1, cc1);
 
-  and1 = vOR3(and1_0, and1_0, and1_1);
-  and4 = and1;
+  or1 = vOR3(or1_0, or1_0, or1_1);
+  or4 = or1;
 
   b0 = vec_load(&img_bin_extra_lines[0][nb_vbits_col-4]);
   b1 = vec_load(&img_bin_extra_lines[1][nb_vbits_col-4]);
@@ -3727,22 +3734,22 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
   cc0 = vec_right1_bin(c0,a0);
   cc1 = vec_right1_bin(c1,a1);
 
-  and2_0 = vOR3(aa0, c0, cc0);
-  and2_1 = vOR3(aa1, c1, cc1);
+  or2_0 = vOR3(aa0, c0, cc0);
+  or2_1 = vOR3(aa1, c1, cc1);
 
-  and2 = vOR3(and2_0, and2_0, and2_1);
-  and5 = and2;
+  or2 = vOR3(or2_0, or2_0, or2_1);
+  or5 = or2;
 
-  aa0 = vec_left1_bin(and1,and0);
-  cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-  or0 = vAND3(aa0, and0, cc0);
+  aa0 = vec_left1_bin(or1,or0);
+  cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+  and0 = vAND3(aa0, or0, cc0);
 
-  aa0 = vec_left1_bin(and2,and1);
-  cc0 = vec_right1_bin(and1,and0);
-  or0_bis = vAND3(aa0, and1, cc0);
+  aa0 = vec_left1_bin(or2,or1);
+  cc0 = vec_right1_bin(or1,or0);
+  and0_bis = vAND3(aa0, or1, cc0);
 
-  or1 = or0;
-  or1_bis = or0_bis;
+  and1 = and0;
+  and1_bis = and0_bis;
 
   for(int i = 0; i < height-3; i+=3){
     a2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-2]);
@@ -3752,36 +3759,36 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-    and0_2 = vOR3(aa2, b2, cc2);
-    and6 = vOR3(and0_2, and0_1, and0_0);
+    or0_2 = vOR3(aa2, b2, cc2);
+    or6 = vOR3(or0_2, or0_1, or0_0);
 
     c2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and1_2 = vOR3(aa2, a2, cc2);
-    and7 = vOR3(and1_2, and1_1, and1_0);
+    or1_2 = vOR3(aa2, a2, cc2);
+    or7 = vOR3(or1_2, or1_1, or1_0);
 
     b2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-4]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and2_2 = vOR3(aa2, c2, cc2);
-    and8 = vOR3(and2_2, and2_1, and2_0);
+    or2_2 = vOR3(aa2, c2, cc2);
+    or8 = vOR3(or2_2, or2_1, or2_0);
 
-    aa0 = vec_left1_bin(and7,and6);
-    cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-    or2 = vAND3(aa0, and6, cc0);
+    aa0 = vec_left1_bin(or7,or6);
+    cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+    and2 = vAND3(aa0, or6, cc0);
 
-    aa0 = vec_left1_bin(and8,and7);
-    cc0 = vec_right1_bin(and7,and6);
-    or2_bis = vAND3(aa0, and7, cc0);
+    aa0 = vec_left1_bin(or8,or7);
+    cc0 = vec_right1_bin(or7,or6);
+    and2_bis = vAND3(aa0, or7, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i][nb_vbits_col-1], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i][nb_vbits_col-2], y);
 
 
@@ -3792,36 +3799,36 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-    and0_0 = vOR3(aa2, b2, cc2);
-    and0 = vOR3(and0_0, and0_2, and0_1);
+    or0_0 = vOR3(aa2, b2, cc2);
+    or0 = vOR3(or0_0, or0_2, or0_1);
 
     c2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and1_0 = vOR3(aa2, a2, cc2);
-    and1 = vOR3(and1_0, and1_2, and1_1);
+    or1_0 = vOR3(aa2, a2, cc2);
+    or1 = vOR3(or1_0, or1_2, or1_1);
 
     b2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-4]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and2_0 = vOR3(aa2, c2, cc2);
-    and2 = vOR3(and2_0, and2_2, and2_1);
+    or2_0 = vOR3(aa2, c2, cc2);
+    or2 = vOR3(or2_0, or2_2, or2_1);
 
-    aa0 = vec_left1_bin(and1,and0);
-    cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-    or0 = vAND3(aa0, and0, cc0);
+    aa0 = vec_left1_bin(or1,or0);
+    cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+    and0 = vAND3(aa0, or0, cc0);
 
-    aa0 = vec_left1_bin(and2,and1);
-    cc0 = vec_right1_bin(and1,and0);
-    or0_bis = vAND3(aa0, and1, cc0);
+    aa0 = vec_left1_bin(or2,or1);
+    cc0 = vec_right1_bin(or1,or0);
+    and0_bis = vAND3(aa0, or1, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i+1][nb_vbits_col-1], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i+1][nb_vbits_col-2], y);
 
 
@@ -3832,66 +3839,66 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-    and0_1 = vOR3(aa2, b2, cc2);
-    and3 = vOR3(and0_1, and0_0, and0_2);
+    or0_1 = vOR3(aa2, b2, cc2);
+    or3 = vOR3(or0_1, or0_0, or0_2);
 
     c2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-3]);
 
     aa2 = vec_left1_bin(c2,a2);
     cc2 = vec_right1_bin(a2,b2);
 
-    and1_1 = vOR3(aa2, a2, cc2);
-    and4 = vOR3(and1_1, and1_0, and1_2);
+    or1_1 = vOR3(aa2, a2, cc2);
+    or4 = vOR3(or1_1, or1_0, or1_2);
 
     b2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-4]);
 
     aa2 = vec_left1_bin(b2,c2);
     cc2 = vec_right1_bin(c2,a2);
 
-    and2_1 = vOR3(aa2, c2, cc2);
-    and5 = vOR3(and2_1, and2_0, and2_2);
+    or2_1 = vOR3(aa2, c2, cc2);
+    or5 = vOR3(or2_1, or2_0, or2_2);
 
-    aa0 = vec_left1_bin(and4,and3);
-    cc0 = vec_right1_bin_unused_col(and3, _mm_bitshift_left(and3, 127-nb_unused_col),nb_unused_col);
-    or1 = vAND3(aa0, and3, cc0);
+    aa0 = vec_left1_bin(or4,or3);
+    cc0 = vec_right1_bin_unused_col(or3, _mm_bitshift_left(or3, 127-nb_unused_col),nb_unused_col);
+    and1 = vAND3(aa0, or3, cc0);
 
-    aa0 = vec_left1_bin(and5,and4);
-    cc0 = vec_right1_bin(and4,and3);
-    or1_bis = vAND3(aa0, and4, cc0);
+    aa0 = vec_left1_bin(or5,or4);
+    cc0 = vec_right1_bin(or4,or3);
+    and1_bis = vAND3(aa0, or4, cc0);
 
-    y = vAND3(or0, or1, or2);
+    y = vAND3(and0, and1, and2);
     vec_store(&m[i+2][nb_vbits_col-1], y);
-    y = vAND3(or0_bis, or1_bis, or2_bis);
+    y = vAND3(and0_bis, and1_bis, and2_bis);
     vec_store(&m[i+2][nb_vbits_col-2], y);
   }
   switch(n){
     case 2:
-      and6 = vOR3(and0_1, and0_1, and0_0);
-      and7 = vOR3(and1_1, and1_1, and1_0);
-      and8 = vOR3(and2_1, and2_1, and2_0);
+      or6 = vOR3(or0_1, or0_1, or0_0);
+      or7 = vOR3(or1_1, or1_1, or1_0);
+      or8 = vOR3(or2_1, or2_1, or2_0);
 
-      aa0 = vec_left1_bin(and7,and6);
-      cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(or7,or6);
+      cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and8,and7);
-      cc0 = vec_right1_bin(and7,and6);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or8,or7);
+      cc0 = vec_right1_bin(or7,or6);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-2][nb_vbits_col-1], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-2][nb_vbits_col-2], y);
 
-      y = vAND3(or1, or2, or2);
+      y = vAND3(and1, and2, and2);
       vec_store(&m[height-1][nb_vbits_col-1], y);
-      y = vAND3(or1_bis, or2_bis, or2_bis);
+      y = vAND3(and1_bis, and2_bis, and2_bis);
       vec_store(&m[height-1][nb_vbits_col-2], y);
     break;
     case 1:
-      y = vAND3(or0, or1, or1);
+      y = vAND3(and0, and1, and1);
       vec_store(&m[height-1][nb_vbits_col-1], y);
-      y = vAND3(or0_bis, or1_bis, or1_bis);
+      y = vAND3(and0_bis, and1_bis, and1_bis);
       vec_store(&m[height-1][nb_vbits_col-2], y);
     break;
     case 0:
@@ -3902,59 +3909,59 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-      and0_2 = vOR3(aa2, b2, cc2);
-      and6 = vOR3(and0_2, and0_1, and0_0);
+      or0_2 = vOR3(aa2, b2, cc2);
+      or6 = vOR3(or0_2, or0_1, or0_0);
 
       c2 = vec_load(&img_bin_extra_lines[height-1][nb_vbits_col-3]);
 
       aa2 = vec_left1_bin(c2,a2);
       cc2 = vec_right1_bin(a2,b2);
 
-      and1_2 = vOR3(aa2, a2, cc2);
-      and7 = vOR3(and1_2, and1_1, and1_0);
+      or1_2 = vOR3(aa2, a2, cc2);
+      or7 = vOR3(or1_2, or1_1, or1_0);
 
       b2 = vec_load(&img_bin_extra_lines[height-1][nb_vbits_col-4]);
 
       aa2 = vec_left1_bin(b2,c2);
       cc2 = vec_right1_bin(c2,a2);
 
-      and2_2 = vOR3(aa2, c2, cc2);
-      and8 = vOR3(and2_2, and2_1, and2_0);
+      or2_2 = vOR3(aa2, c2, cc2);
+      or8 = vOR3(or2_2, or2_1, or2_0);
 
-      aa0 = vec_left1_bin(and7,and6);
-      cc0 = vec_right1_bin_unused_col(and6, _mm_bitshift_left(and6, 127-nb_unused_col),nb_unused_col);
-      or2 = vAND3(aa0, and6, cc0);
+      aa0 = vec_left1_bin(or7,or6);
+      cc0 = vec_right1_bin_unused_col(or6, _mm_bitshift_left(or6, 127-nb_unused_col),nb_unused_col);
+      and2 = vAND3(aa0, or6, cc0);
 
-      aa0 = vec_left1_bin(and8,and7);
-      cc0 = vec_right1_bin(and7,and6);
-      or2_bis = vAND3(aa0, and7, cc0);
+      aa0 = vec_left1_bin(or8,or7);
+      cc0 = vec_right1_bin(or7,or6);
+      and2_bis = vAND3(aa0, or7, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-3][nb_vbits_col-1], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-3][nb_vbits_col-2], y);
 
 
-      and0 = vOR3(and0_2, and0_2, and0_1);
-      and1 = vOR3(and1_2, and1_2, and1_1);
-      and2 = vOR3(and2_2, and2_2, and2_1);
+      or0 = vOR3(or0_2, or0_2, or0_1);
+      or1 = vOR3(or1_2, or1_2, or1_1);
+      or2 = vOR3(or2_2, or2_2, or2_1);
 
-      aa0 = vec_left1_bin(and1,and0);
-      cc0 = vec_right1_bin_unused_col(and0, _mm_bitshift_left(and0, 127-nb_unused_col),nb_unused_col);
-      or0 = vAND3(aa0, and0, cc0);
+      aa0 = vec_left1_bin(or1,or0);
+      cc0 = vec_right1_bin_unused_col(or0, _mm_bitshift_left(or0, 127-nb_unused_col),nb_unused_col);
+      and0 = vAND3(aa0, or0, cc0);
 
-      aa0 = vec_left1_bin(and2,and1);
-      cc0 = vec_right1_bin(and1,and0);
-      or0_bis = vAND3(aa0, and1, cc0);
+      aa0 = vec_left1_bin(or2,or1);
+      cc0 = vec_right1_bin(or1,or0);
+      and0_bis = vAND3(aa0, or1, cc0);
 
-      y = vAND3(or0, or1, or2);
+      y = vAND3(and0, and1, and2);
       vec_store(&m[height-2][nb_vbits_col-1], y);
-      y = vAND3(or0_bis, or1_bis, or2_bis);
+      y = vAND3(and0_bis, and1_bis, and2_bis);
       vec_store(&m[height-2][nb_vbits_col-2], y);
 
-      y = vAND3(or2, or0, or0);
+      y = vAND3(and2, and0, and0);
       vec_store(&m[height-1][nb_vbits_col-1], y);
-      y = vAND3(or2_bis, or0_bis, or0_bis);
+      y = vAND3(and2_bis, and0_bis, and0_bis);
       vec_store(&m[height-1][nb_vbits_col-2], y);
     break;
     default:
