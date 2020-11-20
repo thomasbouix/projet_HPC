@@ -15,4 +15,7 @@
   vbits** ouverture_SIMD(vbits** img_bin, int height, int width);
   vbits ** ouverture_naive_SIMD(vbits** img_bin, int height, int width);
 
+  vbits** fermeture_SIMD(vbits** img_bin, int height, int width);
+  vbits ** fermeture_naive_SIMD(vbits** img_bin, int height, int width);
+
 #endif
