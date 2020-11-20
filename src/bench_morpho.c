@@ -25,7 +25,7 @@ void bench_erosion(void) {
 
   uint8 ** img_ero;
 
-  CHRONO(img_ero = erosion(img_with_borders, height, width, kernel_size), cycles);
+  CHRONO(img_ero = erosion_3x3(img_with_borders, height, width), cycles);
   printf("erosion 3x3 : %.0f cycles\n", cycles);
 
 }
@@ -49,7 +49,7 @@ void bench_dilatation(void) {
 
   uint8 ** img_ero;
 
-  CHRONO(img_ero = dilatation(img_with_borders, height, width, kernel_size), cycles);
+  CHRONO(img_ero = dilatation_3x3(img_with_borders, height, width), cycles);
   printf("dilatation 3x3 : %.0f cycles\n", cycles);
 }
 

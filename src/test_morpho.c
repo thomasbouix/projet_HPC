@@ -25,7 +25,7 @@ void test_ero_5x7_losange_plein(void) {
   uint8** m_with_borders = add_borders(m, height, width, border);
   free_ui8matrix(m, nrl, nrh, ncl, nch);
 
-  uint8** m_ero = erosion(m_with_borders, height, width, 3);
+  uint8** m_ero = erosion_3x3(m_with_borders, height, width);
 
   convert_coding(m_ero, nrl, nrh, ncl, nch, 255, 1);
   // display_ui8matrix(m_ero, nrl, nrh, ncl, nch, "%hhu", "\nlosange_erosion");
@@ -67,7 +67,7 @@ void test_dil_bordure(int height, int width) {
   uint8** m_with_borders = add_borders(m, height, width, border);
   free_ui8matrix(m, nrl, nrh, ncl, nch);
 
-  uint8** m_res = dilatation(m_with_borders, height, width, 3);
+  uint8** m_res = dilatation_3x3(m_with_borders, height, width);
   // display_ui8matrix(m_res, nrl, nrh, ncl, nch, "%hhu", "\nm_res");
 
   // VERIFICATION

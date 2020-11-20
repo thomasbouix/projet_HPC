@@ -1,67 +1,79 @@
 #include "morpho.h"
 
-// AND logique sur un voisinage de taille kernel_size
-uint8** erosion(uint8** img_with_padding, int height, int width, int kernel_size){
-  kernel_size /= 2;
-  int res = 255;
-  //printf("kernel_size = %d\n\n", kernel_size);
+// AND logique sur un voisinage de taille 3x3
+uint8** erosion_3x3(uint8** img_with_padding, int height, int width){
   uint8** m = ui8matrix(0, height-1, 0, width-1);
 
+  /* Pattern
+    x0 x1 x2
+    x3 x4 x5
+    x6 x7 x8
+  */
+  int x0, x1, x2;
+  int x3, x4, x5;
+  int x6, x7, x8;
+
+  int and0, and1, and2;
+
+  x0 = img_with_padding[-1][-1]; x1 = img_with_padding[-1][0];
+  x3 = img_with_padding[-0][-1]; x4 = img_with_padding[-0][0];
   for(int i = 0; i < height; i++){
-    //printf("i=%d\t", i);
+    x6 = img_with_padding[i+1][-1]; x7 = img_with_padding[i+1][-0];
+    and0 = x0 & x3 & x6;
+    and1 = x1 & x4 & x7;
     for(int j = 0; j < width; j++){
-      res = 255;
-      //printf("j=%d\t", j);
-      for(int k = i-kernel_size; k <= i+kernel_size; k++){
-        //printf("k=%d\t", k);
-        for(int l = j-kernel_size; l <= j+kernel_size; l++){
-          //printf("l=%d(%d)\t", l, img_with_padding[k][l]);
-          res &= img_with_padding[k][l];
-          if(res == 0)
-            break;  // Sortie de la boucle K
-        }
-      }
-      //printf("RES");
-      m[i][j] = res;
+      x2 = img_with_padding[i-1][j+1];
+      x5 = img_with_padding[i-0][j+1];
+      x8 = img_with_padding[i+1][j+1];
+      and2 = x2 & x5 & x8;
+      m[i][j] = and0 & and1 & and2;
+      and0 = and1; and1 = and2;
     }
-    //printf("\n\n");
+    x0 = x3; x3 = x6;
+    x1 = x4; x4 = x7;
   }
   return m;
 }
 
 // OR logique sur un voisinage de taille kernel_size
-uint8** dilatation(uint8** img_with_padding, int height, int width, int kernel_size){
-  kernel_size /= 2;
-  int res = 0;
-  //printf("kernel_size = %d\n\n", kernel_size);
+uint8** dilatation_3x3(uint8** img_with_padding, int height, int width){
   uint8** m = ui8matrix(0, height-1, 0, width-1);
 
+  /* Pattern
+    x0 x1 x2
+    x3 x4 x5
+    x6 x7 x8
+  */
+  int x0, x1, x2;
+  int x3, x4, x5;
+  int x6, x7, x8;
+
+  int or0, or1, or2;
+
+  x0 = img_with_padding[-1][-1]; x1 = img_with_padding[-1][0];
+  x3 = img_with_padding[-0][-1]; x4 = img_with_padding[-0][0];
   for(int i = 0; i < height; i++){
-    //printf("i=%d\t", i);
+    x6 = img_with_padding[i+1][-1]; x7 = img_with_padding[i+1][-0];
+    or0 = x0 | x3 | x6;
+    or1 = x1 | x4 | x7;
     for(int j = 0; j < width; j++){
-      res = 0;
-      //printf("j=%d\t", j);
-      for(int k = i-kernel_size; k <= i+kernel_size; k++){
-        //printf("k=%d\t", k);
-        for(int l = j-kernel_size; l <= j+kernel_size; l++){
-          //printf("l=%d(%d)\t", l, img_with_padding[k][l]);
-          res |= img_with_padding[k][l];
-          if(res >= 1)
-            break;  // Sortie de la boucle K
-        }
-      }
-      //printf("RES");
-      m[i][j] = res;
+      x2 = img_with_padding[i-1][j+1];
+      x5 = img_with_padding[i-0][j+1];
+      x8 = img_with_padding[i+1][j+1];
+      or2 = x2 | x5 | x8;
+      m[i][j] = or0 | or1 | or2;
+      or0 = or1; or1 = or2;
     }
-    //printf("\n\n");
+    x0 = x3; x3 = x6;
+    x1 = x4; x4 = x7;
   }
   return m;
 }
 
-void compute_erosion(char* basePath, int kernel_size, int save)
+void compute_erosion_3x3(char* basePath, int save)
 {
   CHECK_ERROR(system("mkdir -p output/erosion"));
-  int padding = kernel_size/2;
+  int bord = 1;
   char buff[35];
   int nrl, nrh, ncl, nch;
   uint8** output = NULL;
@@ -69,21 +81,21 @@ void compute_erosion(char* basePath, int kernel_size, int save)
 
   for(int i = 1; i < 200; i++){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
-    img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
-    output = erosion(img, nrh-padding+1, nch-padding+1, kernel_size);
+    img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, bord);
+    output = erosion_3x3(img, nrh-bord+1, nch-bord+1);
     if(save){
       sprintf(buff, "output/erosion/ero3%.3d.pgm", i);
-      SavePGM_ui8matrix(output, nrl+padding, nrh-padding, ncl+padding, nch-padding, buff);
+      SavePGM_ui8matrix(output, nrl+bord, nrh-bord, ncl+bord, nch-bord, buff);
     }
-    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
-    free_ui8matrix(output, nrl+padding, nrh-padding, ncl+padding, nch-padding);
+    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, bord);
+    free_ui8matrix(output, nrl+bord, nrh-bord, ncl+bord, nch-bord);
   }
 }
 
-void compute_dilatation(char* basePath, int kernel_size, int save)
+void compute_dilatation_3x3(char* basePath, int save)
 {
   CHECK_ERROR(system("mkdir -p output/dilatation"));
-  int padding = kernel_size/2;
+  int bord = 1;
   char buff[35];
   int nrl, nrh, ncl, nch;
   uint8** output = NULL;
@@ -91,21 +103,21 @@ void compute_dilatation(char* basePath, int kernel_size, int save)
 
   for(int i = 1; i < 200; i++){
     sprintf(buff, "%s%.3d.pgm", basePath, i);
-    img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, padding);
-    output = dilatation(img, nrh-padding+1, nch-padding+1, kernel_size);
+    img = LoadPGM_padding_ui8matrix(buff, &nrl, &nrh, &ncl, &nch, bord);
+    output = dilatation_3x3(img, nrh-bord+1, nch-bord+1);
     if(save){
       sprintf(buff, "output/dilatation/dil3%.3d.pgm", i);
-      SavePGM_ui8matrix(output, nrl+padding, nrh-padding, ncl+padding, nch-padding, buff);
+      SavePGM_ui8matrix(output, nrl+bord, nrh-bord, ncl+bord, nch-bord, buff);
     }
-    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, padding);
-    free_ui8matrix(output, nrl+padding, nrh-padding, ncl+padding, nch-padding);
+    free_padding_ui8matrix(img, nrl, nrh, ncl, nch, bord);
+    free_ui8matrix(output, nrl+bord, nrh-bord, ncl+bord, nch-bord);
   }
 }
 
 uint8** ouverture(uint8** img_with_padding, int height, int width, int kernel_size) {
   int border = 1;
-  uint8 ** ero = erosion(img_with_padding, height, width, kernel_size);
+  uint8 ** ero = erosion_3x3(img_with_padding, height, width);
   uint8 ** ero_borders = add_borders(ero, height, width, border);
   free_ui8matrix(ero, 0, height-1, 0, width-1);
-  return dilatation(ero_borders, height, width, kernel_size);
+  return dilatation_3x3(ero_borders, height, width);
 }
