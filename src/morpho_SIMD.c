@@ -9,7 +9,8 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
 
   // Ajout d'un pointeur vers les lignes 0 et height-1 de l'image pour gérer plus facilement les bords
   vbits **img_bin_extra_lines=(vbits **) _mm_malloc ((size_t)((height+2)*sizeof(vbits*)), 16);
-  if (!img_bin_extra_lines) vnrerror("allocation failure in erosion_3x3_SIMD()");
+  if (!img_bin_extra_lines)
+    vnrerror("allocation failure in erosion_3x3_SIMD()");
   img_bin_extra_lines++;
 
   for(int i = 0; i < height; i++)
@@ -52,7 +53,8 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
     and0 = vAND3(aa0, b0, cc0);
     and1 = vAND3(aa1, b1, cc1);
 
-    for(int i=0; i < height-n; i+=3){
+    // TESTER RENTABILITE OMP ICI
+    for(int i=0; i < height-n; i+=3) {
 
       b2 = vec_load(&img_bin_extra_lines[i+1][0]);
       a2 = _mm_bitshift_right(b2, 127);
@@ -121,14 +123,13 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
     return m;
   }
 
-
-
   // Gestion des cas 'standards'
   a0 = vec_load(&img_bin_extra_lines[-1][0]);
   b0 = vec_load(&img_bin_extra_lines[-1][1]);
   a1 = vec_load(&img_bin_extra_lines[0][0]);
   b1 = vec_load(&img_bin_extra_lines[0][1]);
 
+  // "OMP FOR" CLASSIQUE RAJOUTE DU TEMPS ICI
   for(int j = 1; j < nb_vbits_col-1; j++){
     // PROLOGUE
     c0 = vec_load(&img_bin_extra_lines[-1][j+1]);
@@ -248,6 +249,7 @@ vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
   and0 = vAND3(aa0, b0, cc0);
   and1 = vAND3(aa1, b1, cc1);
 
+  // "OMP FOR" CLASSIQUE RAJOUTE DU TEMPS ICI
   for(int i = 0; i < height-n; i+=3){
     // Déroulage de boucle i+0
     b2 = vec_load(&img_bin_extra_lines[i+1][0]);
