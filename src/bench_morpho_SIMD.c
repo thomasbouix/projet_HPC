@@ -6,7 +6,9 @@ static int run, nrun = 5;
 static double t0, t1, dt, tmin, t;
 static double cycles;
 
-void bench_erosion_SIMD(void) {
+
+
+void bench_erosion_SIMD_opti(void) {
 
   long nrl = 0;
   long nrh = 239;
@@ -21,12 +23,12 @@ void bench_erosion_SIMD(void) {
 
   vbits ** img_ero;
   CHRONO(img_ero = erosion_3x3_SIMD(img_bin, height, width), cycles);
-  printf("erosion 3x3 SIMD : %.0f cycles\n", cycles);
+  printf("erosion 3x3 SIMD opti: %.0f cycles\n", cycles);
 
   return;
 }
 
-void bench_dilatation_SIMD(void) {
+void bench_dilatation_SIMD_opti(void) {
 
   long nrl = 0;
   long nrh = 239;
@@ -42,7 +44,7 @@ void bench_dilatation_SIMD(void) {
   vbits ** img_dil;
 
   CHRONO(img_dil = dilatation_3x3_SIMD(img_bin, height, width), cycles);
-  printf("dilatation 3x3 SIMD : %.0f cycles\n", cycles);
+  printf("dilatation 3x3 SIMD opti: %.0f cycles\n", cycles);
 
   return;
 }
@@ -61,13 +63,13 @@ void bench_ouverture_fusion_SIMD(void) {
 
   vbits ** res;
 
-  CHRONO(res = ouverture_SIMD(img_bin, height, width), cycles);
+  CHRONO(res = ouverture_fusion_SIMD(img_bin, height, width), cycles);
   printf("ouverture fusion SIMD : %.0f cycles\n", cycles);
 
   return;
 }
 
-void bench_ouverture_naive_SIMD(void) {
+void bench_ouverture_opti_SIMD(void) {
   long nrl = 0;
   long nrh = 239;
   long ncl = 0;
@@ -81,8 +83,8 @@ void bench_ouverture_naive_SIMD(void) {
 
   vbits ** res;
 
-  CHRONO(res = ouverture_naive_SIMD(img_bin, height, width), cycles);
-  printf("ouverture naive SIMD : %.0f cycles\n", cycles);
+  CHRONO(res = ouverture_opti_SIMD(img_bin, height, width), cycles);
+  printf("ouverture SIMD opti: %.0f cycles\n", cycles);
 
   return;
 }
@@ -101,13 +103,13 @@ void bench_fermeture_fusion_SIMD(void) {
 
   vbits ** res;
 
-  CHRONO(res = fermeture_SIMD(img_bin, height, width), cycles);
+  CHRONO(res = fermeture_fusion_SIMD(img_bin, height, width), cycles);
   printf("fermeture fusion SIMD : %.0f cycles\n", cycles);
 
   return;
 }
 
-void bench_fermeture_naive_SIMD(void) {
+void bench_fermeture_opti_SIMD(void) {
   long nrl = 0;
   long nrh = 239;
   long ncl = 0;
@@ -121,13 +123,13 @@ void bench_fermeture_naive_SIMD(void) {
 
   vbits ** res;
 
-  CHRONO(res = fermeture_naive_SIMD(img_bin, height, width), cycles);
-  printf("fermeture naive SIMD : %.0f cycles\n", cycles);
+  CHRONO(res = fermeture_opti_SIMD(img_bin, height, width), cycles);
+  printf("fermeture SIMD opti: %.0f cycles\n", cycles);
 
   return;
 }
 
-void bench_chaine_naive(void) {
+void bench_chaine_opti(void) {
   long nrl = 0;
   long nrh = 239;
   long ncl = 0;
@@ -142,7 +144,7 @@ void bench_chaine_naive(void) {
   vbits ** res;
 
   CHRONO(res = chaine_complete_naive_SIMD(img_bin, height, width), cycles);
-  printf("chaine complete naive SIMD : %.0f cycles\n", cycles);
+  printf("chaine complete opti SIMD : %.0f cycles\n", cycles);
 
   return;
 }
@@ -170,19 +172,19 @@ void bench_morpho_SIMD(void) {
 
   printf("BENCH MORPHO SIMD\n");
   printf("--------------------\n");
-  bench_erosion_SIMD();
+  bench_erosion_SIMD_opti();
   printf("---\n");
-  bench_dilatation_SIMD();
+  bench_dilatation_SIMD_opti();
   printf("---\n");
-  bench_ouverture_naive_SIMD();
+  bench_ouverture_opti_SIMD();
   printf("---\n");
-  bench_fermeture_naive_SIMD();
+  bench_fermeture_opti_SIMD();
   printf("---\n");
   bench_ouverture_fusion_SIMD();
   printf("---\n");
   bench_fermeture_fusion_SIMD();
   printf("---\n");
-  bench_chaine_naive();
+  bench_chaine_opti();
   printf("---\n");
   bench_chaine_fusion();
   printf("====================\n");

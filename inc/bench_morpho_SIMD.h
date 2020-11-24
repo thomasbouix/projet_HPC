@@ -12,16 +12,16 @@
 
   #include "morpho_SIMD.h"
 
-  void bench_erosion_SIMD(void);
-  void bench_dilatation_SIMD(void);
+  void bench_erosion_SIMD_opti(void);
+  void bench_dilatation_SIMD_opti(void);
 
-  void bench_ouverture_naive_SIMD(void);
+  void bench_ouverture_opti_SIMD(void);
   void bench_ouverture_fusion_SIMD(void);
 
-  void bench_fermeture_naive_SIMD(void);
+  void bench_fermeture_opti_SIMD(void);
   void bench_fermeture_fusion_SIMD(void);
 
-  void bench_chaine_naive(void);
+  void bench_chaine_opti(void);
   void bench_chaine_fusion(void);
 
   void bench_morpho_SIMD(void);
