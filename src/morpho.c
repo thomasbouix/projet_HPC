@@ -114,10 +114,53 @@ void compute_dilatation_3x3(char* basePath, int save)
   }
 }
 
-uint8** ouverture(uint8** img_with_padding, int height, int width, int kernel_size) {
+uint8** ouverture_3x3(uint8** img_with_padding, int height, int width) {
   int border = 1;
+
   uint8 ** ero = erosion_3x3(img_with_padding, height, width);
   uint8 ** ero_borders = add_borders(ero, height, width, border);
+  uint8 ** res = dilatation_3x3(ero_borders, height, width);
+
   free_ui8matrix(ero, 0, height-1, 0, width-1);
-  return dilatation_3x3(ero_borders, height, width);
+  free_padding_ui8matrix(ero_borders, -1, height, -1, width, 1);
+
+  return res;
+}
+
+uint8** fermeture_3x3(uint8** img_with_padding, int height, int width) {
+  int border = 1;
+
+  uint8 ** dil = dilatation_3x3(img_with_padding, height, width);
+  uint8 ** dil_borders = add_borders(dil, height, width, border);
+  uint8 ** res = erosion_3x3(dil_borders, height, width);
+
+  free_ui8matrix(dil, 0, height-1, 0, width-1);
+  free_padding_ui8matrix(dil_borders, -1, height, -1, width, 1);
+
+  return res;
+}
+
+// ero - dil - dil - ero
+uint8** chaine_complete_3x3(uint8** img_with_padding, int height, int width) {
+  int border = 1;
+
+  uint8 ** ero1 = erosion_3x3 (img_with_padding,  height, width);
+  uint8 ** ero1_with_padding = add_borders(ero1, height, width, border);
+
+  uint8 ** dil1 = dilatation_3x3 (ero1_with_padding, height, width);
+  uint8 ** dil1_with_padding = add_borders (dil1, height, width, border);
+
+  uint8 ** dil2 = dilatation_3x3 (dil1_with_padding, height, width);
+  uint8 ** dil2_with_padding = add_borders (dil2, height, width, border);
+
+  uint8 ** ero2 = erosion_3x3 (dil2_with_padding, height, width);
+
+  free_ui8matrix(ero1, 0, height-1, 0, width-1);
+  free_ui8matrix(dil1, 0, height-1, 0, width-1);
+  free_ui8matrix(dil2, 0, height-1, 0, width-1);
+  free_padding_ui8matrix(ero1_with_padding, -1, height, -1, width, 1);
+  free_padding_ui8matrix(dil1_with_padding, -1, height, -1, width, 1);
+  free_padding_ui8matrix(dil2_with_padding, -1, height, -1, width, 1);
+
+  return ero2;
 }

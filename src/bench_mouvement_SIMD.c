@@ -34,7 +34,7 @@ void mesure_all_fd_SIMD(void) {
 
 void bench_mouvement_SIMD(void) {
 
-  printf("BENCH_MOUVEMENT_SIMD\n");
+  printf("BENCH MOUVEMENT SIMD\n");
   printf("--------------------\n");
   printf("Frame différence =>\n");
   printf("\t"); mesure_routine_FD_SIMD();

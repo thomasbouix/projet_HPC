@@ -14,6 +14,9 @@
 
   void bench_erosion(void);
   void bench_dilatation(void);
+  void bench_ouverture(void);
+  void bench_fermeture(void);
+  void bench_chaine_complete(void);
   void bench_morpho(void);
 
 #endif
