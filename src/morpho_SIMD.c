@@ -1233,7 +1233,6 @@ vbits ** dilatation_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   _mm_free(img_bin_extra_lines-1);
   return m;
 }
-
 void compute_all_dilatation_3x3_SIMD_opti(char* basePath, int save)
 {
   CHECK_ERROR(system("mkdir -p output/dilatation_3x3_SIMD_opti"));
@@ -1263,19 +1262,36 @@ void compute_all_dilatation_3x3_SIMD_opti(char* basePath, int save)
   }
 }
 
+vbits** ouverture_SIMD_naif(vbits** img_bin, int height, int width)
+{
+  return dilatation_3x3_SIMD_naif(erosion_3x3_SIMD_naif(img_bin, height, width), height, width);
+}
+vbits** fermeture_SIMD_naif(vbits** img_bin, int height, int width)
+{
+  return erosion_3x3_SIMD_naif(dilatation_3x3_SIMD_naif(img_bin, height, width), height, width);
+}
+vbits** chaine_complete_SIMD_naif(vbits** img_bin, int height, int width)
+{
+
+    vbits ** ouverture = ouverture_SIMD_naif(img_bin, height, width);
+    vbits ** fermeture = fermeture_SIMD_naif(ouverture, height, width);
+
+    free_vbitsmatrix(ouverture, height, width);
+
+    return fermeture;
+}
+
 // dilatation( erosion() )
 vbits ** ouverture_opti_SIMD(vbits** img_bin, int height, int width)
 {
-
   return dilatation_3x3_SIMD_opti(erosion_3x3_SIMD_opti(img_bin, height, width), height, width);
 }
-
 // erosion( dilatation() )
 vbits ** fermeture_opti_SIMD(vbits** img_bin, int height, int width)
 {
-
   return erosion_3x3_SIMD_opti(dilatation_3x3_SIMD_opti(img_bin, height, width), height, width);
 }
+
 
 vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
 {
@@ -2850,7 +2866,6 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
   _mm_free(img_bin_extra_lines);
   return m;
 }
-
 vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
@@ -4427,18 +4442,23 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
 
 // ero - dil - dil - ero
 // fermture(ouverture)
-vbits ** chaine_complete_naive_SIMD(vbits** img_bin, int height, int width) {
+vbits ** chaine_complete_opti_SIMD(vbits** img_bin, int height, int width)
+{
 
   vbits ** ouverture = ouverture_opti_SIMD(img_bin, height, width);
   vbits ** fermeture = fermeture_opti_SIMD(ouverture, height, width);
 
+  free_vbitsmatrix(ouverture, height, width);
+
   return fermeture;
 }
-
-vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width) {
+vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width)
+{
 
   vbits ** ouverture = ouverture_fusion_SIMD(img_bin, height, width);
   vbits ** fermeture = fermeture_fusion_SIMD(ouverture, height, width);
+
+  free_vbitsmatrix(ouverture, height, width);
 
   return fermeture;
 }
