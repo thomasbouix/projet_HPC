@@ -1,7 +1,7 @@
 #include "morpho_SIMD.h"
 
 // AND logique sur un voisinage de taille 3x3
-vbits** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
+vbits ** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -404,7 +404,7 @@ void compute_all_erosion_3x3_SIMD(char* basePath, int save)
 }
 
 // OR logique sur un voisinage de taille 3x3
-vbits** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
+vbits ** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -807,7 +807,21 @@ void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
   }
 }
 
-vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
+// dilatation( erosion() )
+vbits ** ouverture_naive_SIMD(vbits** img_bin, int height, int width)
+{
+
+  return dilatation_3x3_SIMD(erosion_3x3_SIMD(img_bin, height, width), height, width);
+}
+
+// erosion( dilatation() )
+vbits ** fermeture_naive_SIMD(vbits** img_bin, int height, int width)
+{
+
+  return erosion_3x3_SIMD(dilatation_3x3_SIMD(img_bin, height, width), height, width);
+}
+
+vbits ** ouverture_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -2381,24 +2395,7 @@ vbits** ouverture_SIMD(vbits** img_bin, int height, int width)
   return m;
 }
 
-// dilatation( erosion() )
-vbits ** ouverture_naive_SIMD(vbits** img_bin, int height, int width)
-{
-
-  return dilatation_3x3_SIMD(erosion_3x3_SIMD(img_bin, height, width), height, width);
-}
-
-// erosion( dilatation() )
-vbits ** fermeture_naive_SIMD(vbits** img_bin, int height, int width)
-{
-
-  return erosion_3x3_SIMD(dilatation_3x3_SIMD(img_bin, height, width), height, width);
-}
-
-
-
-
-vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
+vbits ** fermeture_SIMD(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -3970,4 +3967,22 @@ vbits** fermeture_SIMD(vbits** img_bin, int height, int width)
 
   _mm_free(img_bin_extra_lines);
   return m;
+}
+
+// ero - dil - dil - ero
+// fermture(ouverture)
+vbits ** chaine_complete_naive_SIMD(vbits** img_bin, int height, int width) {
+
+  vbits ** ouverture = ouverture_naive_SIMD(img_bin, height, width);
+  vbits ** fermeture = fermeture_naive_SIMD(ouverture, height, width);
+
+  return fermeture;
+}
+
+vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width) {
+
+  vbits ** ouverture = ouverture_SIMD(img_bin, height, width);
+  vbits ** fermeture = fermeture_SIMD(ouverture, height, width);
+
+  return fermeture;
 }

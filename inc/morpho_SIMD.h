@@ -18,4 +18,7 @@
   vbits** fermeture_SIMD(vbits** img_bin, int height, int width);
   vbits ** fermeture_naive_SIMD(vbits** img_bin, int height, int width);
 
+  vbits ** chaine_complete_naive_SIMD(vbits** img_bin, int height, int width);
+  vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width);
+
 #endif

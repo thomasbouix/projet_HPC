@@ -127,7 +127,7 @@ void bench_chaine_complete(void) {
 
 void bench_morpho(void) {
 
-  printf("BENCH_MORPHO\n");
+  printf("BENCH MORPHO SCALAIRE\n");
   printf("--------------------\n");
   bench_erosion();
   printf("---\n");
