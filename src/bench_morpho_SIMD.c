@@ -6,7 +6,45 @@ static int run, nrun = 5;
 static double t0, t1, dt, tmin, t;
 static double cycles;
 
+void bench_erosion_SIMD_naif(void) {
 
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img_u8, nrl, nrh, ncl, nch, 255);
+
+  int height = nrh-nrl+1;
+  int width = nch-ncl+1;
+  vbits ** img_bin = convert_to_binary(img_u8, height, width);
+
+  vbits ** img_ero;
+  CHRONO(img_ero = erosion_3x3_SIMD_naif(img_bin, height, width), cycles);
+  printf("erosion 3x3 SIMD naif: %.0f cycles\n", cycles);
+
+  return;
+}
+
+void bench_dilatation_SIMD_naif(void) {
+
+  long nrl = 0;
+  long nrh = 239;
+  long ncl = 0;
+  long nch = 319;
+  uint8** img_u8 = ui8matrix(nrl, nrh, ncl, nch);
+  set_ui8matrix(&img_u8, nrl, nrh, ncl, nch, 255);
+
+  int height = nrh-nrl+1;
+  int width = nch-ncl+1;
+  vbits ** img_bin = convert_to_binary(img_u8, height, width);
+
+  vbits ** img_dil;
+  CHRONO(img_dil = dilatation_3x3_SIMD_naif(img_bin, height, width), cycles);
+  printf("dilatation 3x3 SIMD naif: %.0f cycles\n", cycles);
+
+  return;
+}
 
 void bench_erosion_SIMD_opti(void) {
 
@@ -22,7 +60,7 @@ void bench_erosion_SIMD_opti(void) {
   vbits ** img_bin = convert_to_binary(img_u8, height, width);
 
   vbits ** img_ero;
-  CHRONO(img_ero = erosion_3x3_SIMD(img_bin, height, width), cycles);
+  CHRONO(img_ero = erosion_3x3_SIMD_opti(img_bin, height, width), cycles);
   printf("erosion 3x3 SIMD opti: %.0f cycles\n", cycles);
 
   return;
@@ -43,7 +81,7 @@ void bench_dilatation_SIMD_opti(void) {
 
   vbits ** img_dil;
 
-  CHRONO(img_dil = dilatation_3x3_SIMD(img_bin, height, width), cycles);
+  CHRONO(img_dil = dilatation_3x3_SIMD_opti(img_bin, height, width), cycles);
   printf("dilatation 3x3 SIMD opti: %.0f cycles\n", cycles);
 
   return;
@@ -172,6 +210,10 @@ void bench_morpho_SIMD(void) {
 
   printf("BENCH MORPHO SIMD\n");
   printf("--------------------\n");
+  bench_erosion_SIMD_naif();
+  printf("---\n");
+  bench_dilatation_SIMD_naif();
+  printf("---\n");
   bench_erosion_SIMD_opti();
   printf("---\n");
   bench_dilatation_SIMD_opti();

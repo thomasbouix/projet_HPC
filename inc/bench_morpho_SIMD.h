@@ -12,6 +12,9 @@
 
   #include "morpho_SIMD.h"
 
+  void bench_erosion_SIMD_naif(void);
+  void bench_dilatation_SIMD_naif(void);
+
   void bench_erosion_SIMD_opti(void);
   void bench_dilatation_SIMD_opti(void);
 

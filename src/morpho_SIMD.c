@@ -1,7 +1,6 @@
 #include "morpho_SIMD.h"
 
-/*
-void compute_erosion_3x3_SIMD_non_opti(char* basePath, int save)
+vbits** erosion_3x3_SIMD_naif(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -215,8 +214,7 @@ void compute_erosion_3x3_SIMD_non_opti(char* basePath, int save)
   return m;
 }
 
-//  A IMPLEMENTER
-void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
+vbits** dilatation_3x3_SIMD_naif(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -250,7 +248,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+    y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
 
     vec_store(&m[0][i], y);
   }
@@ -273,7 +271,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+    y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
 
     vec_store(&m[height-1][i], y);
   }
@@ -301,7 +299,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin(b2,c2);
 
-    y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+    y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
 
     vec_store(&m[i][0], y);
   }
@@ -329,7 +327,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
     aa2 = vec_left1_bin(a2,b2);
     cc2 = vec_right1_bin_unused_col(b2,c2,nb_unused_col);
 
-    y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+    y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
 
     vec_store(&m[i][nb_vbits_col-1], y);
   }
@@ -347,7 +345,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
   cc1 = vec_right1_bin(b1,c1);
   aa2 = vec_left1_bin(a2,b2);
   cc2 = vec_right1_bin(b2,c2);
-  y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+  y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[0][0], y);
 
   //Coin sup droit
@@ -363,7 +361,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
   cc1 = vec_right1_bin(b1,c1);
   aa2 = vec_left1_bin(a2,b2);
   cc2 = vec_right1_bin(b2,c2);
-  y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+  y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[0][nb_vbits_col-1], y);
 
   //Coin inf gauche
@@ -379,7 +377,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
   cc1 = vec_right1_bin(b1,c1);
   aa2 = vec_left1_bin(a2,b2);
   cc2 = vec_right1_bin(b2,c2);
-  y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+  y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][0], y);
 
   //Coin inf droit
@@ -395,7 +393,7 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
   cc1 = vec_right1_bin(b1,c1);
   aa2 = vec_left1_bin(a2,b2);
   cc2 = vec_right1_bin(b2,c2);
-  y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+  y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
   for(int i = 1; i < height-1; i++){
@@ -422,19 +420,18 @@ void compute_dilatation_3x3_SIMD_non_opti(char* basePath, int save)
       aa2 = vec_left1_bin(a2,b2);
       cc2 = vec_right1_bin(b2,c2);
 
-      y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
+      y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
 
       vec_store(&m[i][j], y);
     }
   }
   return m;
 }
-*/
 
-void compute_erosion_3x3_SIMD(char* basePath, int save)
+void compute_erosion_3x3_SIMD_opti(char* basePath, int save)
 {
-  CHECK_ERROR(system("mkdir -p output/erosion_3x3_SIMD"));
-  char buff[40];
+  CHECK_ERROR(system("mkdir -p output/erosion_3x3_SIMD_opti"));
+  char buff[60];
   int nrl, nrh, ncl, nch;
   size_t height, width;
   uint8 **img,  **output;
@@ -446,10 +443,10 @@ void compute_erosion_3x3_SIMD(char* basePath, int save)
     height = nrh-nrl+1;
     width = nch-ncl+1;
     img_bin = convert_to_binary(img, height, width);
-    output_bin = erosion_3x3_SIMD(img_bin, height, width);
+    output_bin = erosion_3x3_SIMD_opti(img_bin, height, width);
     output = convert_from_binary(output_bin, height, width);
     if(save){
-      sprintf(buff, "output/erosion_3x3_SIMD/ero3%.3d.pgm", i);
+      sprintf(buff, "output/erosion_3x3_SIMD_opti/ero3%.3d.pgm", i);
       SavePGM_ui8matrix(output, nrl, nrh, ncl, nch, buff);
     }
     free_ui8matrix(img, nrl, nrh, ncl, nch);
@@ -460,7 +457,7 @@ void compute_erosion_3x3_SIMD(char* basePath, int save)
 }
 
 // AND logique sur un voisinage de taille 3x3
-vbits ** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
+vbits ** erosion_3x3_SIMD_opti(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -468,7 +465,7 @@ vbits ** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
 
   // Ajout d'un pointeur vers les lignes 0 et height-1 de l'image pour gérer plus facilement les bords
   vbits **img_bin_extra_lines=(vbits **) _mm_malloc ((size_t)((height+2)*sizeof(vbits*)), 16);
-  if (!img_bin_extra_lines) vnrerror("allocation failure in erosion_3x3_SIMD()");
+  if (!img_bin_extra_lines) vnrerror("allocation failure in erosion_3x3_SIMD_opti()");
   img_bin_extra_lines++;
 
   for(int i = 0; i < height; i++)
@@ -833,10 +830,10 @@ vbits ** erosion_3x3_SIMD(vbits** img_bin, int height, int width)
   return m;
 }
 
-void compute_all_erosion_3x3_SIMD(char* basePath, int save)
+void compute_all_erosion_3x3_SIMD_opti(char* basePath, int save)
 {
-  CHECK_ERROR(system("mkdir -p output/erosion_3x3_SIMD"));
-  char buff[40];
+  CHECK_ERROR(system("mkdir -p output/erosion_3x3_SIMD_opti"));
+  char buff[60];
   int nrl, nrh, ncl, nch;
   size_t height, width;
   uint8 **img,  **output;
@@ -849,10 +846,10 @@ void compute_all_erosion_3x3_SIMD(char* basePath, int save)
     width = nch-ncl+1;
 
     img_bin = convert_to_binary(img, height, width);
-    output_bin = erosion_3x3_SIMD(img_bin, height, width);
+    output_bin = erosion_3x3_SIMD_opti(img_bin, height, width);
     output = convert_from_binary(output_bin, height, width);
     if(save){
-      sprintf(buff, "output/erosion_3x3_SIMD/ero3%.3d.pgm", i);
+      sprintf(buff, "output/erosion_3x3_SIMD_opti/ero3%.3d.pgm", i);
       SavePGM_ui8matrix(output, nrl, nrh, ncl, nch, buff);
     }
     free_ui8matrix(img, nrl, nrh, ncl, nch);
@@ -863,7 +860,7 @@ void compute_all_erosion_3x3_SIMD(char* basePath, int save)
 }
 
 // OR logique sur un voisinage de taille 3x3
-vbits ** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
+vbits ** dilatation_3x3_SIMD_opti(vbits** img_bin, int height, int width)
 {
   int nb_vbits_col = ceil((float)width/128);
   int nb_unused_col = (128-(width%128))%128;
@@ -871,7 +868,7 @@ vbits ** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
 
   // Ajout d'un pointeur vers les lignes 0 et height-1 de l'image pour gérer plus facilement les bords
   vbits **img_bin_extra_lines=(vbits **) _mm_malloc ((size_t)((height+2)*sizeof(vbits*)), 16);
-  if (!img_bin_extra_lines) vnrerror("allocation failure in dilatation_3x3_SIMDS()");
+  if (!img_bin_extra_lines) vnrerror("allocation failure in dilatation_3x3_SIMD_optiS()");
   img_bin_extra_lines++;
 
   for(int i = 0; i < height; i++)
@@ -1237,10 +1234,10 @@ vbits ** dilatation_3x3_SIMD(vbits** img_bin, int height, int width)
   return m;
 }
 
-void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
+void compute_all_dilatation_3x3_SIMD_opti(char* basePath, int save)
 {
-  CHECK_ERROR(system("mkdir -p output/dilatation_3x3_SIMD"));
-  char buff[40];
+  CHECK_ERROR(system("mkdir -p output/dilatation_3x3_SIMD_opti"));
+  char buff[60];
   int nrl, nrh, ncl, nch;
   size_t height, width;
   uint8 **img,  **output;
@@ -1253,10 +1250,10 @@ void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
     width = nch-ncl+1;
 
     img_bin = convert_to_binary(img, height, width);
-    output_bin = dilatation_3x3_SIMD(img_bin, height, width);
+    output_bin = dilatation_3x3_SIMD_opti(img_bin, height, width);
     output = convert_from_binary(output_bin, height, width);
     if(save){
-      sprintf(buff, "output/dilatation_3x3_SIMD/dil3%.3d.pgm", i);
+      sprintf(buff, "output/dilatation_3x3_SIMD_opti/dil3%.3d.pgm", i);
       SavePGM_ui8matrix(output, nrl, nrh, ncl, nch, buff);
     }
     free_ui8matrix(img, nrl, nrh, ncl, nch);
@@ -1270,14 +1267,14 @@ void compute_all_dilatation_3x3_SIMD(char* basePath, int save)
 vbits ** ouverture_opti_SIMD(vbits** img_bin, int height, int width)
 {
 
-  return dilatation_3x3_SIMD(erosion_3x3_SIMD(img_bin, height, width), height, width);
+  return dilatation_3x3_SIMD_opti(erosion_3x3_SIMD_opti(img_bin, height, width), height, width);
 }
 
 // erosion( dilatation() )
 vbits ** fermeture_opti_SIMD(vbits** img_bin, int height, int width)
 {
 
-  return erosion_3x3_SIMD(dilatation_3x3_SIMD(img_bin, height, width), height, width);
+  return erosion_3x3_SIMD_opti(dilatation_3x3_SIMD_opti(img_bin, height, width), height, width);
 }
 
 vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
