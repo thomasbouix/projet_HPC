@@ -23,14 +23,12 @@ void mesure_routine_fd(void) {
 
   return;
 }
-
 void mesure_all_fd(void) {
 
   CHRONO(compute_fd_all_steps(50, 0), cycles);
   printf("compute_fd_all_steps : %.0f cycles\n", cycles);
 
 }
-
 void mesure_SigmaDelta_1step(void) {
   int nrl, nrh, ncl, nch;
 
@@ -58,12 +56,9 @@ void bench_mouvement(void) {
 
   printf("BENCH MOUVEMENT SCALAIRE\n");
   printf("--------------------\n");
-  printf("Frame différence =>\n");
-  printf("\t"); mesure_routine_fd();
-  // printf("\t"); mesure_all_fd();
-  printf("Sigma-Delta =>\n");
-  printf("\t"); mesure_SigmaDelta_1step();
-  // printf("\t"); mesure_all_sd();
+  mesure_routine_fd();
+  printf("---\n");
+  mesure_SigmaDelta_1step();
   printf("====================\n");
   return;
 }

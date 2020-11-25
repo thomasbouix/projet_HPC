@@ -3,7 +3,7 @@
 
   #include <stdio.h>
   #include <stdlib.h>
-  
+
   #include "nrutil.h"
   #include "nrdef.h"
   #include "utils.h"
@@ -15,6 +15,7 @@
 
   void mesure_routine_FD_SIMD(void);
   void mesure_all_fd_SIMD(void);
+  void mesure_SigmaDelta_1step_SIMD(void);
   void bench_mouvement_SIMD(void);
 
 #endif
