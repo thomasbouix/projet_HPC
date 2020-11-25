@@ -33,6 +33,7 @@ C_DEBUG_FLAGS = -O0
 C_CC_FLAGS = -std=c99 -DNOALIAS -DALIGNED -DmySSE -DTIMER_POSIX6
 C_OPTIMISATION_FLAGS = -O3 -fstrict-aliasing
 C_ARCH_FLAGS = -msse4.2
+C_OPENMP_FLAGS =					# à completer lors de l'appel de make
 
 C_OS_FLAGS =
 C_CONFIG_FLAGS = -D$(CONFIG)
@@ -52,12 +53,12 @@ OBJ = $(addprefix ${OBJ_PATH}/, $(addsuffix .o, $(basename $(FILE))))
 # -- Base rules ----------
 $(OBJ_PATH)/%.o : $(SRC_PATH)/%.c
 	mkdir -p obj
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(C_OPENMP_FLAGS)
 
 #-----Main rule ----------
 $(EXE_PATH)/$(PRODUCT): $(OBJ)
 	mkdir -p exe
-	$(CC) -o $@ $^ $(LDFLAGS) $(OPTFLAGS) $(CFG) $(INC) $(LIB) -lm
+	$(CC) -o $@ $^ $(LDFLAGS) $(OPTFLAGS) $(CFG) $(INC) $(LIB) -lm $(C_OPENMP_FLAGS)
 
 # -- Other stuff ----------
 depend:
