@@ -70,24 +70,28 @@ vuint8** SigmaDelta_1step_SIMD(vuint8** M_t_moins_1, vuint8*** M_t_save, vuint8*
   vuint8 vMIN = init_vuint8(V_MIN);
   vuint8 curr_m_t_moins_1, curr_m_t, curr_i_t, curr_v_t_moins_1, curr_v_t;
 
-  for(int i = vi0; i <= vi1; i++){
-    for(int j = vj0; j <= vj1; j++){
+  #pragma omp parallel
+  {
+        #pragma omp for
+        for(int i = vi0; i <= vi1; i++){
+          for(int j = vj0; j <= vj1; j++){
 
-      curr_m_t_moins_1 = vec_load(&M_t_moins_1[i][j]);
-      curr_v_t_moins_1 = vec_load(&V_t_moins_1[i][j]);
-      curr_i_t = vec_load(&I_t[i][j]);
+            curr_m_t_moins_1 = vec_load(&M_t_moins_1[i][j]);
+            curr_v_t_moins_1 = vec_load(&V_t_moins_1[i][j]);
+            curr_i_t = vec_load(&I_t[i][j]);
 
-      curr_m_t = vec_cmp_pixels_SD(curr_m_t_moins_1, curr_i_t);
-      O_t = vABS_DIFF(curr_m_t, curr_i_t);
-      N_O_t = vec_muls_epi8_const(O_t, N);
+            curr_m_t = vec_cmp_pixels_SD(curr_m_t_moins_1, curr_i_t);
+            O_t = vABS_DIFF(curr_m_t, curr_i_t);
+            N_O_t = vec_muls_epi8_const(O_t, N);
 
-      curr_v_t = vec_cmp_pixels_SD(curr_v_t_moins_1, N_O_t);
-      curr_v_t = vec_MAX(vec_MIN(curr_v_t, vMAX), vMIN);
+            curr_v_t = vec_cmp_pixels_SD(curr_v_t_moins_1, N_O_t);
+            curr_v_t = vec_MAX(vec_MIN(curr_v_t, vMAX), vMIN);
 
-      vec_store(&M_t[i][j], curr_m_t);
-      vec_store(&V_t[i][j], curr_v_t);
-      vec_store(&E_t[i][j], vec_cmpgte_vui8(O_t, curr_v_t));
-    }
+            vec_store(&M_t[i][j], curr_m_t);
+            vec_store(&V_t[i][j], curr_v_t);
+            vec_store(&E_t[i][j], vec_cmpgte_vui8(O_t, curr_v_t));
+          }
+        }
   }
 
   *M_t_save = M_t;
