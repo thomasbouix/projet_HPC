@@ -182,6 +182,8 @@ vbits** erosion_3x3_SIMD_naif(vbits** img_bin, int height, int width)
   y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 1; i < height-1; i++){
     for(int j = 1; j < nb_vbits_col-1; j++){
 
@@ -396,6 +398,8 @@ vbits** dilatation_3x3_SIMD_naif(vbits** img_bin, int height, int width)
   y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 1; i < height-1; i++){
     for(int j = 1; j < nb_vbits_col-1; j++){
 
@@ -585,6 +589,8 @@ vbits ** erosion_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   a1 = vec_load(&img_bin_extra_lines[0][0]);
   b1 = vec_load(&img_bin_extra_lines[0][1]);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int j = 1; j < nb_vbits_col-1; j++){
     // PROLOGUE
     c0 = vec_load(&img_bin_extra_lines[-1][j+1]);
@@ -704,6 +710,8 @@ vbits ** erosion_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   and0 = vAND3(aa0, b0, cc0);
   and1 = vAND3(aa1, b1, cc1);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 0; i < height-n; i+=3){
     // Déroulage de boucle i+0
     b2 = vec_load(&img_bin_extra_lines[i+1][0]);
@@ -987,6 +995,8 @@ vbits ** dilatation_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   a1 = vec_load(&img_bin_extra_lines[0][0]);
   b1 = vec_load(&img_bin_extra_lines[0][1]);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int j = 1; j < nb_vbits_col-1; j++){
     // PROLOGUE
 
@@ -2130,6 +2140,8 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
   or1 = or0;
   or1_bis = or0_bis;
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 0; i < height-3; i+=3){
     b2 = vec_load(&img_bin_extra_lines[i+2][0]);
     c2 = vec_load(&img_bin_extra_lines[i+2][1]);
@@ -2347,7 +2359,8 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
     break;
   }
 
-
+  # pragma omp parallel
+  # pragma omp for
   for(int j = 2; j < nb_vbits_col-2; j++){
     a0 = vec_load(&img_bin_extra_lines[0][j-2]);
     a1 = vec_load(&img_bin_extra_lines[1][j-2]);
@@ -2646,6 +2659,8 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
   or1 = or0;
   or1_bis = or0_bis;
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 0; i < height-3; i+=3){
     a2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-2]);
     b2 = vec_load(&img_bin_extra_lines[i+2][nb_vbits_col-1]);
