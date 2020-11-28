@@ -100,7 +100,9 @@ void test_dilatation_losange_SIMD(void) {
 */
 void test_unitaire_SIMD0(void){
   vbits **erosion_result, **dilatation_result;
-  vbits ** m = (vbits**) vui32matrix(0, 2, 0, 2);
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  zero_ui8matrix(&m8, 0, 2, 0, 2);
+  vbits ** m = convert_to_binary(m8, 3, 3);
 
   erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
   dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
@@ -131,30 +133,35 @@ void test_unitaire_SIMD0(void){
 }
 
 /*Pattern       expected_result_erosion     expected_result_dilatation
-  0 1 0                 0 0 0                         1 1 1
-  0 0 0                 0 0 0                         1 1 1
+  1 0 0                 0 0 0                         1 1 0
+  0 0 0                 0 0 0                         1 1 0
   0 0 0                 0 0 0                         0 0 0
 */
 void test_unitaire_SIMD1(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  zero_ui8matrix(&m8, 0, 2, 0, 2);
+
   vbits **erosion_result;
   vbits **dilatation_result;
-  vbits **erosion_expected_result    = (vbits**) vui32matrix(0, 2, 0, 2);
-  vbits **dilatation_expected_result = (vbits**) vui32matrix(0, 2, 0, 2);
-  vbits ** m = (vbits**) vui32matrix(0, 2, 0, 2);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 0, 0, 1);
 
   set_bit(dilatation_expected_result, 0, 0, 1);
   set_bit(dilatation_expected_result, 0, 1, 1);
-  set_bit(dilatation_expected_result, 0, 2, 1);
   set_bit(dilatation_expected_result, 1, 0, 1);
   set_bit(dilatation_expected_result, 1, 1, 1);
-  set_bit(dilatation_expected_result, 1, 2, 1);
 
   erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
   dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
 
   for(int i = 0; i < 3; i++){
     for(int j = 0; j < 3; j++){
-      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_result, i, j)){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
         printf("[%d][%d]\n", i, j);
         ERROR(__func__);
       }
@@ -179,6 +186,63 @@ void test_unitaire_SIMD1(void){
   free_vbitsmatrix(dilatation_expected_result, 3, 3);
 }
 
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  0 1 0                 0 0 0                         1 1 1
+  0 0 0                 0 0 0                         1 1 1
+  0 0 0                 0 0 0                         0 0 0
+*/
+void test_unitaire_SIMD2(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  zero_ui8matrix(&m8, 0, 2, 0, 2);
+
+  vbits **erosion_result;
+  vbits **dilatation_result;
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 0, 1, 1);
+
+  set_bit(dilatation_expected_result, 0, 0, 1);
+  set_bit(dilatation_expected_result, 0, 1, 1);
+  set_bit(dilatation_expected_result, 0, 2, 1);
+  set_bit(dilatation_expected_result, 1, 0, 1);
+  set_bit(dilatation_expected_result, 1, 1, 1);
+  set_bit(dilatation_expected_result, 1, 2, 1);
+
+  erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+
 void test_morpho_SIMD(void) {
 
   printf("TEST_MORPHO SIMD\n");
@@ -187,6 +251,7 @@ void test_morpho_SIMD(void) {
   test_dilatation_losange_SIMD();
   test_unitaire_SIMD0();
   test_unitaire_SIMD1();
+  test_unitaire_SIMD2();
   printf("====================\n");
 
   return;
