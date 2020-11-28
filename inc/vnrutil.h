@@ -19,16 +19,16 @@ extern "C" {
 #include <xmmintrin.h>
 #include <emmintrin.h>
 #include <mmintrin.h>
-    
+
 #include "nrdef.h"
 #include "vnrdef.h"
-    
-    
+
+
 //#pragma message(" - include vnralloc.h")
-    
+
 //#include "vdef.h"
 //#define LINEAR_ALLOCATION 1
-    
+
 /*
  * ifdef: contiguous memory allocation
  * from one line to an other
@@ -129,7 +129,7 @@ void free_vsi32matrix_map(vsint32  **m, int nrl, int nrh, int ncl, int nch);
 void free_vfmatrix_map   (vfloat   **m, int nrl, int nrh, int ncl, int nch);
 void ree_vf32matrix_map  (vfloat32 **m, int nrl, int nrh, int ncl, int nch);
 
-// use vector index 
+// use vector index
 vuint8**    vui8matrix_map_1D_pitch(vuint8   **m, int nrl, int nrh, int ncl, int nch, void *data_1D, int pitch);
 vsint8**    vsi8matrix_map_1D_pitch(vsint8   **m, int nrl, int nrh, int ncl, int nch, void *data_1D, int pitch);
 vuint16**  vui16matrix_map_1D_pitch(vuint16  **m, int nrl, int nrh, int ncl, int nch, void *data_1D, int pitch);

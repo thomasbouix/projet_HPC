@@ -16,6 +16,8 @@
 	#include <math.h>
 	#include <stdint.h>
 	#include <omp.h>
+	#include <math.h>
+	#include <assert.h>
 	#include "vnrdef.h"
 	#include "simd_macro.h"
 
@@ -76,4 +78,8 @@
 	__m128i _mm_bitshift_left(__m128i x, unsigned char offset);
 	__m128i _mm_bitshift_right(__m128i x, unsigned char offset);
 
+	// m[i][j] bitwise
+	int get_bit(vbits** m, int i, int j);
+	// m[i][j] = value, avec value=0 ou value=1
+	void set_bit(vbits **m, int i, int j, int value);
 #endif

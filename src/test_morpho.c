@@ -737,12 +737,15 @@ void test_unitaire11(void){
   = erosion_expected_result[1][0] = erosion_expected_result[1][1] = 0;
 
   erosion_result = erosion_3x3(m_with_borders, 3, 3);
+
+  // display_ui8matrix(erosion_result, 0, 2, 0, 2, "%d", "erosion_result");
+
   dilatation_result = dilatation_3x3(m_with_borders, 3, 3);
 
   for(int i = 0; i < 3; i++){
     for(int j = 0; j < 3; j++){
       if(dilatation_result[i][j] != dilatation_expected_result[i][j]){
-        printf("%d\n", dilatation_result[i][j]);
+        printf("[%d][%d]\n", i, j);
         ERROR(__func__);
       }
     }
@@ -751,7 +754,7 @@ void test_unitaire11(void){
   for(int i = 0; i < 3; i++){
     for(int j = 0; j < 3; j++){
       if(erosion_result[i][j] != erosion_expected_result[i][j]){
-        printf("%d\n", erosion_result[i][j]);
+        printf("[%d][%d]\n", i, j);
         ERROR(__func__);
       }
     }
