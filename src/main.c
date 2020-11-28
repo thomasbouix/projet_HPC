@@ -25,13 +25,17 @@
 int main(int argc, char * argv[]) {
 
   // test_morpho();
-  // test_morpho_SIMD();
+  test_morpho_SIMD();
 
   // bench_mouvement();
   // bench_mouvement_SIMD();
 
   // bench_morpho();
-  bench_morpho_SIMD();
+  // bench_morpho_SIMD();
+
+  // vbits v = 0x00010203040506070809101112131415;
+  // int res =  v % 2;
+
 
   return 0;
 }

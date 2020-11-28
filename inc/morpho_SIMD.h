@@ -25,4 +25,7 @@
   vbits** fermeture_fusion_SIMD(vbits** img_bin, int height, int width);
   vbits** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width);
 
+  // m[i][j] bitwise
+  int get_bit(vbits** m, int i, int j);
+
 #endif
