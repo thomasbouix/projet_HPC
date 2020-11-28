@@ -13,8 +13,9 @@
   #include "morpho_SIMD.h"
   #include "mouvement.h"
 
-  void test_erosion_SIMD(void);
-  void test_dilatation_SIMD(void);
+  void test_erosion_losange_SIMD(void);
+  void test_dilatation_losange_SIMD(void);
+  void test_unitaire_SIMD0(void);
   void test_morpho_SIMD(void);
 
 #endif
