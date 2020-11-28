@@ -16,7 +16,7 @@
 	#include <math.h>
 	#include <stdint.h>
 	#include <omp.h>
-	#include <math.h> 
+	#include <math.h>
 	#include "vnrdef.h"
 	#include "simd_macro.h"
 
@@ -76,5 +76,8 @@
 	// Méthode inspirée de Stack overflow (voir schema explicatif dans le rapport)
 	__m128i _mm_bitshift_left(__m128i x, unsigned char offset);
 	__m128i _mm_bitshift_right(__m128i x, unsigned char offset);
+
+	// m[i][j] bitwise
+	int get_bit(vbits** m, int i, int j);
 
 #endif

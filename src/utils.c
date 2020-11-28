@@ -242,3 +242,40 @@ void set_ui8_bordures(uint8 *** m, int nrl, int nrh, int ncl, int nch, uint8 val
     (*m)[i][nch] = val;
   }
 }
+
+
+int get_bit(vbits** m, int i, int j) {
+
+  int vbits_col = j / 128;          // indice du vbit contenant notre bit
+  int bit_offset = (j % 128);       // offset du bit dans notre vbit
+
+  vbits vecteur = m[i][vbits_col];  // vbit contenant notre bit
+
+  uint64_t mask[2];
+
+  // printf("offset : %d\n", bit_offset);
+  if (bit_offset <= 63) {
+    mask[0] = (uint64_t) pow(2, 63 - bit_offset);
+    // printf("mask[0] : %lu\n", mask[0]);
+    mask[1] = 0;
+  }
+  else {
+    mask[0] = 0;
+    mask[1] = (uint64_t) pow(2, (bit_offset - 64));
+  }
+
+  vbits vmask = _mm_set_epi64x(mask[0], mask[1]);
+  // display_hexa_vbits(vmask);
+  vbits vres = vmask & vecteur;
+  // display_hexa_vbits(vres);
+
+  uint64_t res[2];
+
+  vec_store(res, vres);
+
+  if ( (res[0] == 0) && (res[1]==0))
+    return 0;
+
+  return 1;
+
+}
