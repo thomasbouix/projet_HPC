@@ -127,6 +127,7 @@ void test_unitaire_SIMD0(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -179,6 +180,7 @@ void test_unitaire_SIMD1(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -235,6 +237,7 @@ void test_unitaire_SIMD2(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -289,6 +292,7 @@ void test_unitaire_SIMD3(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -345,6 +349,7 @@ void test_unitaire_SIMD4(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -404,6 +409,7 @@ void test_unitaire_SIMD5(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -460,6 +466,7 @@ void test_unitaire_SIMD6(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -514,6 +521,7 @@ void test_unitaire_SIMD7(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -570,6 +578,7 @@ void test_unitaire_SIMD8(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -625,6 +634,7 @@ void test_unitaire_SIMD9(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -672,6 +682,7 @@ void test_unitaire_SIMD10(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -724,6 +735,7 @@ void test_unitaire_SIMD11(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -778,6 +790,7 @@ void test_unitaire_SIMD12(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -829,6 +842,7 @@ void test_unitaire_SIMD13(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -882,6 +896,7 @@ void test_unitaire_SIMD14(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -930,6 +945,7 @@ void test_unitaire_SIMD15(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -983,6 +999,7 @@ void test_unitaire_SIMD16(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -1035,6 +1052,7 @@ void test_unitaire_SIMD17(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -1089,6 +1107,7 @@ void test_unitaire_SIMD18(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
@@ -1140,6 +1159,7 @@ void test_unitaire_SIMD19(void){
 
   SUCCESS(__func__);
 
+  free_ui8matrix(m8, 0, 2, 0, 2);
   free_vbitsmatrix(m, 3, 3);
   free_vbitsmatrix(erosion_result, 3, 3);
   free_vbitsmatrix(dilatation_result, 3, 3);
