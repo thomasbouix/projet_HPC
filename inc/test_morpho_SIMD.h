@@ -29,6 +29,13 @@
   void test_unitaire_SIMD10(void);
   void test_unitaire_SIMD11(void);
   void test_unitaire_SIMD12(void);
+  void test_unitaire_SIMD13(void);
+  void test_unitaire_SIMD14(void);
+  void test_unitaire_SIMD15(void);
+  void test_unitaire_SIMD16(void);
+  void test_unitaire_SIMD17(void);
+  void test_unitaire_SIMD18(void);
+  void test_unitaire_SIMD19(void);
 
   void test_morpho_SIMD(void);
 

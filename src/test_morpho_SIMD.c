@@ -836,7 +836,316 @@ void test_unitaire_SIMD13(void){
   free_vbitsmatrix(dilatation_expected_result, 3, 3);
 }
 
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 0 0 1                         1 1 1
+  0 1 1                 0 0 1                         1 1 1
+  1 1 1                 0 0 1                         1 1 1
+*/
+void test_unitaire_SIMD14(void){
 
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 1, 0, 0);
+
+  set_bit(erosion_expected_result, 0, 0, 0);
+  set_bit(erosion_expected_result, 0, 1, 0);
+  set_bit(erosion_expected_result, 1, 0, 0);
+  set_bit(erosion_expected_result, 1, 1, 0);
+  set_bit(erosion_expected_result, 2, 0, 0);
+  set_bit(erosion_expected_result, 2, 1, 0);
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 0 0 0                         1 1 1
+  1 0 1                 0 0 0                         1 1 1
+  1 1 1                 0 0 0                         1 1 1
+*/
+void test_unitaire_SIMD15(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 1, 1, 0);
+
+  zero_ui8matrix(&m8, 0, 2, 0, 2);
+  vbits **erosion_expected_result = convert_to_binary(m8, 3, 3);
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 1 0 0                         1 1 1
+  1 1 0                 1 0 0                         1 1 1
+  1 1 1                 1 0 0                         1 1 1
+*/
+void test_unitaire_SIMD16(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 1, 2, 0);
+
+  set_bit(erosion_expected_result, 0, 1, 0);
+  set_bit(erosion_expected_result, 0, 2, 0);
+  set_bit(erosion_expected_result, 1, 1, 0);
+  set_bit(erosion_expected_result, 1, 2, 0);
+  set_bit(erosion_expected_result, 2, 1, 0);
+  set_bit(erosion_expected_result, 2, 2, 0);
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 1 1 1                         1 1 1
+  1 1 1                 0 0 1                         1 1 1
+  0 1 1                 0 0 1                         1 1 1
+*/
+void test_unitaire_SIMD17(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 2, 0, 0);
+
+
+  set_bit(erosion_expected_result, 1, 0, 0);
+  set_bit(erosion_expected_result, 1, 1, 0);
+  set_bit(erosion_expected_result, 2, 0, 0);
+  set_bit(erosion_expected_result, 2, 1, 0);
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 1 1 1                         1 1 1
+  1 1 1                 0 0 0                         1 1 1
+  1 0 1                 0 0 0                         1 1 1
+*/
+void test_unitaire_SIMD18(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 2, 1, 0);
+
+  set_bit(erosion_expected_result, 1, 0, 0);
+  set_bit(erosion_expected_result, 1, 1, 0);
+  set_bit(erosion_expected_result, 1, 2, 0);
+  set_bit(erosion_expected_result, 2, 0, 0);
+  set_bit(erosion_expected_result, 2, 1, 0);
+  set_bit(erosion_expected_result, 2, 2, 0);
+
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
+
+/*Pattern       expected_result_erosion     expected_result_dilatation
+  1 1 1                 1 1 1                         1 1 1
+  1 1 1                 1 0 0                         1 1 1
+  1 1 0                 1 0 0                         1 1 1
+*/
+void test_unitaire_SIMD19(void){
+
+  uint8 ** m8 = ui8matrix(0, 2, 0, 2);
+  set_ui8matrix(&m8, 0, 2, 0, 2, 255);
+
+  vbits **erosion_expected_result    = convert_to_binary(m8, 3, 3);
+  vbits **dilatation_expected_result = convert_to_binary(m8, 3, 3);
+  vbits ** m = convert_to_binary(m8, 3, 3);
+
+  set_bit(m, 2, 2, 0);
+
+  set_bit(erosion_expected_result, 1, 1, 0);
+  set_bit(erosion_expected_result, 1, 2, 0);
+  set_bit(erosion_expected_result, 2, 1, 0);
+  set_bit(erosion_expected_result, 2, 2, 0);
+
+  vbits **erosion_result = erosion_3x3_SIMD_opti(m, 3, 3);
+  vbits **dilatation_result = dilatation_3x3_SIMD_opti(m, 3, 3);
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(dilatation_result, i, j) != get_bit(dilatation_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      if(get_bit(erosion_result, i, j) != get_bit(erosion_expected_result, i, j)){
+        printf("[%d][%d]\n", i, j);
+        ERROR(__func__);
+      }
+    }
+  }
+
+  SUCCESS(__func__);
+
+  free_vbitsmatrix(m, 3, 3);
+  free_vbitsmatrix(erosion_result, 3, 3);
+  free_vbitsmatrix(dilatation_result, 3, 3);
+  free_vbitsmatrix(erosion_expected_result, 3, 3);
+  free_vbitsmatrix(dilatation_expected_result, 3, 3);
+}
 
 void test_morpho_SIMD(void) {
 
@@ -858,6 +1167,12 @@ void test_morpho_SIMD(void) {
   test_unitaire_SIMD11();
   test_unitaire_SIMD12();
   test_unitaire_SIMD13();
+  test_unitaire_SIMD14();
+  test_unitaire_SIMD15();
+  test_unitaire_SIMD16();
+  test_unitaire_SIMD17();
+  test_unitaire_SIMD18();
+  test_unitaire_SIMD19();
   printf("====================\n");
 
   return;
