@@ -17,6 +17,7 @@
 	#include <stdint.h>
 	#include <omp.h>
 	#include <math.h>
+	#include <assert.h>
 	#include "vnrdef.h"
 	#include "simd_macro.h"
 
@@ -79,5 +80,6 @@
 
 	// m[i][j] bitwise
 	int get_bit(vbits** m, int i, int j);
-
+	// m[i][j] = value, avec value=0 ou value=1
+	void set_bit(vbits **m, int i, int j, int value);
 #endif
