@@ -15,7 +15,7 @@
 
   void test_erosion_losange_SIMD(void);
   void test_dilatation_losange_SIMD(void);
-  
+
   void test_unitaire_SIMD0(void);
   void test_unitaire_SIMD1(void);
   void test_unitaire_SIMD2(void);
@@ -26,6 +26,9 @@
   void test_unitaire_SIMD7(void);
   void test_unitaire_SIMD8(void);
   void test_unitaire_SIMD9(void);
+  void test_unitaire_SIMD10(void);
+  void test_unitaire_SIMD11(void);
+  void test_unitaire_SIMD12(void);
 
   void test_morpho_SIMD(void);
 
