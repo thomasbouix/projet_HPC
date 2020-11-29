@@ -18,8 +18,7 @@ uint8** erosion_3x3(uint8** img_with_padding, int height, int width){
   x0 = img_with_padding[-1][-1]; x1 = img_with_padding[-1][0];
   x3 = img_with_padding[-0][-1]; x4 = img_with_padding[-0][0];
 
-  #pragma omp parallel
-  #pragma omp for
+  // NON OPTIMISABLE AVEC OMP FOR
   for(int i = 0; i < height; i++){
     x6 = img_with_padding[i+1][-1]; x7 = img_with_padding[i+1][-0];
     and0 = x0 & x3 & x6;
