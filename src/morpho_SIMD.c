@@ -182,6 +182,8 @@ vbits** erosion_3x3_SIMD_naif(vbits** img_bin, int height, int width)
   y = vAND_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
+  # pragma omp parallel
+  # pragma omp for
   for(int i = 1; i < height-1; i++){
     for(int j = 1; j < nb_vbits_col-1; j++){
 
@@ -396,6 +398,8 @@ vbits** dilatation_3x3_SIMD_naif(vbits** img_bin, int height, int width)
   y = vOR_2D_9(aa0, b0, cc0, aa1, b1, cc1, aa2, b2, cc2);
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
+  #pragma omp parallel
+  #pragma omp for 
   for(int i = 1; i < height-1; i++){
     for(int j = 1; j < nb_vbits_col-1; j++){
 
