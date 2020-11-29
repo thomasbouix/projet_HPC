@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
   test_morpho_SIMD();
 
   // bench_mouvement();
-  // bench_mouvement_SIMD();
+  bench_mouvement_SIMD();
 
   // bench_morpho();
   // bench_morpho_SIMD();
