@@ -1672,12 +1672,12 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
         cc2 = vec_right1_bin(b2,c2);
 
         and0_2 = vAND3(aa2, b2, cc2);
-        and6 = vAND3(and0_0, and0_1, and0_0);
+        and6 = vAND3(and0_2, and0_1, and0_0);
 
         a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
         aa2 = vec_left1_bin(b2,c2);
-        cc2 = vec_right1_bin(c2,a2);
+        cc2 = vec_right1_bin_unused_col(c2,a2,nb_unused_col);
 
         and1_2 = vAND3(aa2, c2, cc2);
         and7 = vAND3(and1_2, and1_1, and1_0);
@@ -3249,7 +3249,7 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
         a2 = _mm_bitshift_left(c2, 127-nb_unused_col);
 
         aa2 = vec_left1_bin(b2,c2);
-        cc2 = vec_right1_bin(c2,a2);
+        cc2 = vec_right1_bin_unused_col(c2,a2,nb_unused_col);
 
         or1_2 = vOR3(aa2, c2, cc2);
         or7 = vOR3(or1_2, or1_1, or1_0);
