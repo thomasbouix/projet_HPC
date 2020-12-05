@@ -213,6 +213,11 @@ vbits** erosion_3x3_SIMD_naif(vbits** img_bin, int height, int width)
       vec_store(&m[i][j], y);
     }
   }
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 
@@ -429,6 +434,11 @@ vbits** dilatation_3x3_SIMD_naif(vbits** img_bin, int height, int width)
       vec_store(&m[i][j], y);
     }
   }
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 
@@ -578,6 +588,11 @@ vbits ** erosion_3x3_SIMD_opti(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines-1);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -831,6 +846,11 @@ vbits ** erosion_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   }
 
   _mm_free(img_bin_extra_lines-1);
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 
@@ -981,6 +1001,11 @@ vbits ** dilatation_3x3_SIMD_opti(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines-1);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -1235,6 +1260,11 @@ vbits ** dilatation_3x3_SIMD_opti(vbits** img_bin, int height, int width)
   }
 
   _mm_free(img_bin_extra_lines-1);
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 void compute_all_dilatation_3x3_SIMD_opti(char* basePath, int save)
@@ -1271,6 +1301,11 @@ vbits** ouverture_SIMD_naif(vbits** img_bin, int height, int width)
   vbits ** ero = erosion_3x3_SIMD_naif(img_bin, height, width);
   vbits ** ouv = dilatation_3x3_SIMD_naif(ero, height, width);
   free_vbitsmatrix(ero, height, width);
+
+  #ifdef BENCH
+  free_vbitsmatrix(ouv, height, width);
+  #endif
+
   return ouv;
 }
 vbits** fermeture_SIMD_naif(vbits** img_bin, int height, int width)
@@ -1278,6 +1313,11 @@ vbits** fermeture_SIMD_naif(vbits** img_bin, int height, int width)
   vbits ** dil = dilatation_3x3_SIMD_naif(img_bin, height, width);
   vbits ** ferm = erosion_3x3_SIMD_naif(dil, height, width);
   free_vbitsmatrix(dil, height, width);
+
+  #ifdef BENCH
+  free_vbitsmatrix(ferm, height, width);
+  #endif
+
   return ferm;
 }
 vbits** chaine_complete_SIMD_naif(vbits** img_bin, int height, int width)
@@ -1288,6 +1328,10 @@ vbits** chaine_complete_SIMD_naif(vbits** img_bin, int height, int width)
 
     free_vbitsmatrix(ouverture, height, width);
 
+    #ifdef BENCH
+    free_vbitsmatrix(fermeture, height, width);
+    #endif
+
     return fermeture;
 }
 
@@ -1297,6 +1341,11 @@ vbits ** ouverture_opti_SIMD(vbits** img_bin, int height, int width)
   vbits ** ero = erosion_3x3_SIMD_opti(img_bin, height, width);
   vbits ** ouv = dilatation_3x3_SIMD_opti(ero, height, width);
   free_vbitsmatrix(ero, height, width);
+
+  #ifdef BENCH
+  free_vbitsmatrix(ouv, height, width);
+  #endif
+
   return ouv;
 
 }
@@ -1306,6 +1355,11 @@ vbits ** fermeture_opti_SIMD(vbits** img_bin, int height, int width)
   vbits ** dil = dilatation_3x3_SIMD_opti(img_bin, height, width);
   vbits ** ferm = erosion_3x3_SIMD_opti(dil, height, width);
   free_vbitsmatrix(dil, height, width);
+
+  #ifdef BENCH
+  free_vbitsmatrix(ferm, height, width);
+  #endif
+
   return ferm;
 }
 
@@ -1476,6 +1530,11 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -1724,6 +1783,11 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -2075,6 +2139,11 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -2880,6 +2949,11 @@ vbits ** ouverture_fusion_SIMD(vbits** img_bin, int height, int width)
   }
 
   _mm_free(img_bin_extra_lines);
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
@@ -3048,6 +3122,11 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -3296,6 +3375,11 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -3647,6 +3731,11 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
     }
 
     _mm_free(img_bin_extra_lines);
+
+    #ifdef BENCH
+    free_vbitsmatrix(m, height, width);
+    #endif
+
     return m;
   }
 
@@ -4453,6 +4542,11 @@ vbits ** fermeture_fusion_SIMD(vbits** img_bin, int height, int width)
   }
 
   _mm_free(img_bin_extra_lines);
+
+  #ifdef BENCH
+  free_vbitsmatrix(m, height, width);
+  #endif
+
   return m;
 }
 
@@ -4466,6 +4560,10 @@ vbits ** chaine_complete_opti_SIMD(vbits** img_bin, int height, int width)
 
   free_vbitsmatrix(ouverture, height, width);
 
+  #ifdef BENCH
+  free_vbitsmatrix(fermeture, height, width);
+  #endif
+
   return fermeture;
 }
 vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width)
@@ -4475,6 +4573,10 @@ vbits ** chaine_complete_fusion_SIMD(vbits** img_bin, int height, int width)
   vbits ** fermeture = fermeture_fusion_SIMD(ouverture, height, width);
 
   free_vbitsmatrix(ouverture, height, width);
+
+  #ifdef BENCH
+  free_vbitsmatrix(fermeture, height, width);
+  #endif
 
   return fermeture;
 }

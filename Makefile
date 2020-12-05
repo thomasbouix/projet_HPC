@@ -10,6 +10,7 @@ FILE = main.c nrutil.c mouvement.c  morpho.c vnrutil.c utils.c  									 \
 			 morpho_SIMD.c mouvement_SIMD.c morpho_SIMD.c																 \
 			 test_morpho.c test_morpho_SIMD.c test_morpho_SIMD.c 												 \
 			 bench_mouvement.c bench_mouvement_SIMD.c bench_morpho.c bench_morpho_SIMD.c \
+			 bench_chaine_complete.c
 
 # -- Paths ----------
 SRC_PATH = src

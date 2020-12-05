@@ -1,6 +1,8 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+//#define BENCH
+
 	#if defined(__INTEL_COMPILER) || defined(__ICC)
 	#include "ia32intrin.h" // chrono Intel
 	#else

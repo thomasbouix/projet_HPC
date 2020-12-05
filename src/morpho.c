@@ -34,6 +34,7 @@ uint8** erosion_3x3(uint8** img_with_padding, int height, int width){
     x0 = x3; x3 = x6;
     x1 = x4; x4 = x7;
   }
+
   return m;
 }
 
@@ -69,6 +70,7 @@ uint8** dilatation_3x3(uint8** img_with_padding, int height, int width){
     x0 = x3; x3 = x6;
     x1 = x4; x4 = x7;
   }
+
   return m;
 }
 
@@ -126,6 +128,10 @@ uint8** ouverture_3x3(uint8** img_with_padding, int height, int width) {
   free_ui8matrix(ero, 0, height-1, 0, width-1);
   free_padding_ui8matrix(ero_borders, -1, height, -1, width, 1);
 
+  #ifdef BENCH
+  free_ui8matrix(res, 0, height-1, 0, width-1);
+  #endif
+
   return res;
 }
 
@@ -138,6 +144,10 @@ uint8** fermeture_3x3(uint8** img_with_padding, int height, int width) {
 
   free_ui8matrix(dil, 0, height-1, 0, width-1);
   free_padding_ui8matrix(dil_borders, -1, height, -1, width, 1);
+
+  #ifdef BENCH
+  free_ui8matrix(res, 0, height-1, 0, width-1);
+  #endif
 
   return res;
 }
@@ -163,6 +173,10 @@ uint8** chaine_complete_3x3(uint8** img_with_padding, int height, int width) {
   free_padding_ui8matrix(ero1_with_padding, -1, height, -1, width, 1);
   free_padding_ui8matrix(dil1_with_padding, -1, height, -1, width, 1);
   free_padding_ui8matrix(dil2_with_padding, -1, height, -1, width, 1);
+
+  #ifdef BENCH
+  free_ui8matrix(ero2, 0, height-1, 0, width-1);
+  #endif
 
   return ero2;
 }

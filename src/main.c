@@ -21,17 +21,23 @@
 #include "bench_morpho.h"
 #include "bench_morpho_SIMD.h"
 
+#include "bench_chaine_complete.h"
+
+
 
 int main(int argc, char * argv[]) {
 
-  // test_morpho();
-  test_morpho_SIMD();
+  //test_morpho();
+  //test_morpho_SIMD();
 
-  // bench_mouvement();
-  // bench_mouvement_SIMD();
+
+  //bench_mouvement();
+  //bench_mouvement_SIMD();
 
   // bench_morpho();
   // bench_morpho_SIMD();
+
+  //bench_chaine_complete_csv(3, 2000, 1);
 
   return 0;
 }

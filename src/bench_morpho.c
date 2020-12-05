@@ -21,13 +21,11 @@ void bench_erosion(void) {
   int kernel_size = 3;
 
   uint8** img_with_borders = add_borders(img, height, width, border);
-  free_ui8matrix(img, nrl, nrh, ncl, nch);
 
-  uint8 ** img_ero;
-
-  CHRONO(img_ero = erosion_3x3(img_with_borders, height, width), cycles);
+  CHRONO(erosion_3x3(img_with_borders, height, width), cycles);
   printf("erosion 3x3 : %.0f cycles\n", cycles);
-
+  free_ui8matrix(img, nrl, nrh, ncl, nch);
+  free_padding_ui8matrix(img_with_borders, nrl-1, nrh+1, ncl-1, nch+1, 1);
 }
 
 void bench_dilatation(void) {
@@ -45,12 +43,12 @@ void bench_dilatation(void) {
   int kernel_size = 3;
 
   uint8** img_with_borders = add_borders(img, height, width, border);
-  free_ui8matrix(img, nrl, nrh, ncl, nch);
 
-  uint8 ** img_ero;
-
-  CHRONO(img_ero = dilatation_3x3(img_with_borders, height, width), cycles);
+  CHRONO(dilatation_3x3(img_with_borders, height, width), cycles);
   printf("dilatation 3x3 : %.0f cycles\n", cycles);
+
+  free_ui8matrix(img, nrl, nrh, ncl, nch);
+  free_padding_ui8matrix(img_with_borders, nrl-1, nrh+1, ncl-1, nch+1, 1);
 }
 
 void bench_ouverture(void) {
@@ -66,15 +64,12 @@ void bench_ouverture(void) {
   int border = 1;
 
   uint8** img_with_borders = add_borders(img, height, width, border);
-  uint8 ** res;
-  CHRONO(res = ouverture_3x3(img_with_borders, height, width), cycles);
+
+  CHRONO(ouverture_3x3(img_with_borders, height, width), cycles);
   printf("ouverture 3x3 : %.0f cycles\n", cycles);
 
-  free_padding_ui8matrix(img_with_borders, -1, 240, -1, 320, 1);
+  free_padding_ui8matrix(img_with_borders, nrl-1, nrh+1, ncl-1, nch+1, 1);
   free_ui8matrix(img, nrl, nrh, ncl, nch);
-  free_ui8matrix(res, nrl, nrh, ncl, nch);
-
-  return;
 }
 
 void bench_fermeture(void) {
@@ -90,15 +85,12 @@ void bench_fermeture(void) {
   int border = 1;
 
   uint8** img_with_borders = add_borders(img, height, width, border);
-  uint8 ** res;
-  CHRONO(res = fermeture_3x3(img_with_borders, height, width), cycles);
+
+  CHRONO(fermeture_3x3(img_with_borders, height, width), cycles);
   printf("fermeture 3x3 : %.0f cycles\n", cycles);
 
-  free_padding_ui8matrix(img_with_borders, -1, 240, -1, 320, 1);
+  free_padding_ui8matrix(img_with_borders, nrl-1, nrh+1, ncl-1, nch+1, 1);
   free_ui8matrix(img, nrl, nrh, ncl, nch);
-  free_ui8matrix(res, nrl, nrh, ncl, nch);
-
-  return;
 }
 
 void bench_chaine_complete(void) {
@@ -114,15 +106,12 @@ void bench_chaine_complete(void) {
   int border = 1;
 
   uint8** img_with_borders = add_borders(img, height, width, border);
-  uint8 ** res;
-  CHRONO(res = chaine_complete_3x3(img_with_borders, height, width), cycles);
+
+  CHRONO(chaine_complete_3x3(img_with_borders, height, width), cycles);
   printf("chaine complete 3x3 : %.0f cycles\n", cycles);
 
-  free_padding_ui8matrix(img_with_borders, -1, 240, -1, 320, 1);
+  free_padding_ui8matrix(img_with_borders, nrl-1, nrh+1, ncl-1, nch+1, 1);
   free_ui8matrix(img, nrl, nrh, ncl, nch);
-  free_ui8matrix(res, nrl, nrh, ncl, nch);
-
-  return;
 }
 
 void bench_morpho(void) {
