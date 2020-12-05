@@ -399,7 +399,7 @@ vbits** dilatation_3x3_SIMD_naif(vbits** img_bin, int height, int width)
   vec_store(&m[height-1][nb_vbits_col-1], y);
 
   #pragma omp parallel
-  #pragma omp for 
+  #pragma omp for
   for(int i = 1; i < height-1; i++){
     for(int j = 1; j < nb_vbits_col-1; j++){
 
@@ -1268,11 +1268,17 @@ void compute_all_dilatation_3x3_SIMD_opti(char* basePath, int save)
 
 vbits** ouverture_SIMD_naif(vbits** img_bin, int height, int width)
 {
-  return dilatation_3x3_SIMD_naif(erosion_3x3_SIMD_naif(img_bin, height, width), height, width);
+  vbits ** ero = erosion_3x3_SIMD_naif(img_bin, height, width);
+  vbits ** ouv = dilatation_3x3_SIMD_naif(ero, height, width);
+  free_vbitsmatrix(ero, height, width);
+  return ouv;
 }
 vbits** fermeture_SIMD_naif(vbits** img_bin, int height, int width)
 {
-  return erosion_3x3_SIMD_naif(dilatation_3x3_SIMD_naif(img_bin, height, width), height, width);
+  vbits ** dil = dilatation_3x3_SIMD_naif(img_bin, height, width);
+  vbits ** ferm = erosion_3x3_SIMD_naif(dil, height, width);
+  free_vbitsmatrix(dil, height, width);
+  return ferm;
 }
 vbits** chaine_complete_SIMD_naif(vbits** img_bin, int height, int width)
 {
@@ -1288,12 +1294,19 @@ vbits** chaine_complete_SIMD_naif(vbits** img_bin, int height, int width)
 // dilatation( erosion() )
 vbits ** ouverture_opti_SIMD(vbits** img_bin, int height, int width)
 {
-  return dilatation_3x3_SIMD_opti(erosion_3x3_SIMD_opti(img_bin, height, width), height, width);
+  vbits ** ero = erosion_3x3_SIMD_opti(img_bin, height, width);
+  vbits ** ouv = dilatation_3x3_SIMD_opti(ero, height, width);
+  free_vbitsmatrix(ero, height, width);
+  return ouv;
+
 }
 // erosion( dilatation() )
 vbits ** fermeture_opti_SIMD(vbits** img_bin, int height, int width)
 {
-  return erosion_3x3_SIMD_opti(dilatation_3x3_SIMD_opti(img_bin, height, width), height, width);
+  vbits ** dil = dilatation_3x3_SIMD_opti(img_bin, height, width);
+  vbits ** ferm = erosion_3x3_SIMD_opti(dil, height, width);
+  free_vbitsmatrix(dil, height, width);
+  return ferm;
 }
 
 

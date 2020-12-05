@@ -338,8 +338,8 @@ void set_bit(vbits **m, int i, int j, int value) {
 // 1 si égales, 0 sinon
 int compare_SIMD(vbits ** m0, vbits ** m1, int height, int width) {
 
-    for (int i=0; i<height-1; i++) {
-      for (int j=0; j<width-1; j++) {
+    for (int i=0; i<=height-1; i++) {
+      for (int j=0; j<=width-1; j++) {
         if (get_bit(m0, i, j) != get_bit(m1, i, j))
           return 0;
       }
