@@ -37,8 +37,9 @@
   void test_unitaire_SIMD18(void);
   void test_unitaire_SIMD19(void);
 
-  // compare SIMD naif avec SIMD fusion
+  // compare SIMD opti avec SIMD fusion
   void test_ouverture_universel(int height, int width);
+  void test_fermeture_universel(int height, int width);
 
   void test_morpho_SIMD(void);
 
