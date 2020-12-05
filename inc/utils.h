@@ -82,4 +82,7 @@
 	int get_bit(vbits** m, int i, int j);
 	// m[i][j] = value, avec value=0 ou value=1
 	void set_bit(vbits **m, int i, int j, int value);
+
+	// compare deux matrices SIMD, renvoie 1 si égales, 0 sinon
+	int compare_SIMD(vbits ** m0, vbits ** m1, int height, int width);
 #endif

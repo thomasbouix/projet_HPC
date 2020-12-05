@@ -1167,6 +1167,61 @@ void test_unitaire_SIMD19(void){
   free_vbitsmatrix(dilatation_expected_result, 3, 3);
 }
 
+void test_ouverture_universel(int height, int width) {
+
+  uint8 ** m8 = ui8matrix(0, height-1, 0, width-1);
+  zero_ui8matrix(&m8, 0, height-1, 0, width-1);
+  vbits ** m = convert_to_binary(m8, height, width);
+  free_ui8matrix(m8, 0, height, 0, width);
+
+  vbits ** ouverture_naive  = ouverture_SIMD_naif(m, height, width);
+  vbits ** ouverture_opti   = ouverture_opti_SIMD(m, height, width);
+  vbits ** ouverutre_fusion = ouverture_fusion_SIMD(m, height, width);
+
+  if (compare_SIMD(ouverture_naive, ouverture_opti, height, width) == 0) {
+    ERROR(__func__);
+  }
+  else if (compare_SIMD(ouverture_naive, ouverture_opti, height, width) == 0) {
+    ERROR(__func__);
+  }
+  else {
+    SUCCESS(__func__);
+  }
+
+  free_vbitsmatrix(ouverture_naive, height, width);
+  free_vbitsmatrix(ouverture_opti, height, width);
+  free_vbitsmatrix(ouverutre_fusion, height, width);
+
+  // 1 TEST COMPLET PAR PIXEL
+  for (int i=0; i<height-1; i++) {
+    for (int j=0; j<width-1; j++) {
+
+          set_bit(m, i, j, 1);
+
+          ouverture_naive  = ouverture_SIMD_naif(m, height, width);
+          ouverture_opti   = ouverture_opti_SIMD(m, height, width);
+          ouverutre_fusion = ouverture_fusion_SIMD(m, height, width);
+
+          if (compare_SIMD(ouverture_naive, ouverture_opti, height, width) == 0) {
+            ERROR(__func__);
+          }
+          else if (compare_SIMD(ouverture_naive, ouverture_opti, height, width) == 0) {
+            ERROR(__func__);
+          }
+          else {
+            SUCCESS(__func__);
+          }
+
+          free_vbitsmatrix(ouverture_naive, height, width);
+          free_vbitsmatrix(ouverture_opti, height, width);
+          free_vbitsmatrix(ouverutre_fusion, height, width);
+    }
+  }
+
+  free_vbitsmatrix(m, height, width);
+
+}
+
 void test_morpho_SIMD(void) {
 
   printf("TEST_MORPHO SIMD\n");
