@@ -1167,6 +1167,112 @@ void test_unitaire_SIMD19(void){
   free_vbitsmatrix(dilatation_expected_result, 3, 3);
 }
 
+void test_ouverture_universel(int height, int width) {
+
+  uint8 ** m8 = ui8matrix(0, height-1, 0, width-1);
+  zero_ui8matrix(&m8, 0, height-1, 0, width-1);
+
+  vbits ** m = convert_to_binary(m8, height, width);
+  vbits ** ouverture_opti   = ouverture_opti_SIMD(m, height, width);
+  vbits ** ouverture_fusion = ouverture_fusion_SIMD(m, height, width);
+
+  if (compare_SIMD(ouverture_opti, ouverture_fusion, height, width) == 0) {
+    ERROR(__func__);
+  }
+
+  free_vbitsmatrix(ouverture_opti, height, width);
+  free_vbitsmatrix(ouverture_fusion, height, width);
+
+  // 1 TEST COMPLET PAR PIXEL
+  for (int i=0; i<=height-1; i++) {
+    for (int j=0; j<=width-1; j++) {
+
+          set_bit(m, i, j, 1);
+
+          ouverture_opti   = ouverture_opti_SIMD(m, height, width);
+          ouverture_fusion = ouverture_fusion_SIMD(m, height, width);
+
+          if (compare_SIMD(ouverture_opti, ouverture_fusion, height, width) == 0) {
+            printf("ERROR (%d, %d)\n", i, j);
+            // printf("base : \n");
+            // display_hexa_vbits_matrix(m, height, width);
+            // printf("ouverture_opti : \n");
+            // display_hexa_vbits_matrix(ouverture_opti, height, width);
+            // printf("ouverture_fusion : \n");
+            // display_hexa_vbits_matrix(ouverture_fusion, height, width);
+            // printf("======\n");
+
+            // ERROR(__func__);
+          }
+
+          free_vbitsmatrix(ouverture_opti, height, width);
+          free_vbitsmatrix(ouverture_fusion, height, width);
+    }
+  }
+
+  free_ui8matrix(m8, 0, height-1, 0, width-1);
+  free_vbitsmatrix(m, height, width);
+
+
+  printf("\033[1;32mSucess\033[0m : ");
+  printf(__func__);
+  printf(" %dx%d\n", height, width);
+
+}
+
+void test_fermeture_universel(int height, int width) {
+
+  uint8 ** m8 = ui8matrix(0, height-1, 0, width-1);
+  zero_ui8matrix(&m8, 0, height-1, 0, width-1);
+
+  vbits ** m = convert_to_binary(m8, height, width);
+  vbits ** fermeture_opti   = fermeture_opti_SIMD(m, height, width);
+  vbits ** fermeture_fusion = fermeture_fusion_SIMD(m, height, width);
+
+  if (compare_SIMD(fermeture_opti, fermeture_fusion, height, width) == 0) {
+    ERROR(__func__);
+  }
+
+  free_vbitsmatrix(fermeture_opti, height, width);
+  free_vbitsmatrix(fermeture_fusion, height, width);
+
+  // 1 TEST COMPLET PAR PIXEL
+  for (int i=0; i<=height-1; i++) {
+    for (int j=0; j<=width-1; j++) {
+
+          set_bit(m, i, j, 1);
+
+          fermeture_opti   = fermeture_opti_SIMD(m, height, width);
+          fermeture_fusion = fermeture_fusion_SIMD(m, height, width);
+
+          if (compare_SIMD(fermeture_opti, fermeture_fusion, height, width) == 0) {
+            printf("ERROR (%d, %d)\n", i, j);
+            printf("base : \n");
+            display_hexa_vbits_matrix(m, height, width);
+            printf("fermeture_opti : \n");
+            display_hexa_vbits_matrix(fermeture_opti, height, width);
+            printf("fermeture_fusion : \n");
+            display_hexa_vbits_matrix(fermeture_fusion, height, width);
+            printf("======\n");
+
+            // ERROR(__func__);
+          }
+
+          free_vbitsmatrix(fermeture_opti, height, width);
+          free_vbitsmatrix(fermeture_fusion, height, width);
+    }
+  }
+
+  free_ui8matrix(m8, 0, height-1, 0, width-1);
+  free_vbitsmatrix(m, height, width);
+
+
+  printf("\033[1;32mSucess\033[0m : ");
+  printf(__func__);
+  printf(" %dx%d\n", height, width);
+
+}
+
 void test_morpho_SIMD(void) {
 
   printf("TEST_MORPHO SIMD\n");
@@ -1193,6 +1299,19 @@ void test_morpho_SIMD(void) {
   test_unitaire_SIMD17();
   test_unitaire_SIMD18();
   test_unitaire_SIMD19();
+
+  test_ouverture_universel(3, 3);
+  test_ouverture_universel(10, 10);
+  test_ouverture_universel(50, 50);
+  test_ouverture_universel(128, 128);
+  test_ouverture_universel(129, 129);
+
+  test_fermeture_universel(3, 3);
+  test_fermeture_universel(10, 10);
+  test_fermeture_universel(50, 50);
+  test_fermeture_universel(128, 128);
+  test_fermeture_universel(129, 129);
+
   printf("====================\n");
 
   return;
