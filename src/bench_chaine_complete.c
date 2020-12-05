@@ -23,9 +23,10 @@ void bench_chaine_complete_csv(int taille_min, int taille_max, int pas)
     generated_img = ui8matrix(0, i-1, 0, i-1);
     for(int j = 0; j < i; j++){
       for(int k = 0; k < i; k++){
-        generated_img[j][k] = rand() % 256;
+        generated_img[j][k] = rand() % 2;
       }
     }
+    convert_coding(generated_img, 0, i-1, 0, i-1, 1, 255);
     bench_chaine_complete_scalaire(generated_img, i);
     bench_chaine_complete_SIMD_naif(generated_img, i);
     bench_chaine_complete_SIMD_opti(generated_img, i);

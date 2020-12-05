@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
   // bench_morpho();
   // bench_morpho_SIMD();
 
-  //bench_chaine_complete_csv(3, 2000, 1);
+  bench_chaine_complete_csv(3, 2000, 1);
 
   return 0;
 }
