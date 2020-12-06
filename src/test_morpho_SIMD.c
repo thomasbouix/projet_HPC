@@ -1193,16 +1193,7 @@ void test_ouverture_universel(int height, int width) {
           ouverture_fusion = ouverture_fusion_SIMD(m, height, width);
 
           if (compare_SIMD(ouverture_opti, ouverture_fusion, height, width) == 0) {
-            printf("ERROR (%d, %d)\n", i, j);
-            // printf("base : \n");
-            // display_hexa_vbits_matrix(m, height, width);
-            // printf("ouverture_opti : \n");
-            // display_hexa_vbits_matrix(ouverture_opti, height, width);
-            // printf("ouverture_fusion : \n");
-            // display_hexa_vbits_matrix(ouverture_fusion, height, width);
-            // printf("======\n");
-
-            // ERROR(__func__);
+            ERROR(__func__);
           }
 
           free_vbitsmatrix(ouverture_opti, height, width);
@@ -1246,16 +1237,7 @@ void test_fermeture_universel(int height, int width) {
           fermeture_fusion = fermeture_fusion_SIMD(m, height, width);
 
           if (compare_SIMD(fermeture_opti, fermeture_fusion, height, width) == 0) {
-            printf("ERROR (%d, %d)\n", i, j);
-            printf("base : \n");
-            display_hexa_vbits_matrix(m, height, width);
-            printf("fermeture_opti : \n");
-            display_hexa_vbits_matrix(fermeture_opti, height, width);
-            printf("fermeture_fusion : \n");
-            display_hexa_vbits_matrix(fermeture_fusion, height, width);
-            printf("======\n");
-
-            // ERROR(__func__);
+            ERROR(__func__);
           }
 
           free_vbitsmatrix(fermeture_opti, height, width);
