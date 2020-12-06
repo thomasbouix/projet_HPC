@@ -32,14 +32,11 @@ void mesure_all_fd(void) {
 void mesure_SigmaDelta_1step(void) {
   int nrl, nrh, ncl, nch;
 
-  uint8 ** M_0 = LoadPGM_ui8matrix("car3/car_3000.pgm", &nrl, &nrh, &ncl, &nch);
-  uint8 ** V_0 = ui8matrix(nrl, nrh, ncl, nch);
+  uint8 **M_0, **V_0;
   SigmaDelta_step0(&M_0, &V_0, &nrl, &nrh, &ncl, &nch);
 
   uint8 ** I_1 = LoadPGM_ui8matrix("car3/car_3001.pgm", &nrl, &nrh, &ncl, &nch);
-  uint8 ** M_1 = ui8matrix(nrl, nrh, ncl, nch);
-  uint8 ** V_1 = ui8matrix(nrl, nrh, ncl, nch);;
-  uint8 ** E_1;
+  uint8 **M_1, **V_1, **E_1;
 
   CHRONO(E_1 = SigmaDelta_1step(M_0, &M_1, V_0, &V_1, I_1, nrl, nrh, ncl, nch), cycles);
   printf("SigmaDelta_1step : %.0f cycles \n", cycles);

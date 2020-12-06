@@ -37,7 +37,8 @@ int main(int argc, char * argv[]) {
   // bench_morpho();
   // bench_morpho_SIMD();
 
-  bench_chaine_complete_csv(3, 2000, 1);
+  //bench_chaine_complete_csv(3, 2000, 1);
+  bench_mouvement_csv(16, 2400, 16);
 
   return 0;
 }

@@ -16,6 +16,11 @@ vuint8** routine_FrameDifference_SIMD(vuint8** I_t, vuint8** I_t_moins_1, int vi
       vec_store(&E_t[i][j], vCMP_THRESHOLD(abs_diff, theta));
     }
   }
+
+  #ifdef BENCH
+  free_vui8matrix(E_t, vi0, vi1, vj0, vj1);
+  #endif
+
   return E_t;
 }
 
@@ -97,6 +102,13 @@ vuint8** SigmaDelta_1step_SIMD(vuint8** M_t_moins_1, vuint8*** M_t_save, vuint8*
 
   *M_t_save = M_t;
   *V_t_save = V_t;
+
+  #ifdef BENCH
+  free_vui8matrix(M_t, vi0, vi1, vj0, vj1);
+  free_vui8matrix(V_t, vi0, vi1, vj0, vj1);
+  free_vui8matrix(E_t, vi0, vi1, vj0, vj1);
+  #endif
+
   return E_t;
 }
 

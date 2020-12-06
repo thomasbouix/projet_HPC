@@ -14,6 +14,11 @@ uint8** routine_FrameDifference(uint8** I_t, uint8** I_t_moins_1, int nrl, int n
       // O_t[i][j] = (uint8)abs(I_t[i][j] - I_t_moins_1[i][j]);
     }
   }
+
+  #ifdef BENCH
+  free_ui8matrix(E_t, nrl, nrh, ncl, nch);
+  #endif
+
   return E_t;
 }
 
@@ -97,6 +102,13 @@ uint8** SigmaDelta_1step(uint8** M_t_moins_1, uint8*** M_t_save, uint8** V_t_moi
 
   *M_t_save = M_t;
   *V_t_save = V_t;
+
+  #ifdef BENCH
+  free_ui8matrix(V_t, nrl, nrh, ncl, nch);
+  free_ui8matrix(M_t, nrl, nrh, ncl, nch);
+  free_ui8matrix(E_t, nrl, nrh, ncl, nch);
+  #endif
+
   return E_t;
 }
 

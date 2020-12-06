@@ -18,4 +18,10 @@
   void mesure_SigmaDelta_1step_SIMD(void);
   void bench_mouvement_SIMD(void);
 
+  void bench_mouvement_csv(int taille_min, int taille_max, int pas);
+  void bench_FD_scalaire(uint8** img0, uint8** img1, int taille);
+  void bench_FD_SIMD(uint8** img0, uint8** img1, int taille);
+  void bench_SD_scalaire(uint8** M_0, uint8** I_1, int taille);
+  void bench_SD_SIMD(uint8** M_0, uint8** I_1, int taille);
+
 #endif
