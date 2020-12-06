@@ -1,1 +1,1 @@
-# projet_SIMD
+# projet_HPC
