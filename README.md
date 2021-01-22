@@ -1,4 +1,4 @@
-# Projet HPC
+# Projet "Calcul Haute Performance"
 
 ### Ce projet possède trois objectifs :
 
